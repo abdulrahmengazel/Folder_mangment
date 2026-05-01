@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core">
+<h:head>
+    <title>Kontrol Paneli (لوحة التحكم)</title>
+</h:head>
+<h:body>
+    <h2>Sisteme Hoş Geldiniz! (أهلاً بك في النظام)</h2>
+    <hr/>
+
+    <!-- القسم الأول: إنشاء المجلدات -->
+    <h3>1. Yeni Klasör Oluştur (إنشاء مجلد جديد)</h3>
+    <h:form id="folderForm">
+        <h:panelGrid columns="3" cellpadding="5">
+            <h:outputLabel value="Klasör Adı (اسم المجلد):"/>
+            <!-- افترضت هنا أن المتغير في كلاس Folders اسمه name -->
+            <h:inputText value="#{folderBean.folder.name}" required="true" requiredMessage="Klasör adı boş olamaz!"/>
+            <h:commandButton value="Oluştur (إنشاء)" action="#{folderBean.createFolder()}"/>
+        </h:panelGrid>
+    </h:form>
+
+    <br/>
+    <hr/>
+
+    <!-- القسم الثاني: رفع الملفات -->
+    <h3>2. Dosya Yükle (رفع ملف)</h3>
+    <!-- لاحظ الخاصية enctype الضرورية لرفع الملفات -->
+    <h:form id="uploadForm" enctype="multipart/form-data">
+        <h:panelGrid columns="2" cellpadding="5">
+
+            <h:outputLabel value="Hedef Klasör (المجلد الهدف):"/>
+            <!-- قائمة منسدلة تجلب المجلدات من FolderBean -->
+            <h:selectOneMenu value="#{fileBean.targetFolder}" required="true" requiredMessage="Lütfen klasör seçin.">
+                <f:selectItem itemLabel="-- Klasör Seçin --" itemValue="#{null}" noSelectionOption="true" />
+                <f:selectItems value="#{folderBean.foldersList}" var="folder" itemLabel="#{folder.name}" itemValue="#{folder}" />
+            </h:selectOneMenu>
+
+            <h:outputLabel value="Dosya Seç (اختر الملف):"/>
+            <!-- وسم خاص بـ JSF لاختيار الملفات -->
+            <h:inputFile value="#{fileBean.uploadedFile}" required="true" requiredMessage="Lütfen bir dosya seçin."/>
+
+            <h:panelGroup/>
+            <h:commandButton value="Yükle (رفع)" action="#{fileBean.uploadFile()}"/>
+
+        </h:panelGrid>
+    </h:form>
+
+</h:body>
+</html>
