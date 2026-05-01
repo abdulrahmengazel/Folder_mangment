@@ -15,16 +15,18 @@
 
         <h:panelGrid columns="2" cellpadding="5">
             <h:outputLabel for="email" value="E-posta:"/>
-            <h:inputText id="email" value="#{loginBean.user.email}" required="true" requiredMessage="E-posta alanı boş bırakılamaz!"/>
+            <h:inputText id="email" value="#{loginBean.user.email}" required="true"
+                         requiredMessage="E-posta alanı boş bırakılamaz!"/>
 
             <h:outputLabel for="password" value="Parola:"/>
-            <h:inputSecret id="password" value="#{loginBean.user.password}" required="true" requiredMessage="Parola alanı boş bırakılamaz!"/>
+            <h:inputSecret id="password" value="#{loginBean.user.password}" required="true"
+                           requiredMessage="Parola alanı boş bırakılamaz!"/>
 
             <h:panelGroup/>
             <h:commandButton value="Giriş Yap" action="#{loginBean.login()}"/>
 
             <br/>
-            <h:link value="Hesabınız yok mu? Yeni kayıt oluşturun." outcome="register.xhtml" />
+            <h:link value="Hesabınız yok mu? Yeni kayıt oluşturun." outcome="register.xhtml"/>
         </h:panelGrid>
     </h:form>
 </h:body>
