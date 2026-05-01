@@ -1,9 +1,10 @@
 package facadeLocal;
 
 import entity.Files;
+import jakarta.ejb.Local;
 
 import java.util.List;
-
+@Local
 public interface FileFacadeLocal {
     void create(Files files);
 

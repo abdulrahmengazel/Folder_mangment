@@ -39,6 +39,11 @@ public class LoginBean implements Serializable {
         }
     }
 
+    public String logout() {
+        facesContext.getExternalContext().getSessionMap().remove("user");
+        return "login.xhtml?faces-redirect=true";
+    }
+
     public Users getUser() {
         if (user == null) {
             user = new Users();

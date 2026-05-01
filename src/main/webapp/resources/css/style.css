@@ -1,0 +1,254 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f8f9fa;
+    color: #202124;
+    line-height: 1.6;
+}
+
+/* Global Styles */
+h1, h2, h3, h4, h5, h6 {
+    color: #202124;
+    font-weight: 500;
+}
+
+a {
+    text-decoration: none;
+    color: #1a73e8;
+}
+
+a:hover {
+    color: #1557b0;
+    text-decoration: underline;
+}
+
+/* Form Controls */
+.form-control,
+select.form-control,
+textarea.form-control {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #dadce0;
+    border-radius: 4px;
+    font-size: 14px;
+    color: #202124;
+    font-family: inherit;
+    transition: all 0.3s ease;
+}
+
+.form-control:hover {
+    border-color: #bdc1c6;
+}
+
+.form-control:focus {
+    border-color: #1a73e8;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(26, 115, 232, 0.1);
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 10px 24px;
+    background-color: #1a73e8;
+    color: white !important;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+    letter-spacing: 0.25px;
+    transition: all 0.2s ease;
+}
+
+.btn:hover {
+    background-color: #1557b0;
+    box-shadow: 0 2px 6px rgba(26, 115, 232, 0.3);
+}
+
+.btn:active {
+    transform: scale(0.98);
+}
+
+.btn-primary {
+    background-color: #1a73e8;
+}
+
+.btn-primary:hover {
+    background-color: #1557b0;
+    box-shadow: 0 2px 6px rgba(26, 115, 232, 0.3);
+}
+
+.btn-danger {
+    background-color: #d93025;
+}
+
+.btn-danger:hover {
+    background-color: #b31412;
+    box-shadow: 0 2px 6px rgba(217, 48, 37, 0.3);
+}
+
+.btn-sm {
+    padding: 6px 12px;
+    font-size: 12px;
+}
+
+/* Tables */
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+.data-table thead tr {
+    background-color: #f8f9fa;
+}
+
+.data-table th {
+    padding: 12px 16px;
+    text-align: right;
+    font-weight: 600;
+    color: #5f6368;
+    font-size: 13px;
+    text-transform: uppercase;
+    border-bottom: 2px solid #dadce0;
+}
+
+.data-table td {
+    padding: 15px 16px;
+    border-bottom: 1px solid #e0e0e0;
+    color: #3c4043;
+}
+
+.data-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+.small-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.small-table th {
+    padding: 10px;
+    text-align: right;
+    font-weight: 600;
+    color: #5f6368;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dadce0;
+}
+
+.small-table td {
+    padding: 10px;
+    text-align: right;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.small-table tbody tr:hover {
+    background-color: #f8f9fa;
+}
+
+/* Messages & Alerts */
+.messages {
+    list-style: none;
+    padding: 0;
+    margin-bottom: 20px;
+}
+
+.messages li {
+    padding: 12px 15px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+    font-weight: 500;
+    border-left: 4px solid;
+}
+
+.messages li.error-message {
+    background-color: #fce5e5;
+    color: #d93025;
+    border-left-color: #d93025;
+}
+
+.messages li.success-message {
+    background-color: #e6f4ea;
+    color: #0d652d;
+    border-left-color: #0d652d;
+}
+
+.messages li.warn-message {
+    background-color: #fff3cd;
+    color: #856404;
+    border-left-color: #ffc107;
+}
+
+.messages li.info-message {
+    background-color: #e8f0fe;
+    color: #1a73e8;
+    border-left-color: #1a73e8;
+}
+
+/* Page Container */
+#page {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header */
+#header {
+    background-color: #ffffff;
+    padding: 15px 25px;
+    border-bottom: 1px solid #e0e0e0;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+#header h1 {
+    margin: 0;
+    font-size: 22px;
+    color: #202124;
+}
+
+/* Content Area */
+#content {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+}
+
+/* Footer */
+#footer {
+    background-color: #f8f9fa;
+    color: #5f6368;
+    text-align: center;
+    padding: 20px;
+    font-size: 12px;
+    border-top: 1px solid #e0e0e0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    #content {
+        padding: 20px;
+    }
+
+    .data-table {
+        font-size: 12px;
+    }
+
+    .data-table th,
+    .data-table td {
+        padding: 10px 8px;
+    }
+
+    .btn {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+}

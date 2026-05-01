@@ -2,37 +2,147 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
->
+      xmlns:f="jakarta.faces.core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
 <h:head>
-    <title>Yeni Kayıt</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Google Drive - Create Account</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet"/>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .login-box {
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            border: 1px solid #dadce0;
+        }
+        .logo {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            margin-top: 0;
+            color: #202124;
+            font-weight: 400;
+            margin-bottom: 5px;
+            font-size: 24px;
+        }
+        p.subtitle {
+            color: #202124;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+        .form-control {
+            width: 100%;
+            padding: 13px 15px;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+        .form-control:focus {
+            border: 2px solid #1a73e8;
+            outline: none;
+            padding: 12px 14px;
+        }
+        .btn-primary {
+            background-color: #1a73e8;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 14px;
+            transition: background-color 0.2s;
+        }
+        .btn-primary:hover {
+            background-color: #1557b0;
+        }
+        .links {
+            margin-top: 20px;
+            display: flex;
+            justify-content: flex-start;
+            font-size: 14px;
+        }
+        .links a {
+            color: #1a73e8;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .messages {
+            color: #1a73e8;
+            list-style-type: none;
+            padding: 0;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        .action-row {
+             display: flex;
+             justify-content: space-between;
+             align-items: center;
+             margin-top: 30px;
+        }
+    </style>
 </h:head>
 <h:body>
-    <h:form id="registerForm">
-        <h2>Yeni Kullanıcı Oluştur</h2>
 
-        <h:messages globalOnly="true" style="color:blue; font-weight:bold;"/>
-        <h:outputLabel for="name" value="Ad Soyad:"/>
-        <h:inputText id="name" value="#{userBean.user.name}" required="true"
-                     requiredMessage="İsim alanı boş bırakılamaz!"/>
-        <h:panelGrid columns="2" cellpadding="5">
-            <h:outputLabel for="email" value="E-posta:"/>
-            <!-- نربط الحقل بكائن user داخل userBean -->
-            <h:inputText id="email" value="#{userBean.user.email}" required="true"
-                         requiredMessage="E-posta alanı boş bırakılamaz!"/>
+    <div class="login-box">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="Google Drive Logo" class="logo"/>
+        <h2>Create a Google Account</h2>
+        <p class="subtitle">to continue to Drive</p>
 
-            <h:outputLabel for="password" value="Parola:"/>
-            <!-- نربط الحقل بكائن user داخل userBean -->
-            <h:inputSecret id="password" value="#{userBean.user.password}" required="true"
-                           requiredMessage="Parola alanı boş bırakılamaz!"/>
+        <h:form id="registerForm">
+            <h:messages globalOnly="true" styleClass="messages" style="color: #1a73e8;"/>
 
-            <h:panelGroup/>
-            <!-- الزر يستدعي دالة createUser -->
-            <h:commandButton value="Kayıt Ol" action="#{userBean.createUser()}"/>
-        </h:panelGrid>
+            <div class="form-group">
+                <h:inputText id="name" value="#{userBean.user.name}" required="true"
+                             requiredMessage="Enter first and last name" styleClass="form-control" a:placeholder="First and last name"/>
+            </div>
 
-        <br/>
-        <!-- رابط للعودة إلى صفحة الدخول -->
-        <h:link value="Zaten hesabınız var mı? Giriş yapın." outcome="login.xhtml"/>
-    </h:form>
+            <div class="form-group">
+                <h:inputText id="email" value="#{userBean.user.email}" required="true"
+                             requiredMessage="Enter your email" styleClass="form-control" a:placeholder="Email address"/>
+            </div>
+
+            <div class="form-group">
+                <h:inputSecret id="password" value="#{userBean.user.password}" required="true"
+                               requiredMessage="Enter a password" styleClass="form-control" a:placeholder="Password"/>
+            </div>
+
+            <p style="font-size: 12px; color: #5f6368; text-align: left; margin-top: -10px; margin-bottom: 20px;">
+                Use 8 or more characters with a mix of letters, numbers &amp; symbols
+            </p>
+
+            <div class="action-row">
+                <div class="links" style="margin-top: 0;">
+                    <h:link value="Sign in instead" outcome="login.xhtml"/>
+                </div>
+                <h:commandButton value="Next" action="#{userBean.createUser()}" styleClass="btn-primary"/>
+            </div>
+
+        </h:form>
+    </div>
+
 </h:body>
 </html>

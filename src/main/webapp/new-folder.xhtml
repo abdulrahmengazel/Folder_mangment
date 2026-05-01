@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+
+<ui:composition template="./template.xhtml">
+
+    <ui:define name="title">
+        Google Drive - New Folder
+    </ui:define>
+
+    <ui:define name="content">
+        <div style="max-width: 600px; margin: 0 auto; background: #ffffff; padding: 30px; border-radius: 8px; border: 1px solid #dadce0; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+
+            <div style="display: flex; align-items: center; margin-bottom: 25px; border-bottom: 1px solid #e0e0e0; padding-bottom: 15px;">
+                <h:link outcome="dashboard.xhtml" style="color: #5f6368; margin-right: 15px; font-size: 20px; text-decoration: none;">
+                    <i class="fas fa-arrow-left"></i>
+                </h:link>
+                <h3 style="margin: 0; color: #202124; font-size: 20px; display: flex; align-items: center;">
+                    <i class="fas fa-folder-plus" style="color: #1a73e8; margin-right: 10px;"></i> New folder
+                </h3>
+            </div>
+
+            <h:messages globalOnly="true" styleClass="messages" style="list-style-type: none; padding: 10px; background: #e8f0fe; color: #1a73e8; border-radius: 4px; margin-bottom: 20px; font-weight: 500;"/>
+
+            <h:form id="folderForm">
+                <div class="form-group" style="margin-bottom: 25px;">
+                    <h:outputLabel value="Folder name:" style="display: block; margin-bottom: 8px; color: #3c4043; font-weight: 500;"/>
+                    <h:inputText value="#{folderBean.folder.name}" required="true" requiredMessage="Please enter a folder name" styleClass="form-control" style="font-size: 16px; padding: 12px;"/>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 15px;">
+                    <h:link value="Cancel" outcome="dashboard.xhtml" style="padding: 10px 20px; color: #1a73e8; font-weight: 500; border-radius: 4px; text-decoration: none; display: inline-block;"/>
+                    <h:commandButton value="Create" action="#{folderBean.createFolder()}" styleClass="btn btn-primary" style="padding: 10px 30px; font-size: 15px;"/>
+                </div>
+            </h:form>
+
+        </div>
+    </ui:define>
+
+</ui:composition>
+</html>

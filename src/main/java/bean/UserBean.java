@@ -22,11 +22,37 @@ public class UserBean implements Serializable {
         user = new Users();
     }
 
+    // تأكد من تعريف المسار الأساسي في أعلى الكلاس
+    private static final String ROOT_UPLOAD_DIR = "/home/abdulrahman/cloud_uploads";
+
     public String createUser() {
-        userFacade.create(user);
-        System.out.println("User created");
-        // توجيه المستخدم لصفحة الدخول بعد نجاح إنشاء الحساب
-        return "login.xhtml?faces-redirect=true";
+        try {
+            // 1. حفظ المستخدم في قاعدة البيانات أولاً ليحصل على ID
+            userFacade.create(user);
+            System.out.println("User saved to database with ID: " + user.getId());
+
+            // 2. بناء المسار الفيزيائي للمستخدم الجديد على نظام لينكس
+            try {
+                String userDirectory = "user_" + user.getId();
+                java.nio.file.Path userPath = java.nio.file.Paths.get(ROOT_UPLOAD_DIR, userDirectory);
+
+                // أمر نظام التشغيل بإنشاء المجلد
+                if (!java.nio.file.Files.exists(userPath)) {
+                    java.nio.file.Files.createDirectories(userPath);
+                    System.out.println("Physical root folder created for user at: " + userPath.toString());
+                }
+            } catch (Exception e) {
+                // في حال فشل نظام التشغيل، نطبع الخطأ لكن لا نوقف التسجيل
+                System.out.println("Warning: Failed to create OS folder for user: " + e.getMessage());
+            }
+
+            // توجيه المستخدم إلى صفحة الدخول بعد نجاح العملية
+            return "login.xhtml?faces-redirect=true";
+
+        } catch (Exception e) {
+            System.out.println("Error registering user: " + e.getMessage());
+            return null;
+        }
     }
 
     public void editUser() {

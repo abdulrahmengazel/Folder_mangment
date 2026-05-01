@@ -25,20 +25,41 @@ public class FolderBean implements Serializable {
         folder = new Folders();
     }
 
-    public void createFolder() {
-        // استخراج المستخدم المسجل من الجلسة
+    // يجب إضافة هذا المسار الثابت في أعلى الكلاس إذا لم يكن موجوداً
+    private static final String ROOT_UPLOAD_DIR = "/home/abdulrahman/cloud_uploads";
+
+    public String createFolder() {
         FacesContext context = FacesContext.getCurrentInstance();
         Users currentUser = (Users) context.getExternalContext().getSessionMap().get("user");
 
         if (currentUser != null) {
-            // ربط المجلد بالمستخدم الحالي
             getFolder().setOwner(currentUser);
 
+            // 1. الحفظ في قاعدة البيانات أولاً لكي يتم توليد المعرف (ID) للمجلد
             folderFacade.create(folder);
-            System.out.println("Folder created successfully!");
+
+            // 2. إنشاء المسار الفيزيائي على نظام لينكس لكل مستخدم ومجلد
+            try {
+                String userDirectory = "user_" + currentUser.getId();
+                String folderDirectory = "folder_" + getFolder().getId();
+
+                java.nio.file.Path physicalPath = java.nio.file.Paths.get(ROOT_UPLOAD_DIR, userDirectory, folderDirectory);
+
+                if (!java.nio.file.Files.exists(physicalPath)) {
+                    java.nio.file.Files.createDirectories(physicalPath);
+                    System.out.println("Physical folder created at: " + physicalPath.toString());
+                }
+            } catch (Exception e) {
+                System.out.println("Error creating physical folder: " + e.getMessage());
+            }
+
+            System.out.println("Folder created successfully in DB and Linux!");
             clearForm();
+            
+            return "dashboard.xhtml?faces-redirect=true";
         } else {
             System.out.println("Error: No user logged in.");
+            return null;
         }
     }
 

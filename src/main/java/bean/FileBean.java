@@ -13,9 +13,6 @@ import jakarta.servlet.http.Part;
 
 import java.io.InputStream;
 import java.io.Serializable;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 
 @Named
@@ -37,68 +34,73 @@ public class FileBean implements Serializable {
     @EJB
     private FolderFacadeLocal folderFacade;
 
-    private static final String ROOT_UPLOAD_DIR = "/home/your_username/cloud_uploads";
+    private static final String ROOT_UPLOAD_DIR = "/home/abdulrahman/cloud_uploads";
 
     public void clearForm() {
         fileEntity = new Files();
         uploadedFile = null;
     }
 
-    public void uploadFile() {
-        // نتحقق من أن المستخدم اختار ملفاً ورقم مجلد صالح
-        if (uploadedFile != null && targetFolderId != null) {
+    public String uploadFile() {
+        FacesContext context = FacesContext.getCurrentInstance();
 
-            FacesContext context = FacesContext.getCurrentInstance();
-            Users currentUser = (Users) context.getExternalContext().getSessionMap().get("user");
-
-            if (currentUser != null) {
-                // التعديل الثالث: نجلب المجلد الحقيقي من قاعدة البيانات باستخدام الرقم
-                Folders actualTargetFolder = folderFacade.find(targetFolderId);
-
-                if (actualTargetFolder != null) {
-                    try {
-                        String originalFileName = Paths.get(uploadedFile.getSubmittedFileName()).getFileName().toString();
-                        String uniqueFileName = System.currentTimeMillis() + "_" + originalFileName;
-
-                        // نستخدم المجلد الحقيقي الذي جلبناه لبناء المسار
-                        String userDirectory = "user_" + currentUser.getId();
-                        String folderDirectory = "folder_" + actualTargetFolder.getId();
-                        Path dynamicFolderPath = Paths.get(ROOT_UPLOAD_DIR, userDirectory, folderDirectory);
-
-                        if (!java.nio.file.Files.exists(dynamicFolderPath)) {
-                            java.nio.file.Files.createDirectories(dynamicFolderPath);
-                        }
-
-                        Path finalPath = dynamicFolderPath.resolve(uniqueFileName);
-
-                        try (InputStream input = uploadedFile.getInputStream()) {
-                            java.nio.file.Files.copy(input, finalPath, StandardCopyOption.REPLACE_EXISTING);
-                        }
-
-                        getFileEntity().setName(originalFileName);
-                        getFileEntity().setPath(finalPath.toString());
-                        getFileEntity().setType(uploadedFile.getContentType());
-                        getFileEntity().setSize(uploadedFile.getSize());
-
-                        // نربط الملف بالمجلد الحقيقي
-                        getFileEntity().setFolder(actualTargetFolder);
-                        getFileEntity().setOwner(currentUser);
-
-                        fileFacade.create(fileEntity);
-
-                        System.out.println("File uploaded successfully to: " + finalPath.toString());
-                        clearForm();
-
-                    } catch (Exception e) {
-                        System.out.println("Error during file upload: " + e.getMessage());
-                    }
-                }
-            } else {
-                System.out.println("Error: User session expired.");
-            }
-        } else {
-            System.out.println("Error: File or Folder ID is missing.");
+        // التحقق من وصول الملف
+        if (uploadedFile == null) {
+            context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Error", "لم يتم استلام أي ملف من المتصفح."));
+            return null;
         }
+
+        // التحقق من وصول رقم المجلد
+        if (targetFolderId == null) {
+            context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Error", "لم يتم التعرف على المجلد الهدف."));
+            return null;
+        }
+
+        Users currentUser = (Users) context.getExternalContext().getSessionMap().get("user");
+
+        if (currentUser != null) {
+            Folders actualTargetFolder = folderFacade.find(targetFolderId);
+
+            if (actualTargetFolder != null) {
+                try {
+                    String originalFileName = java.nio.file.Paths.get(uploadedFile.getSubmittedFileName()).getFileName().toString();
+                    String uniqueFileName = System.currentTimeMillis() + "_" + originalFileName;
+
+                    String userDirectory = "user_" + currentUser.getId();
+                    String folderDirectory = "folder_" + actualTargetFolder.getId();
+                    java.nio.file.Path dynamicFolderPath = java.nio.file.Paths.get(ROOT_UPLOAD_DIR, userDirectory, folderDirectory);
+
+                    if (!java.nio.file.Files.exists(dynamicFolderPath)) {
+                        java.nio.file.Files.createDirectories(dynamicFolderPath);
+                    }
+
+                    java.nio.file.Path finalPath = dynamicFolderPath.resolve(uniqueFileName);
+
+                    try (InputStream input = uploadedFile.getInputStream()) {
+                        java.nio.file.Files.copy(input, finalPath, java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+                    }
+
+                    getFileEntity().setName(originalFileName);
+                    getFileEntity().setPath(finalPath.toString());
+                    getFileEntity().setType(uploadedFile.getContentType());
+                    getFileEntity().setSize(uploadedFile.getSize());
+
+                    getFileEntity().setFolder(actualTargetFolder);
+                    getFileEntity().setOwner(currentUser);
+
+                    fileFacade.create(fileEntity);
+
+                    context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_INFO, "Success", "تم الرفع بنجاح!"));
+                    clearForm();
+                    
+                    return "dashboard.xhtml?faces-redirect=true";
+
+                } catch (Exception e) {
+                    context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "System Error", e.getMessage()));
+                }
+            }
+        }
+        return null;
     }
 
     // دوال الجلب والتعيين للمتغير الجديد

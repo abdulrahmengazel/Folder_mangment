@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+
+<ui:composition template="./template.xhtml">
+
+    <ui:define name="title">
+        Google Drive - Shared with me
+    </ui:define>
+
+    <ui:define name="content">
+
+        <style>
+            .drive-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 20px;
+                border-bottom: 1px solid #dadce0;
+                padding-bottom: 15px;
+            }
+            .drive-title {
+                font-size: 18px;
+                color: #202124;
+                font-weight: 400;
+                margin: 0;
+            }
+            .action-buttons {
+                display: flex;
+                gap: 15px;
+            }
+            .btn-drive {
+                background: #ffffff;
+                color: #3c4043 !important;
+                border: 1px solid #dadce0;
+                border-radius: 24px;
+                padding: 8px 20px;
+                font-weight: 500;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                box-shadow: 0 1px 2px 0 rgba(60,64,67,0.3);
+                transition: background 0.2s, box-shadow 0.2s;
+                text-decoration: none;
+                font-size: 14px;
+            }
+            .btn-drive:hover {
+                background: #f8f9fa;
+                box-shadow: 0 1px 3px 1px rgba(60,64,67,0.15);
+            }
+
+            .section-label {
+                font-size: 14px;
+                font-weight: 500;
+                color: #5f6368;
+                margin-top: 30px;
+                margin-bottom: 15px;
+                border-bottom: 1px solid #e0e0e0;
+                padding-bottom: 5px;
+            }
+
+            .files-table {
+                width: 100%;
+                border-collapse: collapse;
+            }
+
+            .files-table th {
+                text-align: left;
+                padding: 10px;
+                font-size: 14px;
+                font-weight: 500;
+                color: #5f6368;
+                border-bottom: 1px solid #dadce0;
+            }
+
+            .files-table td {
+                padding: 12px 10px;
+                border-bottom: 1px solid #dadce0;
+                color: #3c4043;
+                font-size: 14px;
+            }
+
+            .files-table tr:hover {
+                background-color: #f5f5f5;
+            }
+
+            .file-name-cell {
+                display: flex;
+                align-items: center;
+                gap: 15px;
+                font-weight: 500;
+            }
+
+            .file-icon {
+                color: #1a73e8;
+                font-size: 20px;
+            }
+
+            .user-info {
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                color: #5f6368;
+            }
+
+            .user-avatar {
+                background: #1a73e8;
+                color: white;
+                border-radius: 50%;
+                width: 24px;
+                height: 24px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 12px;
+                font-weight: bold;
+            }
+
+            .empty-state {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 60px 20px;
+                color: #5f6368;
+                text-align: center;
+            }
+        </style>
+
+        <h:messages globalOnly="true" styleClass="messages" style="list-style-type: none; padding-left: 0; font-weight: 500;"/>
+
+        <div class="drive-header">
+            <h2 class="drive-title">Shared with me</h2>
+            <div class="action-buttons">
+                <!-- A hypothetical 'Share File' button if the user wants to initiate sharing from here -->
+            </div>
+        </div>
+
+        <!-- Section for files shared with the current user -->
+        <h:panelGroup rendered="#{sharedFilesBean.sharedWithMeList.size() > 0}">
+            <div class="section-label">Shared with me</div>
+            <h:form id="sharedWithMeForm">
+                <table class="files-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Shared by</th>
+                            <th>Permission</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ui:repeat value="#{sharedFilesBean.sharedWithMeList}" var="sf">
+                            <tr>
+                                <td>
+                                    <div class="file-name-cell">
+                                        <i class="fas fa-file file-icon"></i>
+                                        <h:outputText value="#{sf.file.name}" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="user-info">
+                                        <!-- Fallback letter avatar -->
+                                        <div class="user-avatar">
+                                            <h:outputText value="#{sf.file.owner.name.substring(0,1).toUpperCase()}" rendered="#{not empty sf.file.owner.name}"/>
+                                        </div>
+                                        <h:outputText value="#{sf.file.owner.email}" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <h:outputText value="#{sf.permission == 'READ' ? 'Viewer' : 'Editor'}" />
+                                </td>
+                            </tr>
+                        </ui:repeat>
+                    </tbody>
+                </table>
+            </h:form>
+        </h:panelGroup>
+
+        <!-- Section for files the user has shared with others -->
+        <h:panelGroup rendered="#{sharedFilesBean.sharedFilesList.size() > 0}">
+            <div class="section-label" style="margin-top: 40px;">Shared by me</div>
+            <h:form id="mySharedForm">
+                <table class="files-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Shared with</th>
+                            <th>Permission</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <ui:repeat value="#{sharedFilesBean.sharedFilesList}" var="sf">
+                            <tr>
+                                <td>
+                                    <div class="file-name-cell">
+                                        <i class="fas fa-share-alt file-icon" style="color: #34a853;"></i>
+                                        <h:outputText value="#{sf.file.name}" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="user-info">
+                                         <div class="user-avatar" style="background: #34a853;">
+                                            <h:outputText value="#{sf.recipient.name.substring(0,1).toUpperCase()}" rendered="#{not empty sf.recipient.name}"/>
+                                        </div>
+                                        <h:outputText value="#{sf.recipient.email}" />
+                                    </div>
+                                </td>
+                                <td>
+                                    <h:outputText value="#{sf.permission == 'READ' ? 'Viewer' : 'Editor'}" />
+                                </td>
+                                <td>
+                                    <h:commandLink action="#{sharedFilesBean.removeSharedFile(sf)}" title="Remove access" onclick="return confirm('Are you sure you want to remove access for this person?');" style="color: #d93025; font-size: 16px;">
+                                        <i class="fas fa-user-minus"></i>
+                                    </h:commandLink>
+                                </td>
+                            </tr>
+                        </ui:repeat>
+                    </tbody>
+                </table>
+            </h:form>
+        </h:panelGroup>
+
+        <h:panelGroup rendered="#{sharedFilesBean.sharedWithMeList.size() == 0 and sharedFilesBean.sharedFilesList.size() == 0}">
+            <div class="empty-state">
+                <img src="https://ssl.gstatic.com/docs/doclist/images/empty_state_shared_with_me_v2.svg" alt="Empty Shared" style="width: 250px; margin-bottom: 20px; opacity: 0.8;"/>
+                <h3 style="margin-top: 0; color: #3c4043;">No shared files</h3>
+                <p>Files and folders others share with you will show up here.</p>
+            </div>
+        </h:panelGroup>
+
+    </ui:define>
+
+</ui:composition>
+</html>
