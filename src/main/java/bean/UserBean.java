@@ -22,10 +22,11 @@ public class UserBean implements Serializable {
         user = new Users();
     }
 
-    public void createUser() {
-        // تم التعديل لتتطابق مع دالة الإضافة في Facade
+    public String createUser() {
         userFacade.create(user);
         System.out.println("User created");
+        // توجيه المستخدم لصفحة الدخول بعد نجاح إنشاء الحساب
+        return "login.xhtml?faces-redirect=true";
     }
 
     public void editUser() {
