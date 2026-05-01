@@ -2,34 +2,37 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core">
+>
 <h:head>
-  <title>Yeni Kayıt</title>
+    <title>Yeni Kayıt</title>
 </h:head>
 <h:body>
-  <h:form id="registerForm">
-    <h2>Yeni Kullanıcı Oluştur</h2>
+    <h:form id="registerForm">
+        <h2>Yeni Kullanıcı Oluştur</h2>
 
-    <h:messages globalOnly="true" style="color:blue; font-weight:bold;"/>
-    <h:outputLabel for="name" value="Ad Soyad:"/>
-    <h:inputText id="name" value="#{userBean.user.name}" required="true" requiredMessage="İsim alanı boş bırakılamaz!"/>
-    <h:panelGrid columns="2" cellpadding="5">
-      <h:outputLabel for="email" value="E-posta:"/>
-      <!-- نربط الحقل بكائن user داخل userBean -->
-      <h:inputText id="email" value="#{userBean.user.email}" required="true" requiredMessage="E-posta alanı boş bırakılamaz!"/>
+        <h:messages globalOnly="true" style="color:blue; font-weight:bold;"/>
+        <h:outputLabel for="name" value="Ad Soyad:"/>
+        <h:inputText id="name" value="#{userBean.user.name}" required="true"
+                     requiredMessage="İsim alanı boş bırakılamaz!"/>
+        <h:panelGrid columns="2" cellpadding="5">
+            <h:outputLabel for="email" value="E-posta:"/>
+            <!-- نربط الحقل بكائن user داخل userBean -->
+            <h:inputText id="email" value="#{userBean.user.email}" required="true"
+                         requiredMessage="E-posta alanı boş bırakılamaz!"/>
 
-      <h:outputLabel for="password" value="Parola:"/>
-      <!-- نربط الحقل بكائن user داخل userBean -->
-      <h:inputSecret id="password" value="#{userBean.user.password}" required="true" requiredMessage="Parola alanı boş bırakılamaz!"/>
+            <h:outputLabel for="password" value="Parola:"/>
+            <!-- نربط الحقل بكائن user داخل userBean -->
+            <h:inputSecret id="password" value="#{userBean.user.password}" required="true"
+                           requiredMessage="Parola alanı boş bırakılamaz!"/>
 
-      <h:panelGroup/>
-      <!-- الزر يستدعي دالة createUser -->
-      <h:commandButton value="Kayıt Ol" action="#{userBean.createUser()}"/>
-    </h:panelGrid>
+            <h:panelGroup/>
+            <!-- الزر يستدعي دالة createUser -->
+            <h:commandButton value="Kayıt Ol" action="#{userBean.createUser()}"/>
+        </h:panelGrid>
 
-    <br/>
-    <!-- رابط للعودة إلى صفحة الدخول -->
-    <h:link value="Zaten hesabınız var mı? Giriş yapın." outcome="login.xhtml" />
-  </h:form>
+        <br/>
+        <!-- رابط للعودة إلى صفحة الدخول -->
+        <h:link value="Zaten hesabınız var mı? Giriş yapın." outcome="login.xhtml"/>
+    </h:form>
 </h:body>
 </html>
