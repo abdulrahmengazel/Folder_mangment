@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+
+<ui:composition template="./template.xhtml">
+
+    <ui:define name="title">
+        Trash - Drive
+    </ui:define>
+
+    <ui:define name="content">
+        <style>
+            .page-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding-bottom: 16px;
+                margin-bottom: 24px;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .page-title {
+                font-size: 18px;
+                color: var(--text-primary);
+                margin: 0;
+                font-weight: 500;
+            }
+            .empty-state {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 80px 24px;
+                text-align: center;
+            }
+            .empty-state-img {
+                width: 250px;
+                margin-bottom: 24px;
+                opacity: 0.9;
+            }
+            .empty-state h3 {
+                font-size: 20px;
+                font-weight: 400;
+                color: var(--text-primary);
+                margin-bottom: 12px;
+            }
+            .empty-state p {
+                font-size: 14px;
+                color: var(--text-secondary);
+                max-width: 400px;
+            }
+            .trash-info-banner {
+                background-color: #f1f3f4;
+                padding: 12px 16px;
+                border-radius: 8px;
+                margin-bottom: 24px;
+                font-size: 14px;
+                color: var(--text-secondary);
+                display: flex;
+                align-items: center;
+                gap: 12px;
+            }
+            .empty-trash-btn {
+                color: var(--primary-color);
+                font-weight: 500;
+                cursor: pointer;
+                background: none;
+                border: none;
+                margin-left: auto;
+            }
+        </style>
+
+        <h:messages globalOnly="true" styleClass="messages" />
+
+        <div class="page-header">
+            <h2 class="page-title">Trash</h2>
+        </div>
+
+        <div class="trash-info-banner">
+            <i class="fas fa-info-circle"></i>
+            <span>Items in trash are deleted forever after 30 days.</span>
+            <button class="empty-trash-btn" onclick="alert('Trash is already empty.'); return false;">Empty trash</button>
+        </div>
+
+        <!-- Placeholder for Trash functionality -->
+        <!-- In a real implementation, you'd fetch files where an 'isDeleted' flag is true -->
+        <h:panelGroup rendered="true">
+            <div class="empty-state">
+                <img src="https://ssl.gstatic.com/docs/doclist/images/empty_state_trash_v2.svg" alt="Trash is empty" class="empty-state-img"/>
+                <h3>Trash is empty</h3>
+                <p>No items have been moved to the trash.</p>
+            </div>
+        </h:panelGroup>
+
+    </ui:define>
+
+</ui:composition>
+</html>

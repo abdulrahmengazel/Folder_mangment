@@ -7,141 +7,127 @@
 <h:head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Google Drive - Create Account</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet"/>
+    <title>Create Account - Drive</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet"/>
+    <!-- Load CSS correctly -->
+    <h:outputStylesheet name="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/style.css?v=2.0" />
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f0f2f5;
+            background-color: var(--bg-color);
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             margin: 0;
-            padding: 20px;
-            box-sizing: border-box;
+            padding: 24px;
         }
-        .login-box {
-            background-color: #fff;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+
+        .auth-container {
             width: 100%;
-            max-width: 450px;
+            max-width: 480px;
+            background: var(--surface-color);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .auth-header {
             text-align: center;
-            border: 1px solid #dadce0;
+            padding: 40px 40px 24px;
         }
-        .logo {
-            width: 60px;
-            height: 60px;
-            margin-bottom: 20px;
+
+        .auth-logo {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 24px;
         }
-        h2 {
-            margin-top: 0;
-            color: #202124;
-            font-weight: 400;
-            margin-bottom: 5px;
+
+        .auth-title {
             font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
         }
-        p.subtitle {
-            color: #202124;
-            margin-bottom: 30px;
-            font-size: 16px;
+
+        .auth-subtitle {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin: 0;
         }
+
+        .auth-form {
+            padding: 0 40px 40px;
+        }
+
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             text-align: left;
         }
-        .form-control {
-            width: 100%;
-            padding: 13px 15px;
-            border: 1px solid #dadce0;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-        .form-control:focus {
-            border: 2px solid #1a73e8;
-            outline: none;
-            padding: 12px 14px;
-        }
-        .btn-primary {
-            background-color: #1a73e8;
-            color: white;
-            border: none;
-            padding: 10px 24px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 500;
-            font-size: 14px;
-            transition: background-color 0.2s;
-        }
-        .btn-primary:hover {
-            background-color: #1557b0;
-        }
-        .links {
-            margin-top: 20px;
+
+        .auth-actions {
             display: flex;
-            justify-content: flex-start;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 32px;
+        }
+
+        .auth-link {
             font-size: 14px;
+            font-weight: 600;
+            color: var(--primary-color);
+            transition: color 0.2s;
         }
-        .links a {
-            color: #1a73e8;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .messages {
-            color: #1a73e8;
-            list-style-type: none;
-            padding: 0;
-            font-size: 14px;
-            margin-bottom: 20px;
-        }
-        .action-row {
-             display: flex;
-             justify-content: space-between;
-             align-items: center;
-             margin-top: 30px;
+
+        .auth-link:hover {
+            color: var(--primary-hover);
         }
     </style>
 </h:head>
 <h:body>
 
-    <div class="login-box">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="Google Drive Logo" class="logo"/>
-        <h2>Create a Google Account</h2>
-        <p class="subtitle">to continue to Drive</p>
+    <div class="auth-container">
+        <div class="auth-header">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="Drive Logo" class="auth-logo"/>
+            <h1 class="auth-title">Create your Account</h1>
+            <p class="auth-subtitle">to continue to Drive</p>
+        </div>
 
-        <h:form id="registerForm">
-            <h:messages globalOnly="true" styleClass="messages" style="color: #1a73e8;"/>
+        <div class="auth-form">
+            <h:form id="registerForm">
+                <h:messages globalOnly="true" styleClass="messages" />
 
-            <div class="form-group">
-                <h:inputText id="name" value="#{userBean.user.name}" required="true"
-                             requiredMessage="Enter first and last name" styleClass="form-control" a:placeholder="First and last name"/>
-            </div>
-
-            <div class="form-group">
-                <h:inputText id="email" value="#{userBean.user.email}" required="true"
-                             requiredMessage="Enter your email" styleClass="form-control" a:placeholder="Email address"/>
-            </div>
-
-            <div class="form-group">
-                <h:inputSecret id="password" value="#{userBean.user.password}" required="true"
-                               requiredMessage="Enter a password" styleClass="form-control" a:placeholder="Password"/>
-            </div>
-
-            <p style="font-size: 12px; color: #5f6368; text-align: left; margin-top: -10px; margin-bottom: 20px;">
-                Use 8 or more characters with a mix of letters, numbers &amp; symbols
-            </p>
-
-            <div class="action-row">
-                <div class="links" style="margin-top: 0;">
-                    <h:link value="Sign in instead" outcome="login.xhtml"/>
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <h:inputText id="name" value="#{userBean.user.name}" required="true"
+                                 requiredMessage="Enter first and last name" styleClass="form-control" a:placeholder="e.g. John Doe"/>
                 </div>
-                <h:commandButton value="Next" action="#{userBean.createUser()}" styleClass="btn-primary"/>
-            </div>
 
-        </h:form>
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <h:inputText id="email" value="#{userBean.user.email}" required="true"
+                                 requiredMessage="Enter your email" styleClass="form-control" a:placeholder="john@example.com"/>
+                </div>
+
+                <div class="form-group" style="margin-bottom: 8px;">
+                    <label class="form-label">Password</label>
+                    <h:inputSecret id="password" value="#{userBean.user.password}" required="true"
+                                   requiredMessage="Enter a password" styleClass="form-control" a:placeholder="Create a strong password"/>
+                </div>
+
+                <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 24px;">
+                    Use 8 or more characters with a mix of letters, numbers &amp; symbols
+                </p>
+
+                <div class="auth-actions">
+                    <h:link value="Sign in instead" outcome="login.xhtml" styleClass="auth-link"/>
+                    <h:commandButton value="Create Account" action="#{userBean.createUser()}" styleClass="btn btn-primary" style="padding: 12px 24px; font-size: 15px; border-radius: 12px;"/>
+                </div>
+
+            </h:form>
+        </div>
     </div>
 
 </h:body>

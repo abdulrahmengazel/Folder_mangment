@@ -5,40 +5,42 @@
       xmlns:f="jakarta.faces.core"
       xmlns:ui="jakarta.faces.facelets"
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
-
+<h:outputStylesheet name="css/style.css" />
+<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/style.css?v=2.0" />
 <ui:composition template="./template.xhtml">
 
     <ui:define name="title">
-        Google Drive - New Folder
+        New Folder - Drive
     </ui:define>
 
     <ui:define name="content">
-        <div style="max-width: 600px; margin: 0 auto; background: #ffffff; padding: 30px; border-radius: 8px; border: 1px solid #dadce0; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <h:messages globalOnly="true" styleClass="messages" />
 
-            <div style="display: flex; align-items: center; margin-bottom: 25px; border-bottom: 1px solid #e0e0e0; padding-bottom: 15px;">
-                <h:link outcome="dashboard.xhtml" style="color: #5f6368; margin-right: 15px; font-size: 20px; text-decoration: none;">
-                    <i class="fas fa-arrow-left"></i>
-                </h:link>
-                <h3 style="margin: 0; color: #202124; font-size: 20px; display: flex; align-items: center;">
-                    <i class="fas fa-folder-plus" style="color: #1a73e8; margin-right: 10px;"></i> New folder
-                </h3>
+        <div class="page-header" style="justify-content: flex-start; gap: 16px; border: none;">
+            <h:link outcome="dashboard.xhtml" style="color: var(--text-secondary); text-decoration: none; font-size: 20px; transition: color 0.2s;">
+                <i class="fas fa-arrow-left"></i>
+            </h:link>
+            <h2 class="page-title" style="font-weight: 600;">Create new folder</h2>
+        </div>
+
+        <div class="form-card" style="margin-top: 24px;">
+            <div style="text-align: center; margin-bottom: 32px;">
+                <i class="fas fa-folder-plus" style="font-size: 64px; color: var(--primary-color);"></i>
             </div>
 
-            <h:messages globalOnly="true" styleClass="messages" style="list-style-type: none; padding: 10px; background: #e8f0fe; color: #1a73e8; border-radius: 4px; margin-bottom: 20px; font-weight: 500;"/>
-
             <h:form id="folderForm">
-                <div class="form-group" style="margin-bottom: 25px;">
-                    <h:outputLabel value="Folder name:" style="display: block; margin-bottom: 8px; color: #3c4043; font-weight: 500;"/>
-                    <h:inputText value="#{folderBean.folder.name}" required="true" requiredMessage="Please enter a folder name" styleClass="form-control" style="font-size: 16px; padding: 12px;"/>
+                <div class="form-group">
+                    <label class="form-label">Folder name</label>
+                    <h:inputText value="#{folderBean.folder.name}" required="true" requiredMessage="Please enter a folder name" styleClass="form-control" a:placeholder="Untitled folder"/>
                 </div>
 
-                <div style="display: flex; justify-content: flex-end; gap: 15px;">
-                    <h:link value="Cancel" outcome="dashboard.xhtml" style="padding: 10px 20px; color: #1a73e8; font-weight: 500; border-radius: 4px; text-decoration: none; display: inline-block;"/>
-                    <h:commandButton value="Create" action="#{folderBean.createFolder()}" styleClass="btn btn-primary" style="padding: 10px 30px; font-size: 15px;"/>
+                <div class="form-actions">
+                    <h:link value="Cancel" outcome="dashboard.xhtml" styleClass="btn btn-outline" />
+                    <h:commandButton value="Create" action="#{folderBean.createFolder()}" styleClass="btn btn-primary" />
                 </div>
             </h:form>
-
         </div>
+
     </ui:define>
 
 </ui:composition>

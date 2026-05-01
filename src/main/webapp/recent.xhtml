@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
+      xmlns:ui="jakarta.faces.facelets">
+
+<ui:composition template="./template.xhtml">
+
+    <ui:define name="title">
+        Recent - Drive
+    </ui:define>
+
+    <ui:define name="content">
+        <style>
+            .page-header {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding-bottom: 16px;
+                margin-bottom: 24px;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .page-title {
+                font-size: 18px;
+                color: var(--text-primary);
+                margin: 0;
+                font-weight: 500;
+            }
+            .empty-state {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                padding: 80px 24px;
+                text-align: center;
+            }
+            .empty-state-img {
+                width: 250px;
+                margin-bottom: 24px;
+                opacity: 0.9;
+            }
+            .empty-state h3 {
+                font-size: 20px;
+                font-weight: 400;
+                color: var(--text-primary);
+                margin-bottom: 12px;
+            }
+            .empty-state p {
+                font-size: 14px;
+                color: var(--text-secondary);
+                max-width: 400px;
+            }
+        </style>
+
+        <h:messages globalOnly="true" styleClass="messages" />
+
+        <div class="page-header">
+            <h2 class="page-title">Recent</h2>
+        </div>
+
+        <!-- Placeholder for Recent Files functionality -->
+        <!-- In a real implementation, you'd fetch files ordered by upload date or last accessed date -->
+        <h:panelGroup rendered="true">
+            <div class="empty-state">
+                <img src="https://ssl.gstatic.com/docs/doclist/images/empty_state_recent_v2.svg" alt="No recent files" class="empty-state-img"/>
+                <h3>No recent files</h3>
+                <p>Files you've recently opened or edited will show up here.</p>
+            </div>
+        </h:panelGroup>
+
+    </ui:define>
+
+</ui:composition>
+</html>

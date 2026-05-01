@@ -10,6 +10,7 @@ import jakarta.inject.Named;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Named
 @ViewScoped
@@ -64,8 +65,14 @@ public class FolderBean implements Serializable {
     }
 
     public void deleteFolder(Folders f) {
-        folderFacade.remove(f);
-        System.out.println("Folder deleted");
+        FacesContext context = FacesContext.getCurrentInstance();
+        Users currentUser = (Users) context.getExternalContext().getSessionMap().get("user");
+
+        if (currentUser != null && f != null && f.getOwner().getId().equals(currentUser.getId())) {
+            folderFacade.remove(f);
+            System.out.println("Folder deleted");
+            foldersList = null; // force reload
+        }
     }
 
     public Folders getFolder() {
@@ -80,7 +87,16 @@ public class FolderBean implements Serializable {
     }
 
     public List<Folders> getFoldersList() {
-        foldersList = folderFacade.findAll();
+        FacesContext context = FacesContext.getCurrentInstance();
+        Users currentUser = (Users) context.getExternalContext().getSessionMap().get("user");
+
+        if (currentUser != null) {
+            foldersList = folderFacade.findAll().stream()
+                    .filter(f -> f.getOwner().getId().equals(currentUser.getId()))
+                    .collect(Collectors.toList());
+        } else {
+            foldersList = java.util.Collections.emptyList();
+        }
         return foldersList;
     }
 

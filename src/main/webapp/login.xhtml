@@ -7,124 +7,117 @@
 <h:head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Google Drive - Sign in</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet"/>
+    <title>Sign In - Drive</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet"/>
+    <!-- Load CSS correctly -->
+    <h:outputStylesheet name="css/style.css" />
+    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/style.css?v=2.0" />
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f0f2f5;
+            background-color: var(--bg-color);
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
+            margin: 0;
+            padding: 24px;
+        }
+
+        .auth-container {
+            width: 100%;
+            max-width: 440px;
+            background: var(--surface-color);
+            border-radius: 16px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .auth-header {
+            text-align: center;
+            padding: 40px 40px 24px;
+        }
+
+        .auth-logo {
+            width: 48px;
+            height: 48px;
+            margin-bottom: 24px;
+        }
+
+        .auth-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            letter-spacing: -0.02em;
+        }
+
+        .auth-subtitle {
+            font-size: 15px;
+            color: var(--text-secondary);
             margin: 0;
         }
-        .login-box {
-            background-color: #fff;
-            padding: 40px;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            border: 1px solid #dadce0;
+
+        .auth-form {
+            padding: 0 40px 40px;
         }
-        .logo {
-            width: 60px;
-            height: 60px;
-            margin-bottom: 20px;
-        }
-        h2 {
-            margin-top: 0;
-            color: #202124;
-            font-weight: 400;
-            margin-bottom: 5px;
-        }
-        p.subtitle {
-            color: #202124;
-            margin-bottom: 30px;
-            font-size: 16px;
-        }
+
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             text-align: left;
         }
-        .form-control {
-            width: 100%;
-            padding: 13px 15px;
-            border: 1px solid #dadce0;
-            border-radius: 4px;
-            box-sizing: border-box;
-            font-size: 16px;
-        }
-        .form-control:focus {
-            border: 2px solid #1a73e8;
-            outline: none;
-            padding: 12px 14px;
-        }
-        .btn-primary {
-            background-color: #1a73e8;
-            color: white;
-            border: none;
-            padding: 10px 24px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 500;
-            font-size: 14px;
-            width: 100%;
-            transition: background-color 0.2s;
-        }
-        .btn-primary:hover {
-            background-color: #1557b0;
-        }
-        .links {
-            margin-top: 20px;
+
+        .auth-actions {
             display: flex;
             justify-content: space-between;
-            font-size: 14px;
+            align-items: center;
+            margin-top: 32px;
         }
-        .links a {
-            color: #1a73e8;
-            text-decoration: none;
-            font-weight: 500;
-        }
-        .messages {
-            color: #d93025;
-            list-style-type: none;
-            padding: 0;
+
+        .auth-link {
             font-size: 14px;
-            margin-bottom: 20px;
+            font-weight: 600;
+            color: var(--primary-color);
+            transition: color 0.2s;
+        }
+
+        .auth-link:hover {
+            color: var(--primary-hover);
         }
     </style>
 </h:head>
 <h:body>
 
-    <div class="login-box">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="Google Drive Logo" class="logo"/>
-        <h2>Sign in</h2>
-        <p class="subtitle">to continue to Drive</p>
+    <div class="auth-container">
+        <div class="auth-header">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="Drive Logo" class="auth-logo"/>
+            <h1 class="auth-title">Sign in</h1>
+            <p class="auth-subtitle">to continue to Drive</p>
+        </div>
 
-        <h:form id="loginForm">
-            <h:messages globalOnly="true" styleClass="messages"/>
+        <div class="auth-form">
+            <h:form id="loginForm">
+                <h:messages globalOnly="true" styleClass="messages" />
 
-            <div class="form-group">
-                <h:inputText id="email" value="#{loginBean.user.email}" required="true"
-                             requiredMessage="Enter an email" styleClass="form-control" a:placeholder="Email or phone"/>
-            </div>
+                <div class="form-group">
+                    <label class="form-label">Email or Phone</label>
+                    <h:inputText id="email" value="#{loginBean.user.email}" required="true"
+                                 requiredMessage="Enter an email" styleClass="form-control" a:placeholder="name@example.com"/>
+                </div>
 
-            <div class="form-group">
-                <h:inputSecret id="password" value="#{loginBean.user.password}" required="true"
-                               requiredMessage="Enter your password" styleClass="form-control" a:placeholder="Enter your password"/>
-            </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <h:inputSecret id="password" value="#{loginBean.user.password}" required="true"
+                                   requiredMessage="Enter your password" styleClass="form-control" a:placeholder="Enter your password"/>
+                </div>
 
-            <div style="display: flex; justify-content: flex-end; margin-top: 30px;">
-                <h:commandButton value="Next" action="#{loginBean.login()}" styleClass="btn-primary" style="width: auto;"/>
-            </div>
+                <div class="auth-actions">
+                    <h:link value="Create account" outcome="register.xhtml" styleClass="auth-link"/>
+                    <h:commandButton value="Next" action="#{loginBean.login()}" styleClass="btn btn-primary" style="padding: 12px 24px; font-size: 15px; border-radius: 12px;"/>
+                </div>
 
-            <div class="links" style="justify-content: flex-start; margin-top: 30px;">
-                <h:link value="Create account" outcome="register.xhtml"/>
-            </div>
-        </h:form>
+            </h:form>
+        </div>
     </div>
 
 </h:body>

@@ -33,15 +33,15 @@ public class LoginBean implements Serializable {
             facesContext.getExternalContext().getSessionMap().put("user", u);
             return "dashboard.xhtml?faces-redirect=true";
         } else {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login failed", "Email veya parola hatali.");
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login failed", "Incorrect email or password.");
             facesContext.addMessage(null, msg);
             return null;
         }
     }
 
     public String logout() {
-        facesContext.getExternalContext().getSessionMap().remove("user");
-        return "login.xhtml?faces-redirect=true";
+        facesContext.getExternalContext().invalidateSession(); // Invalidate entire session securely
+        return "/login.xhtml?faces-redirect=true";
     }
 
     public Users getUser() {

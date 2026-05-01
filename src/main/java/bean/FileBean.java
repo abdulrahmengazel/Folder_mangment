@@ -14,6 +14,7 @@ import jakarta.servlet.http.Part;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Named
 @ViewScoped
@@ -46,13 +47,13 @@ public class FileBean implements Serializable {
 
         // التحقق من وصول الملف
         if (uploadedFile == null) {
-            context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Error", "لم يتم استلام أي ملف من المتصفح."));
+            context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Error", "No file received."));
             return null;
         }
 
         // التحقق من وصول رقم المجلد
         if (targetFolderId == null) {
-            context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Error", "لم يتم التعرف على المجلد الهدف."));
+            context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Error", "Target folder not identified."));
             return null;
         }
 
@@ -61,7 +62,7 @@ public class FileBean implements Serializable {
         if (currentUser != null) {
             Folders actualTargetFolder = folderFacade.find(targetFolderId);
 
-            if (actualTargetFolder != null) {
+            if (actualTargetFolder != null && actualTargetFolder.getOwner().getId().equals(currentUser.getId())) {
                 try {
                     String originalFileName = java.nio.file.Paths.get(uploadedFile.getSubmittedFileName()).getFileName().toString();
                     String uniqueFileName = System.currentTimeMillis() + "_" + originalFileName;
@@ -90,7 +91,7 @@ public class FileBean implements Serializable {
 
                     fileFacade.create(fileEntity);
 
-                    context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_INFO, "Success", "تم الرفع بنجاح!"));
+                    context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_INFO, "Success", "File uploaded successfully!"));
                     clearForm();
                     
                     return "dashboard.xhtml?faces-redirect=true";
@@ -98,10 +99,26 @@ public class FileBean implements Serializable {
                 } catch (Exception e) {
                     context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "System Error", e.getMessage()));
                 }
+            } else {
+                context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Error", "Access denied to folder."));
             }
         }
         return null;
     }
+
+    public void deleteFile(Files file) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        Users currentUser = (Users) context.getExternalContext().getSessionMap().get("user");
+
+        if (currentUser != null && file != null && file.getOwner().getId().equals(currentUser.getId())) {
+            fileFacade.remove(file);
+            filesList = null; // force reload
+            context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_INFO, "Success", "File deleted."));
+        } else {
+             context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Error", "You do not have permission to delete this file."));
+        }
+    }
+
 
     // دوال الجلب والتعيين للمتغير الجديد
     public Long getTargetFolderId() {
@@ -130,7 +147,16 @@ public class FileBean implements Serializable {
     }
 
     public List<Files> getFilesList() {
-        filesList = fileFacade.findAll();
+        FacesContext context = FacesContext.getCurrentInstance();
+        Users currentUser = (Users) context.getExternalContext().getSessionMap().get("user");
+
+        if (currentUser != null) {
+             filesList = fileFacade.findAll().stream()
+                    .filter(f -> f.getOwner().getId().equals(currentUser.getId()))
+                    .collect(Collectors.toList());
+        } else {
+             filesList = java.util.Collections.emptyList();
+        }
         return filesList;
     }
 

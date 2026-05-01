@@ -9,46 +9,45 @@
 <ui:composition template="./template.xhtml">
 
     <ui:define name="title">
-        Google Drive - File Upload
+        File Upload - Drive
     </ui:define>
 
     <ui:define name="content">
-        <div style="max-width: 600px; margin: 0 auto; background: #ffffff; padding: 30px; border-radius: 8px; border: 1px solid #dadce0; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <h:messages globalOnly="true" styleClass="messages" />
 
-            <div style="display: flex; align-items: center; margin-bottom: 25px; border-bottom: 1px solid #e0e0e0; padding-bottom: 15px;">
-                <h:link outcome="dashboard.xhtml" style="color: #5f6368; margin-right: 15px; font-size: 20px; text-decoration: none;">
-                    <i class="fas fa-arrow-left"></i>
-                </h:link>
-                <h3 style="margin: 0; color: #202124; font-size: 20px; display: flex; align-items: center;">
-                    <i class="fas fa-file-upload" style="color: #1a73e8; margin-right: 10px;"></i> File upload
-                </h3>
-            </div>
+        <div class="page-header" style="justify-content: flex-start; gap: 16px; border: none;">
+            <h:link outcome="dashboard.xhtml" style="color: var(--text-secondary); text-decoration: none; font-size: 20px; transition: color 0.2s;">
+                <i class="fas fa-arrow-left"></i>
+            </h:link>
+            <h2 class="page-title" style="font-weight: 600;">Upload a file</h2>
+        </div>
 
-            <h:messages globalOnly="true" styleClass="messages" style="list-style-type: none; padding: 10px; background: #e8f0fe; color: #1a73e8; border-radius: 4px; margin-bottom: 20px; font-weight: 500;"/>
+        <div class="form-card" style="margin-top: 24px;">
 
             <h:form id="uploadForm" enctype="multipart/form-data">
-
-                <div class="form-group" style="margin-bottom: 20px;">
-                    <h:outputLabel value="Target folder:" style="display: block; margin-bottom: 8px; color: #3c4043; font-weight: 500;"/>
-                    <h:selectOneMenu value="#{fileBean.targetFolderId}" required="true" requiredMessage="Please select a folder" styleClass="form-control" style="font-size: 15px; padding: 12px;">
-                        <f:selectItem itemLabel="-- Select Folder --" itemValue="#{null}" noSelectionOption="true" />
+                <div class="form-group">
+                    <label class="form-label">Select destination folder</label>
+                    <h:selectOneMenu value="#{fileBean.targetFolderId}" required="true" requiredMessage="Please select a folder" styleClass="form-control">
+                        <f:selectItem itemLabel="Choose a folder..." itemValue="#{null}" noSelectionOption="true" />
                         <f:selectItems value="#{folderBean.foldersList}" var="folder" itemLabel="#{folder.name}" itemValue="#{folder.id}" />
                     </h:selectOneMenu>
-                    <p style="font-size: 12px; color: #5f6368; margin-top: 5px;">* Select the folder where the file will be uploaded.</p>
                 </div>
 
-                <div class="form-group" style="margin-bottom: 30px; border: 2px dashed #dadce0; padding: 30px; text-align: center; border-radius: 8px; background: #f8f9fa;">
-                    <i class="fas fa-cloud-upload-alt" style="font-size: 40px; color: #1a73e8; margin-bottom: 15px; display: block;"></i>
-                    <h:inputFile value="#{fileBean.uploadedFile}" required="true" requiredMessage="Please select a file" style="font-size: 15px; width: 100%; cursor: pointer;"/>
+                <div class="form-group" style="margin-top: 32px;">
+                     <div style="border: 2px dashed #cbd5e1; border-radius: 12px; padding: 48px 24px; text-align: center; background-color: #f8fafc; transition: all 0.2s;">
+                        <i class="fas fa-cloud-upload-alt" style="font-size: 48px; color: var(--primary-color); margin-bottom: 16px;"></i>
+                        <div style="margin-bottom: 16px; color: var(--text-primary); font-weight: 500;">Select a file to upload</div>
+                        <h:inputFile value="#{fileBean.uploadedFile}" required="true" requiredMessage="Please select a file to upload" style="width: 100%; max-width: 300px; margin: 0 auto; color: var(--text-secondary); cursor: pointer;"/>
+                    </div>
                 </div>
 
-                <div style="display: flex; justify-content: flex-end; gap: 15px;">
-                    <h:link value="Cancel" outcome="dashboard.xhtml" style="padding: 10px 20px; color: #1a73e8; font-weight: 500; border-radius: 4px; text-decoration: none; display: inline-block;"/>
-                    <h:commandButton value="Upload" action="#{fileBean.uploadFile()}" styleClass="btn btn-primary" style="padding: 10px 30px; font-size: 15px;"/>
+                <div class="form-actions">
+                    <h:link value="Cancel" outcome="dashboard.xhtml" styleClass="btn btn-outline" />
+                    <h:commandButton value="Upload" action="#{fileBean.uploadFile()}" styleClass="btn btn-primary" />
                 </div>
             </h:form>
-
         </div>
+
     </ui:define>
 
 </ui:composition>
