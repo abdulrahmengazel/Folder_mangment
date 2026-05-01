@@ -4,6 +4,7 @@ import entity.Files;
 import entity.Folders;
 import entity.Users;
 import facadeLocal.FileFacadeLocal;
+import facadeLocal.FolderFacadeLocal; // أضفنا هذه المكتبة
 import jakarta.ejb.EJB;
 import jakarta.faces.context.FacesContext;
 import jakarta.faces.view.ViewScoped;
@@ -26,10 +27,16 @@ public class FileBean implements Serializable {
     private Part uploadedFile;
     private Folders targetFolder;
 
+    // التعديل الأول: نستقبل رقم المجلد بدلاً من الكائن الكامل
+    private Long targetFolderId;
+
     @EJB
     private FileFacadeLocal fileFacade;
 
-    // المسار الجذري على نظام Linux الخاص بك
+    // التعديل الثاني: نحتاج طبقة المجلدات للبحث عن المجلد برقمه
+    @EJB
+    private FolderFacadeLocal folderFacade;
+
     private static final String ROOT_UPLOAD_DIR = "/home/your_username/cloud_uploads";
 
     public void clearForm() {
@@ -38,65 +45,74 @@ public class FileBean implements Serializable {
     }
 
     public void uploadFile() {
-        if (uploadedFile != null && targetFolder != null) {
+        // نتحقق من أن المستخدم اختار ملفاً ورقم مجلد صالح
+        if (uploadedFile != null && targetFolderId != null) {
 
-            // استخراج المستخدم المسجل من الجلسة
             FacesContext context = FacesContext.getCurrentInstance();
             Users currentUser = (Users) context.getExternalContext().getSessionMap().get("user");
 
             if (currentUser != null) {
-                try {
-                    // 1. استخراج وتأمين اسم الملف
-                    String originalFileName = Paths.get(uploadedFile.getSubmittedFileName()).getFileName().toString();
-                    String uniqueFileName = System.currentTimeMillis() + "_" + originalFileName;
+                // التعديل الثالث: نجلب المجلد الحقيقي من قاعدة البيانات باستخدام الرقم
+                Folders actualTargetFolder = folderFacade.find(targetFolderId);
 
-                    // 2. بناء المسار الهرمي المنظم (مستخدم -> مجلد)
-                    String userDirectory = "user_" + currentUser.getId();
-                    String folderDirectory = "folder_" + targetFolder.getId();
-                    Path dynamicFolderPath = Paths.get(ROOT_UPLOAD_DIR, userDirectory, folderDirectory);
+                if (actualTargetFolder != null) {
+                    try {
+                        String originalFileName = Paths.get(uploadedFile.getSubmittedFileName()).getFileName().toString();
+                        String uniqueFileName = System.currentTimeMillis() + "_" + originalFileName;
 
-                    // 3. التحقق من وجود المجلدات الفيزيائية وإنشاؤها
-                    if (!java.nio.file.Files.exists(dynamicFolderPath)) {
-                        java.nio.file.Files.createDirectories(dynamicFolderPath);
+                        // نستخدم المجلد الحقيقي الذي جلبناه لبناء المسار
+                        String userDirectory = "user_" + currentUser.getId();
+                        String folderDirectory = "folder_" + actualTargetFolder.getId();
+                        Path dynamicFolderPath = Paths.get(ROOT_UPLOAD_DIR, userDirectory, folderDirectory);
+
+                        if (!java.nio.file.Files.exists(dynamicFolderPath)) {
+                            java.nio.file.Files.createDirectories(dynamicFolderPath);
+                        }
+
+                        Path finalPath = dynamicFolderPath.resolve(uniqueFileName);
+
+                        try (InputStream input = uploadedFile.getInputStream()) {
+                            java.nio.file.Files.copy(input, finalPath, StandardCopyOption.REPLACE_EXISTING);
+                        }
+
+                        getFileEntity().setName(originalFileName);
+                        getFileEntity().setPath(finalPath.toString());
+                        getFileEntity().setType(uploadedFile.getContentType());
+                        getFileEntity().setSize(uploadedFile.getSize());
+
+                        // نربط الملف بالمجلد الحقيقي
+                        getFileEntity().setFolder(actualTargetFolder);
+                        getFileEntity().setOwner(currentUser);
+
+                        fileFacade.create(fileEntity);
+
+                        System.out.println("File uploaded successfully to: " + finalPath.toString());
+                        clearForm();
+
+                    } catch (Exception e) {
+                        System.out.println("Error during file upload: " + e.getMessage());
                     }
-
-                    // 4. تحديد المسار النهائي وبدء عملية النسخ
-                    Path finalPath = dynamicFolderPath.resolve(uniqueFileName);
-
-                    try (InputStream input = uploadedFile.getInputStream()) {
-                        java.nio.file.Files.copy(input, finalPath, StandardCopyOption.REPLACE_EXISTING);
-                    }
-
-                    // 5. حفظ بيانات الملف في قاعدة البيانات
-                    getFileEntity().setName(originalFileName);
-                    getFileEntity().setPath(finalPath.toString());
-                    getFileEntity().setType(uploadedFile.getContentType());
-                    getFileEntity().setSize(uploadedFile.getSize());
-
-                    getFileEntity().setFolder(targetFolder);
-                    getFileEntity().setOwner(currentUser);
-
-                    fileFacade.create(fileEntity);
-
-                    System.out.println("File uploaded successfully to: " + finalPath.toString());
-                    clearForm();
-
-                } catch (Exception e) {
-                    System.out.println("Error during file upload: " + e.getMessage());
                 }
             } else {
-                System.out.println("Error: User session expired or not logged in.");
+                System.out.println("Error: User session expired.");
             }
         } else {
-            System.out.println("Error: Uploaded file or target folder is null.");
+            System.out.println("Error: File or Folder ID is missing.");
         }
     }
 
-    public void deleteFile(Files f) {
-        // سيتم برمجة الحذف الفيزيائي لاحقاً، حالياً نحذف من القاعدة فقط
-        fileFacade.remove(f);
-        System.out.println("File deleted from database");
+    // دوال الجلب والتعيين للمتغير الجديد
+    public Long getTargetFolderId() {
+        return targetFolderId;
     }
+
+    public void setTargetFolderId(Long targetFolderId) {
+        this.targetFolderId = targetFolderId;
+    }
+
+    // دوال الجلب والتعيين القديمة (اقتطعتها للاختصار، أبقها كما هي في كودك)
+    // getFileEntity, setFileEntity, getFilesList, setFilesList, getUploadedFile, setUploadedFile
+
 
     // --- Getters and Setters ---
 

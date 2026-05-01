@@ -31,7 +31,7 @@ public class LoginBean implements Serializable {
 
         if (u != null) {
             facesContext.getExternalContext().getSessionMap().put("user", u);
-            return "/panel/index.xhtml?faces-redirect=true";
+            return "dashboard.xhtml?faces-redirect=true";
         } else {
             FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login failed", "Email veya parola hatali.");
             facesContext.addMessage(null, msg);
