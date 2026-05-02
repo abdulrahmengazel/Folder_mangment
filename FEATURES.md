@@ -1,357 +1,206 @@
-# 📋 Features and Files Summary
+# Features and Files Summary
 
-## 🎯 Core Functionalities
+This document maps implemented features to pages, beans, facades, and entities.
 
-### 1. **Registration and Authentication**
+## Core Functionalities
 
-#### Login Page (`login.xhtml`)
-- ✅ Email field
-- ✅ Password field
-- ✅ Login button
-- ✅ Link to create a new account
-- ✅ Error message display
+### 1) Authentication and Account Creation
 
-**Used Bean:** `LoginBean`
-**Facade:** `UserFacade` → `UserFacadeLocal`
+#### `login.xhtml`
 
----
-
-#### Registration Page (`register.xhtml`)
-- ✅ Full name field
-- ✅ Email field
-- ✅ Password field
-- ✅ Data validation
-- ✅ Physical storage folder creation
-- ✅ Link to return to login
-
-**Used Bean:** `UserBean`
-**Facade:** `UserFacade` → `UserFacadeLocal`
+- Email/password login form
+- Error message on invalid credentials
+- Redirect to dashboard on success
 
----
-
-### 2. **Folder Management**
+Bean/facade flow:
 
-#### Create a New Folder
-```
-Dashboard → "New folder" Button
-```
-
-**Features:**
-- ✅ Enter folder name
-- ✅ Save to database
-- ✅ Create physical path on the system
-- ✅ Success/error message display
-
-**Bean:** `FolderBean.createFolder()`
-**Facade:** `FolderFacade` → `FolderFacadeLocal`
-**Entity:** `Folders`
-
-#### Delete a Folder
-```
-Dashboard → My Drive → Folders Grid → "Delete" Action
-```
+- `LoginBean.login()`
+- `UserFacade.login(email, password)`
+- `BCrypt.checkpw(...)` for password verification
 
-**Features:**
-- ✅ Deletion confirmation
-- ✅ Delete from database
-- ✅ Delete physical path (optional logic based on implementation)
+#### `register.xhtml`
 
-**Bean:** `FolderBean.deleteFolder(Folders f)`
+- Account creation with basic form validation
+- Creates a physical root folder for the new user
+- Redirects to login page after successful registration
 
----
-
-### 3. **File Management**
-
-#### Upload a New File
-```
-Dashboard → "File upload" Button
-```
-
-**Features:**
-- ✅ Select target folder
-- ✅ Choose file from device
-- ✅ Save file information in the database
-- ✅ Copy file to storage path
-- ✅ Path structure: `ROOT_UPLOAD_DIR/user_ID/folder_ID/filename`
-
-**Bean:** `FileBean.uploadFile()`
-**Facade:** `FileFacade` → `FileFacadeLocal`
-**Entity:** `Files`
-**Physical Path:** `/home/abdulrahman/cloud_uploads/`
-
-#### View Files
-```
-Dashboard → Select Folder → Folder Content Page
-```
-
-**Columns:**
-- 📄 File Name
-- 💾 File Size (in KB)
-- 🏷️ Type
-- ❌ Delete button
-
-**Bean:** `FolderContentBean.getFilesInFolder()`
-
----
+Bean/facade flow:
 
-### 4. **File Sharing and Permissions**
+- `UserBean.createUser()`
+- `BCrypt.hashpw(...)` before persistence
+- `UserFacade.create(user)`
 
-#### Share a file with another user
-```
-Dashboard → "Shared with me" Page (or hypothetical Sharing Dialog)
-```
-
-**Steps:**
-1. Select file from your files list
-2. Select user to share with
-3. Choose permission type:
-   - 👁️ **Viewer** (READ) - View file only
-   - ✏️ **Editor** (WRITE) - View and edit file
-
-**Bean:** `SharedFilesBean.shareFile()`
-**Facade:** `SharedFilesFacade` → `SharedFilesFacadeLocal`
-**Entity:** `SharedFiles`
-**Enum:** `PermissionEnum` (READ, WRITE)
-
-**Validation:**
-- ✅ Ensure current user is the file owner
-- ✅ Prevent duplicate sharing with the same user
-- ✅ Ensure recipient user exists
-
-#### Revoke Sharing
-```
-Shared Page → "Shared by me" section → "Remove access" action
-```
-
-**Bean:** `SharedFilesBean.removeSharedFile(SharedFiles sf)`
-
-#### View Files Shared With Me
-```
-Shared Page → "Shared with me" section
-```
-
-**Information Displayed:**
-- 📄 File Name
-- 👤 Owner Name/Email
-- 🔐 Permission Type
-
-**Bean:** `SharedFilesBean.getSharedWithMeList()`
-
-#### View Files I Shared
-```
-Shared Page → "Shared by me" section
-```
-
-**Information Displayed:**
-- 📄 File Name
-- 👥 Shared With User
-- 🔐 Permission
-- ❌ Revoke action
-
-**Bean:** `SharedFilesBean.getSharedFilesList()`
-
----
-
-## 📁 UI Files (XHTML)
-
-| File | Function | Used Bean |
-|------|--------|-----------------|
-| `login.xhtml` | User Login | `LoginBean` |
-| `register.xhtml` | Create new account | `UserBean` |
-| `dashboard.xhtml` | Main Dashboard (Folders) | `FolderBean`, `FileBean` |
-| `folder-content.xhtml` | View files in a folder | `FolderContentBean` |
-| `new-folder.xhtml` | Create a folder form | `FolderBean` |
-| `upload-file.xhtml` | Upload file form | `FileBean`, `FolderBean` |
-| `shared.xhtml` | Shared files view | `SharedFilesBean` |
-| `template.xhtml` | Global Layout Template | - |
-
----
-
-## ☕ Java Bean Files
-
-| File | Function | Scope |
-|------|--------|---------|
-| `LoginBean.java` | Handle login process | `@ViewScoped` |
-| `UserBean.java` | Create and manage users | `@ViewScoped` |
-| `FolderBean.java` | Create and delete folders | `@ViewScoped` |
-| `FileBean.java` | Upload and manage files | `@ViewScoped` |
-| `SharedFilesBean.java` | Share files and permissions | `@ViewScoped` |
-| `FolderContentBean.java` | View contents of a specific folder | `@ViewScoped` |
-
----
-
-## 🗄️ Entity Files (Entities)
-
-| File | Table | Columns |
-|------|--------|--------|
-| `Users.java` | USERS | id, name, email, password |
-| `Folders.java` | FOLDERS | id, name, createdAt, owner_id, parent_folder_id |
-| `Files.java` | FILES | id, name, size, type, path, folder_id, owner_id |
-| `SharedFiles.java` | SHAREDFILES | id, file_id, recipient_id, permission |
-
----
-
-## 🔧 Service Files (Facades)
-
-### Implementations
-
-| File | Interface | Entity |
-|------|--------|----------|
-| `UserFacade.java` | `UserFacadeLocal` | `Users` |
-| `FolderFacade.java` | `FolderFacadeLocal` | `Folders` |
-| `FileFacade.java` | `FileFacadeLocal` | `Files` |
-| `SharedFilesFacade.java` | `SharedFilesFacadeLocal` | `SharedFiles` |
-| `AbstractFacade.java` | - | Base Class |
-
-### Local Interfaces
-
-```
-facadeLocal/
-├── UserFacadeLocal.java
-├── FolderFacadeLocal.java
-├── FileFacadeLocal.java
-└── SharedFilesFacadeLocal.java
-```
-
-**Common Methods:**
-- `create(Entity e)` - Create
-- `edit(Entity e)` - Update
-- `remove(Entity e)` - Delete
-- `find(Object id)` - Find by ID
-- `findAll()` - Get all
-
-**Specific Methods:**
-- `UserFacade.login(String email, String password)` - Authentication
-
----
-
-## 🎨 Design Files (CSS)
-
-```
-resources/css/
-└── style.css
-```
-
-**Main Styles (Google Drive Theme):**
-- ✅ Data Tables (`.files-table`)
-- ✅ Buttons (`.btn-drive`, `.btn-primary`)
-- ✅ Form Inputs (`.form-control`)
-- ✅ Grid Layouts (`.folders-grid`, `.folder-card`)
-- ✅ Sidebar Navigation
-
----
-
-## ⚙️ Configuration Files
-
-### `pom.xml`
-```xml
-<!-- Project Dependencies -->
-- jakarta.platform:jakarta.jakartaee-api:10.0.0
-- org.eclipse.persistence:org.eclipse.persistence.jpa:4.0.2
-- org.junit.jupiter:junit-jupiter:5.10.2
-```
-
-### `persistence.xml`
-```xml
-<!-- JPA Configuration -->
-- Persistence Unit: CloudDrivePu
-- Provider: EclipseLink
-- Data Source: jdbc/CloudDrivePu
-- DDL: create-or-extend-tables
-```
-
-### `web.xml`
-```xml
-<!-- Application Server Configuration -->
-- JSF Servlet: jakarta.faces.webapp.FacesServlet
-- URL Pattern: *.xhtml
-- Welcome File: login.xhtml
-```
-
----
-
-## 🔄 Data Flow
-
-```
-┌─────────────┐
-│   XHTML     │ (User Interface)
-│ (JSF Pages) │
-└──────┬──────┘
-       │
-       ↓
-┌─────────────┐
-│    Bean     │ (Logic Processing)
-│  (6 Beans)  │
-└──────┬──────┘
-       │
-       ↓
-┌─────────────┐
-│   Facade    │ (EJB Services)
-│ (4 Facades) │
-└──────┬──────┘
-       │
-       ↓
-┌─────────────┐
-│     JPA     │ (Data Access Standard)
-│  (Entities) │
-└──────┬──────┘
-       │
-       ↓
-┌─────────────┐
-│ Database    │ (Database)
-│(Derby/MySQL)│
-└─────────────┘
-```
-
----
-
-## 📊 Use Cases
-
-### Case 1: Register a new user
-```
-register.xhtml → UserBean.createUser()
-→ UserFacade.create() → Users Entity → Database
-```
-
-### Case 2: Upload a file
-```
-upload-file.xhtml → FileBean.uploadFile()
-→ FileFacade.create() → Files Entity → Database + File System
-```
-
-### Case 3: Share a file
-```
-shared.xhtml (or dashboard) → SharedFilesBean.shareFile()
-→ SharedFilesFacade.create() → SharedFiles Entity → Database
-```
-
-### Case 4: View files shared with me
-```
-shared.xhtml → SharedFilesBean.getSharedWithMeList()
-→ SharedFilesFacade.findAll() → Filtered by recipient_id
-```
-
----
-
-## ✨ Additional Features
-
-### Error Handling
-- ✅ Input data validation
-- ✅ Clear error messages in English
-- ✅ Exception handling
-
-### Security
-- ✅ User permissions verification
-- ✅ Prevent deletion of others' files
-- ✅ Verify file ownership before sharing
-
-### Usability
-- ✅ Modern Google Drive-like interface
-- ✅ Deletion confirmation dialogs
-- ✅ Dropdown menus populated with real data
-- ✅ Empty states for empty folders/drives
-
----
-
-**Last Update:** 2024-05-01 (Translated & Updated structure)
-**Version:** 1.0.0
+### 2) Folder Management
+
+#### Create Folder
+
+- Page path: `dashboard.xhtml` -> `new-folder.xhtml`
+- Persists folder metadata and creates physical directory
+
+Bean/facade flow:
+
+- `FolderBean.createFolder()`
+- `FolderFacade.create(folder)`
+
+#### Delete Folder (Soft Delete)
+
+- Page path: `dashboard.xhtml` folder actions
+- Marks folder and nested content as `deleted=true`
+- Folder disappears from drive and appears in Trash
+
+Bean/facade flow:
+
+- `FolderBean.deleteFolder(folder)`
+- `FolderBean.softDeleteFolderTree(...)`
+- `FolderFacade.edit(folder)` and `FileFacade.edit(file)`
+
+### 3) File Management
+
+#### Upload File
+
+- Page path: `dashboard.xhtml` -> `upload-file.xhtml`
+- Stores file physically and metadata in DB
+- `createdAt` is auto-filled (`@PrePersist`)
+
+Bean/facade flow:
+
+- `FileBean.uploadFile()`
+- `FileFacade.create(file)`
+
+#### Delete File (Soft Delete)
+
+- Page path: `folder-content.xhtml`
+- Marks file as `deleted=true`
+- File is hidden from normal views and moved logically to Trash
+
+Bean/facade flow:
+
+- `FileBean.deleteFile(file)` and `FolderContentBean.deleteFile(file)`
+- `FileFacade.edit(file)`
+
+### 4) Trash Lifecycle
+
+#### Trash View
+
+- Page path: `trash.xhtml`
+- Shows deleted files and folders for current user only
+
+Bean/facade flow:
+
+- `TrashBean.getDeletedFiles()` -> `FileFacade.findDeleted()`
+- `TrashBean.getDeletedFolders()` -> `FolderFacade.findDeleted()`
+
+#### Restore
+
+- Restore file/folder to active state (`deleted=false`)
+- Folder restore recursively restores nested deleted files/folders
+
+Bean methods:
+
+- `TrashBean.restoreFile(file)`
+- `TrashBean.restoreFolder(folder)`
+
+#### Permanent Delete
+
+- Permanently removes DB records
+- Cleans up physical storage (best effort)
+- Removes related share records before file deletion
+
+Bean methods:
+
+- `TrashBean.permanentlyDeleteFile(file)`
+- `TrashBean.permanentlyDeleteFolder(folder)`
+
+### 5) Starred and Recent Files
+
+#### Starred
+
+- Pages: `folder-content.xhtml`, `starred.xhtml`
+- Toggle favorite using `starred` boolean field
+
+Bean/facade flow:
+
+- `FileBean.toggleStar(file)` / `FolderContentBean.toggleStar(file)`
+- `FileFacade.findStarredFiles(ownerId)`
+
+#### Recent
+
+- Page: `recent.xhtml`
+- Returns current user files sorted by newest first
+
+Bean/facade flow:
+
+- `FileBean.getRecentFiles()`
+- `FileFacade.findRecentFiles(ownerId)` ordered by `createdAt DESC`
+
+### 6) Sharing and Permissions
+
+- Page: `shared.xhtml`
+- Share owned files with another user as `READ` or `WRITE`
+- Prevent duplicate share entries for same file+recipient
+- Hidden for deleted files
+
+Bean/facade flow:
+
+- `SharedFilesBean.shareFile()`
+- `SharedFilesBean.removeSharedFile(sf)`
+- `SharedFilesBean.changePermission(sf, permission)`
+
+## UI Files
+
+| File | Function | Main Bean(s) |
+|---|---|---|
+| `login.xhtml` | Login | `LoginBean` |
+| `register.xhtml` | Registration | `UserBean` |
+| `dashboard.xhtml` | Drive root and folders | `FolderBean`, `FileBean` |
+| `new-folder.xhtml` | Create folder | `FolderBean` |
+| `upload-file.xhtml` | Upload file | `FileBean`, `FolderBean` |
+| `folder-content.xhtml` | Folder files, star/delete | `FolderContentBean` |
+| `shared.xhtml` | Share management | `SharedFilesBean` |
+| `starred.xhtml` | Starred files view | `FileBean` |
+| `recent.xhtml` | Recent files view | `FileBean` |
+| `trash.xhtml` | Restore/permanent delete | `TrashBean` |
+| `template.xhtml` | Layout + sidebar navigation | Global |
+
+## Bean Files
+
+| Bean | Scope | Responsibility |
+|---|---|---|
+| `LoginBean` | `@ViewScoped` | Login/logout and session setup |
+| `UserBean` | `@ViewScoped` | Registration and user CRUD |
+| `FolderBean` | `@ViewScoped` | Folder create and soft delete tree |
+| `FileBean` | `@ViewScoped` | Upload, file listing, starred/recent |
+| `FolderContentBean` | `@ViewScoped` | Current folder file listing/actions |
+| `SharedFilesBean` | `@ViewScoped` | Sharing workflows and permission checks |
+| `TrashBean` | `@ViewScoped` | Trash listing, restore, permanent delete |
+
+## Entity Schema Snapshot
+
+| Entity | Important Columns |
+|---|---|
+| `Users` | `id`, `name`, `email`, `password` (BCrypt hash) |
+| `Folders` | `id`, `name`, `createdAt`, `deleted`, `owner_id`, `parent_folder_id` |
+| `Files` | `id`, `name`, `size`, `type`, `path`, `createdAt`, `deleted`, `starred`, `folder_id`, `owner_id` |
+| `SharedFiles` | `id`, `file_id`, `recipient_id`, `permission` |
+
+## Facade Responsibilities
+
+- `UserFacade`: user CRUD + secure login verification
+- `FolderFacade`: active/deleted folder queries
+- `FileFacade`: active/deleted/starred/recent file queries
+- `SharedFilesFacade`: share CRUD
+
+## Configuration Notes
+
+- `pom.xml`: includes `org.mindrot:jbcrypt` for password hashing
+- `persistence.xml`: `eclipselink.ddl-generation=create-or-extend-tables`
+
+## Current Feature Status
+
+- Implemented: secure password hashing and verification
+- Implemented: soft delete + Trash restore/permanent delete
+- Implemented: starred files
+- Implemented: recent files sorted by creation date
+- Planned: advanced search/filtering, public links, backup/notifications
+
+Last Update: 2026-05-02
