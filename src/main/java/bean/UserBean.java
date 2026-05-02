@@ -5,6 +5,7 @@ import facadeLocal.UserFacadeLocal;
 import jakarta.ejb.EJB;
 import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.Serializable;
 import java.util.List;
@@ -27,6 +28,11 @@ public class UserBean implements Serializable {
 
     public String createUser() {
         try {
+            // Hash the password before saving to the database
+            String plainPassword = user.getPassword();
+            String hashedPassword = BCrypt.hashpw(plainPassword, BCrypt.gensalt(12)); // Cost factor 12
+            user.setPassword(hashedPassword);
+
             // 1. حفظ المستخدم في قاعدة البيانات أولاً ليحصل على ID
             userFacade.create(user);
             System.out.println("User saved to database with ID: " + user.getId());
@@ -56,7 +62,7 @@ public class UserBean implements Serializable {
     }
 
     public void editUser() {
-        // تم التعديل لتتطابق مع دالة التعديل في Facade
+        // إذا كان هناك تعديل لكلمة المرور يجب تشفيرها أيضاً (يعتمد على تصميم الواجهة)
         userFacade.edit(user);
         System.out.println("User edited");
     }
@@ -82,7 +88,6 @@ public class UserBean implements Serializable {
     }
 
     public List<Users> getUsers() {
-        // تم التعديل لتتطابق مع دالة البحث في Facade
         users = userFacade.findAll();
         return users;
     }

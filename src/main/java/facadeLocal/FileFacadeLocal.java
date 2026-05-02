@@ -14,4 +14,10 @@ public interface FileFacadeLocal {
     Files find(Object id);
 
     List<Files> findAll();
+
+    List<Files> findDeleted();
+
+    List<Files> findStarredFiles(Long ownerId);
+
+    List<Files> findRecentFiles(Long ownerId);
 }

@@ -111,11 +111,23 @@ public class FileBean implements Serializable {
         Users currentUser = (Users) context.getExternalContext().getSessionMap().get("user");
 
         if (currentUser != null && file != null && file.getOwner().getId().equals(currentUser.getId())) {
-            fileFacade.remove(file);
+            file.setDeleted(true);
+            fileFacade.edit(file);
             filesList = null; // force reload
             context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_INFO, "Success", "File deleted."));
         } else {
              context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Error", "You do not have permission to delete this file."));
+        }
+    }
+
+    public void toggleStar(Files file) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        Users currentUser = (Users) context.getExternalContext().getSessionMap().get("user");
+
+        if (currentUser != null && file != null && file.getOwner().getId().equals(currentUser.getId()) && !file.isDeleted()) {
+            file.setStarred(!file.isStarred());
+            fileFacade.edit(file);
+            filesList = null;
         }
     }
 
@@ -153,11 +165,34 @@ public class FileBean implements Serializable {
         if (currentUser != null) {
              filesList = fileFacade.findAll().stream()
                     .filter(f -> f.getOwner().getId().equals(currentUser.getId()))
+                    .filter(f -> !f.isDeleted())
                     .collect(Collectors.toList());
         } else {
              filesList = java.util.Collections.emptyList();
         }
         return filesList;
+    }
+
+    public List<Files> getStarredFiles() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        Users currentUser = (Users) context.getExternalContext().getSessionMap().get("user");
+
+        if (currentUser != null) {
+            return fileFacade.findStarredFiles(currentUser.getId());
+        }
+
+        return java.util.Collections.emptyList();
+    }
+
+    public List<Files> getRecentFiles() {
+        FacesContext context = FacesContext.getCurrentInstance();
+        Users currentUser = (Users) context.getExternalContext().getSessionMap().get("user");
+
+        if (currentUser != null) {
+            return fileFacade.findRecentFiles(currentUser.getId());
+        }
+
+        return java.util.Collections.emptyList();
     }
 
     public void setFilesList(List<Files> filesList) {

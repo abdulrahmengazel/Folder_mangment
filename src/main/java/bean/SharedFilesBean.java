@@ -80,6 +80,12 @@ public class SharedFilesBean implements Serializable {
             return;
         }
 
+        if (file.isDeleted()) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
+                    "خطأ", "لا يمكن مشاركة ملف في سلة المهملات"));
+            return;
+        }
+
         if (!file.getOwner().getId().equals(currentUser.getId())) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
                     "خطأ", "لا يمكنك مشاركة ملف لا تملكه"));
@@ -193,6 +199,7 @@ public class SharedFilesBean implements Serializable {
 
         sharedWithMeList = sharedFilesFacade.findAll().stream()
                 .filter(sf -> sf.getRecipient().getId().equals(currentUser.getId()))
+                .filter(sf -> sf.getFile() != null && !sf.getFile().isDeleted())
                 .collect(Collectors.toList());
 
         return sharedWithMeList;
@@ -210,6 +217,7 @@ public class SharedFilesBean implements Serializable {
         }
 
         sharedFilesList = sharedFilesFacade.findAll().stream()
+                .filter(sf -> sf.getFile() != null && !sf.getFile().isDeleted())
                 .filter(sf -> sf.getFile().getOwner().getId().equals(currentUser.getId()))
                 .collect(Collectors.toList());
 
@@ -230,6 +238,7 @@ public class SharedFilesBean implements Serializable {
 
         availableFiles = fileFacade.findAll().stream()
                 .filter(f -> f.getOwner().getId().equals(currentUser.getId()))
+                .filter(f -> !f.isDeleted())
                 .collect(Collectors.toList());
 
         return availableFiles;

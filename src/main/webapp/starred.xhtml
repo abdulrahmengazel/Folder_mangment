@@ -12,60 +12,57 @@
     </ui:define>
 
     <ui:define name="content">
-        <style>
-            .page-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding-bottom: 16px;
-                margin-bottom: 24px;
-                border-bottom: 1px solid var(--border-color);
-            }
-            .page-title {
-                font-size: 18px;
-                color: var(--text-primary);
-                margin: 0;
-                font-weight: 500;
-            }
-            .empty-state {
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                padding: 80px 24px;
-                text-align: center;
-            }
-            .empty-state-img {
-                width: 250px;
-                margin-bottom: 24px;
-                opacity: 0.9;
-            }
-            .empty-state h3 {
-                font-size: 20px;
-                font-weight: 400;
-                color: var(--text-primary);
-                margin-bottom: 12px;
-            }
-            .empty-state p {
-                font-size: 14px;
-                color: var(--text-secondary);
-                max-width: 400px;
-            }
-        </style>
-
         <h:messages globalOnly="true" styleClass="messages" />
 
         <div class="page-header">
             <h2 class="page-title">Starred</h2>
         </div>
 
-        <!-- Placeholder for Starred Files functionality -->
-        <!-- In a real implementation, you'd fetch files where a 'starred' boolean is true -->
-        <h:panelGroup rendered="true">
+        <h:panelGroup rendered="#{fileBean.starredFiles.size() > 0}">
+            <div class="table-container">
+                <h:form style="margin: 0;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th style="width: 160px;">Created at</th>
+                                <th style="width: 150px;">Type</th>
+                                <th style="width: 180px; text-align: center;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <ui:repeat value="#{fileBean.starredFiles}" var="file">
+                                <tr>
+                                    <td>
+                                        <div class="file-name-cell">
+                                            <i class="fas fa-file-alt file-icon" style="color: #f59e0b;" />
+                                            <h:outputText value="#{file.name}" />
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <h:outputText value="#{file.createdAt}">
+                                            <f:convertDateTime pattern="yyyy-MM-dd HH:mm" />
+                                        </h:outputText>
+                                    </td>
+                                    <td style="color: var(--text-secondary);"><h:outputText value="#{file.type}" /></td>
+                                    <td style="text-align: center; display: flex; justify-content: center; gap: 10px;">
+                                        <h:commandLink action="#{fileBean.toggleStar(file)}" styleClass="table-action-btn" title="Remove from starred">
+                                            <i class="fas fa-star" style="color: #f59e0b;" />
+                                        </h:commandLink>
+                                    </td>
+                                </tr>
+                            </ui:repeat>
+                        </tbody>
+                    </table>
+                </h:form>
+            </div>
+        </h:panelGroup>
+
+        <h:panelGroup rendered="#{fileBean.starredFiles.size() == 0}">
             <div class="empty-state">
-                <img src="https://ssl.gstatic.com/docs/doclist/images/empty_state_starred_v2.svg" alt="No starred files" class="empty-state-img"/>
+                <i class="fas fa-star" style="font-size: 80px; color: #cbd5e1; margin-bottom: 24px;" />
                 <h3>No starred files</h3>
-                <p>Add stars to things that you want to easily find later.</p>
+                <p>Add stars to files you want to find quickly later.</p>
             </div>
         </h:panelGroup>
 

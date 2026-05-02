@@ -6,6 +6,7 @@ import jakarta.ejb.Stateless;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
+import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.List;
 @Stateless
@@ -46,13 +47,13 @@ public class UserFacade extends AbstractFacade implements UserFacadeLocal {
             CriteriaQuery<Users> cq = cb.createQuery(Users.class);
             Root<Users> root = cq.from(Users.class);
 
-            cq.select(root).where(
-                    cb.and(
-                            cb.equal(root.get("email"), email),
-                            cb.equal(root.get("password"), password)
-                    )
-            );
-            return entityManager.createQuery(cq).getSingleResult();
+            cq.select(root).where(cb.equal(root.get("email"), email));
+
+            Users user = entityManager.createQuery(cq).getSingleResult();
+            if (user != null && password != null && BCrypt.checkpw(password, user.getPassword())) {
+                return user;
+            }
+            return null;
         }catch (Exception e){
             return null;
         }

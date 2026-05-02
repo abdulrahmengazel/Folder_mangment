@@ -2,6 +2,8 @@ package bean;
 
 import entity.Folders;
 import entity.Users;
+import entity.Files;
+import facadeLocal.FileFacadeLocal;
 import facadeLocal.FolderFacadeLocal;
 import jakarta.ejb.EJB;
 import jakarta.faces.context.FacesContext;
@@ -21,6 +23,9 @@ public class FolderBean implements Serializable {
 
     @EJB
     private FolderFacadeLocal folderFacade;
+
+    @EJB
+    private FileFacadeLocal fileFacade;
 
     public void clearForm() {
         folder = new Folders();
@@ -69,9 +74,37 @@ public class FolderBean implements Serializable {
         Users currentUser = (Users) context.getExternalContext().getSessionMap().get("user");
 
         if (currentUser != null && f != null && f.getOwner().getId().equals(currentUser.getId())) {
-            folderFacade.remove(f);
+            softDeleteFolderTree(f, currentUser.getId());
             System.out.println("Folder deleted");
             foldersList = null; // force reload
+        }
+    }
+
+    private void softDeleteFolderTree(Folders folderToDelete, Long ownerId) {
+        if (folderToDelete == null || folderToDelete.isDeleted()) {
+            return;
+        }
+
+        folderToDelete.setDeleted(true);
+        folderFacade.edit(folderToDelete);
+
+        List<Files> filesToDelete = fileFacade.findAll().stream()
+                .filter(file -> file.getOwner().getId().equals(ownerId))
+                .filter(file -> file.getFolder() != null && file.getFolder().getId().equals(folderToDelete.getId()))
+                .collect(Collectors.toList());
+
+        for (Files file : filesToDelete) {
+            file.setDeleted(true);
+            fileFacade.edit(file);
+        }
+
+        List<Folders> childFolders = folderFacade.findAll().stream()
+                .filter(folder -> folder.getOwner().getId().equals(ownerId))
+                .filter(folder -> folder.getParentFolder() != null && folder.getParentFolder().getId().equals(folderToDelete.getId()))
+                .collect(Collectors.toList());
+
+        for (Folders childFolder : childFolders) {
+            softDeleteFolderTree(childFolder, ownerId);
         }
     }
 
@@ -93,6 +126,7 @@ public class FolderBean implements Serializable {
         if (currentUser != null) {
             foldersList = folderFacade.findAll().stream()
                     .filter(f -> f.getOwner().getId().equals(currentUser.getId()))
+                    .filter(f -> !f.isDeleted())
                     .collect(Collectors.toList());
         } else {
             foldersList = java.util.Collections.emptyList();

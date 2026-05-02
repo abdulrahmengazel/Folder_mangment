@@ -25,6 +25,9 @@ public class Folders implements Serializable {
     @JoinColumn(name = "parent_folder_id", referencedColumnName = "id")
     private Folders parentFolder;
 
+    @Column(name = "Deleted", nullable = false)
+    private boolean deleted = false;
+
     // هذا الوسم يخبر النظام بتنفيذ هذه الدالة تلقائياً قبل عملية الحفظ (Insert)
     @PrePersist
     public void prePersist() {
@@ -75,5 +78,13 @@ public class Folders implements Serializable {
 
     public void setParentFolder(Folders parentFolder) {
         this.parentFolder = parentFolder;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
     }
 }

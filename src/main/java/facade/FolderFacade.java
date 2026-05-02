@@ -5,6 +5,7 @@ import facadeLocal.FolderFacadeLocal;
 import jakarta.ejb.Stateless;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 
 import java.util.List;
 
@@ -34,7 +35,17 @@ public class FolderFacade extends AbstractFacade implements FolderFacadeLocal {
     public List<Folders> findAll() {
         CriteriaBuilder cb = entityManager.getCriteriaBuilder();
         CriteriaQuery<Folders> cq = cb.createQuery(Folders.class);
-        cq.select(cq.from(Folders.class));
+        Root<Folders> root = cq.from(Folders.class);
+        cq.select(root).where(cb.isFalse(root.get("deleted")));
+        return entityManager.createQuery(cq).getResultList();
+    }
+
+    @Override
+    public List<Folders> findDeleted() {
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Folders> cq = cb.createQuery(Folders.class);
+        Root<Folders> root = cq.from(Folders.class);
+        cq.select(root).where(cb.isTrue(root.get("deleted")));
         return entityManager.createQuery(cq).getResultList();
     }
 }

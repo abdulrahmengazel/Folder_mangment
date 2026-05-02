@@ -15,4 +15,6 @@ public interface FolderFacadeLocal {
 
     List<Folders> findAll();
 
+    List<Folders> findDeleted();
+
 }

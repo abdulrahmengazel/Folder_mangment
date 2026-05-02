@@ -12,8 +12,10 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Named
 @ViewScoped
@@ -41,7 +43,7 @@ public class FolderContentBean implements Serializable {
             currentFolder = folderFacade.find(folderId);
             
             // Check if folder exists and belongs to the current user
-            if (currentFolder != null && currentFolder.getOwner().getId().equals(currentUser.getId())) {
+            if (currentFolder != null && !currentFolder.isDeleted() && currentFolder.getOwner().getId().equals(currentUser.getId())) {
                 loadFilesInFolder(currentUser.getId());
             } else {
                 currentFolder = null; // Prevent access to others' folders
@@ -54,14 +56,13 @@ public class FolderContentBean implements Serializable {
         List<Files> allFiles = fileFacade.findAll();
         filesInFolder = new ArrayList<>();
         if (allFiles != null && currentFolder != null) {
-            for (Files file : allFiles) {
-                // Filter by folder ID and make sure the file belongs to the user
-                if (file.getFolder() != null && 
-                    file.getFolder().getId().equals(currentFolder.getId()) &&
-                    file.getOwner().getId().equals(userId)) {
-                    filesInFolder.add(file);
-                }
-            }
+            filesInFolder = allFiles.stream()
+                    .filter(file -> file.getFolder() != null)
+                    .filter(file -> file.getFolder().getId().equals(currentFolder.getId()))
+                    .filter(file -> file.getOwner().getId().equals(userId))
+                    .filter(file -> !file.isDeleted())
+                    .sorted(Comparator.comparing(Files::getCreatedAt, Comparator.nullsLast(Comparator.naturalOrder())).reversed())
+                    .collect(Collectors.toList());
         }
     }
 
@@ -70,11 +71,23 @@ public class FolderContentBean implements Serializable {
         Users currentUser = (Users) context.getExternalContext().getSessionMap().get("user");
 
         if (currentUser != null && file != null && file.getOwner().getId().equals(currentUser.getId())) {
-            fileFacade.remove(file);
+            file.setDeleted(true);
+            fileFacade.edit(file);
             loadFilesInFolder(currentUser.getId()); // Reload list after deletion
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "File deleted successfully."));
         } else {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "You don't have permission to delete this file."));
+        }
+    }
+
+    public void toggleStar(Files file) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        Users currentUser = (Users) context.getExternalContext().getSessionMap().get("user");
+
+        if (currentUser != null && file != null && file.getOwner().getId().equals(currentUser.getId()) && !file.isDeleted()) {
+            file.setStarred(!file.isStarred());
+            fileFacade.edit(file);
+            loadFilesInFolder(currentUser.getId());
         }
     }
 
