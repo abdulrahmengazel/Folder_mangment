@@ -1,409 +1,146 @@
-# 🔄 Integration and Navigation Flow Diagrams
+# Integration and Navigation Flow Diagrams
 
-## 1️⃣ Full Navigation Diagram
-
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                    Cloud File Management System                  │
-└─────────────────────────────────────────────────────────────────┘
-
-                            Web Application
-                                │
-                ┌───────────────┼───────────────┐
-                │               │               │
-            login.xhtml    register.xhtml   dashboard.xhtml
-                │               │               │
-                └───────────┬───┴───────┬───────┘
-                            │           │
-                       template.xhtml ← (Layout)
-                            │
-                            ▼
-                    ┌───────────────┐
-                    │  User Session │
-                    └───────────────┘
-                            │
-                            ▼
-                    ┌───────────────┐
-                    │  Beans Layer  │
-                    └───────────────┘
-                    - LoginBean
-                    - UserBean
-                    - FolderBean
-                    - FileBean
-                    - FolderContentBean ⭐
-                    - SharedFilesBean ⭐
-                            │
-                            ▼
-                    ┌───────────────┐
-                    │ Facades Layer │
-                    └───────────────┘
-                    - UserFacade
-                    - FolderFacade
-                    - FileFacade
-                    - SharedFilesFacade ⭐
-                            │
-                            ▼
-                    ┌───────────────┐
-                    │  JPA/Entities │
-                    └───────────────┘
-                    - Users
-                    - Folders
-                    - Files
-                    - SharedFiles ⭐
-                            │
-                            ▼
-                    ┌───────────────┐
-                    │   Database    │
-                    └───────────────┘
-```
-
----
-
-## 2️⃣ Page Navigation Flow
+## 1) Full Navigation Map
 
 ```
-                          login.xhtml
-                          ┌────────────┐
-                          │   Sign In  │
-                          └──────┬─────┘
-                                 │
-                    ┌────────────┴────────────┐
-                    │                         │
-         Success (dashboard) ✅      Failure (Retry)
-                    │                         │
-                    ▼                         │
-             dashboard.xhtml ◄───────────────┘
-                (My Drive)
-                    │
-        ┌───────────┼───────────┬─────────────┐
-        │           │           │             │
-        ▼           ▼           ▼             ▼
-   new-folder  upload-file  folder-content   shared
-        │           │           │             │
-        └───────────┴─────┬─────┴─────────────┘
-                          │
-                          ▼
-                  (Stay or return)
-                          │
-                          ▼
-                       Sign Out
-                          │
-                          ▼
-                  login.xhtml (Return)
+                         +---------------------+
+                         |  login.xhtml        |
+                         +----------+----------+
+                                    |
+                      success       |       create account
+                                    v
+                         +---------------------+
+                         |  dashboard.xhtml    |
+                         +----+----+----+-----+
+                              |    |    | \
+                              |    |    |  \ sidebar
+                              |    |    |   \-----------------------------+
+                              |    |    |                                 |
+                              v    v    v                                 v
+                    +-----------+ +--------------+ +----------------+ +----------------+
+                    |new-folder | |upload-file   | |folder-content  | |shared.xhtml    |
+                    +-----------+ +--------------+ +----------------+ +----------------+
+                                                                           |
+                                                      +--------------------+----------------------+
+                                                      |                    |                      |
+                                                      v                    v                      v
+                                                +-----------+        +------------+         +-----------+
+                                                |recent.xhtml|       |starred.xhtml|        |trash.xhtml |
+                                                +-----------+        +------------+         +-----------+
 
-
-            register.xhtml
-             (New Registration)
-                    │
-         ┌──────────┴──────────┐
-         │                     │
-     Success ✅             Failure
-         │                     │
-         ▼                     │
-    login.xhtml ◄──────────────┘
+  register.xhtml -> login.xhtml
+  template.xhtml provides global links and logout
 ```
 
----
-
-## 3️⃣ Data Flow Diagram
+## 2) Layer Diagram
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      User Registration Flow                     │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  register.xhtml ──┐                                             │
-│  (Data input)     │                                             │
-│                  │                                              │
-│              UserBean                                           │
-│              │  user.name                                       │
-│              │  user.email                                      │
-│              │  user.password                                   │
-│              │                                                  │
-│              ▼ createUser()                                     │
-│         ┌────────────┐                                          │
-│         │ Validation │                                          │
-│         └─────┬──────┘                                          │
-│              │                                                  │
-│              ▼                                                  │
-│      UserFacade.create(user)                                   │
-│              │                                                  │
-│              ▼                                                  │
-│   ┌──────────────────┐                                          │
-│   │  Users Entity    │                                          │
-│   │  Database Table  │                                          │
-│   │                  │                                          │
-│   │  ├─ id          │                                           │
-│   │  ├─ name        │                                           │
-│   │  ├─ email       │                                           │
-│   │  └─ password    │                                           │
-│   └──────────────────┘                                          │
-│              │                                                  │
-│              ▼ (Redirect)                                       │
-│         login.xhtml                                             │
-│                                                                 │
-└─────────────────────────────────────────────────────────────────┘
+XHTML Pages
+  -> Beans
+      LoginBean
+      UserBean
+      FolderBean
+      FileBean
+      FolderContentBean
+      SharedFilesBean
+      TrashBean
+  -> EJB Facades
+      UserFacade
+      FolderFacade
+      FileFacade
+      SharedFilesFacade
+  -> JPA Entities
+      Users
+      Folders
+      Files
+      SharedFiles
+  -> Database
 ```
 
----
-
-## 4️⃣ File Sharing Flow (SharedFilesBean) ⭐
+## 3) Authentication Flow (BCrypt)
 
 ```
-┌──────────────────────────────────────────────────────────────────┐
-│                      File Sharing Flow                           │
-├──────────────────────────────────────────────────────────────────┤
-│                                                                  │
-│  shared.xhtml (or dialog)                                       │
-│  ├─ Select File (selectedFileId)                                │
-│  ├─ Select User (selectedUserId)                                │
-│  ├─ Select Permission (READ/WRITE)                              │
-│  └─ "Share" Button                                              │
-│       │                                                         │
-│       ▼                                                         │
-│  SharedFilesBean.shareFile()                                    │
-│       │                                                         │
-│       ├─ ✅ Verify Ownership                                     │
-│       │    file.owner.id == currentUser.id                     │
-│       │                                                         │
-│       ├─ ✅ Verify User Exists                                   │
-│       │    userFacade.find(selectedUserId)                     │
-│       │                                                         │
-│       ├─ ✅ Prevent Duplicates                                   │
-│       │    no existing SharedFiles                              │
-│       │                                                         │
-│       └─ ✅ Save Share                                           │
-│            SharedFilesFacade.create()                           │
-│            │                                                    │
-│            ▼                                                    │
-│  ┌──────────────────────────┐                                  │
-│  │  SharedFiles Entity      │                                  │
-│  │  ┌──────────────────┐    │                                  │
-│  │  │ id               │    │                                  │
-│  │  │ file_id (FK)     │────┼─→ Files Table                   │
-│  │  │ recipient_id(FK) │────┼─→ Users Table                   │
-│  │  │ permission       │    │                                  │
-│  │  │ (READ/WRITE)     │    │                                  │
-│  │  └──────────────────┘    │                                  │
-│  └──────────────────────────┘                                  │
-│       │                                                         │
-│       ▼                                                         │
-│  Display Files:                                                 │
-│  ├─ sharedFilesList                                            │
-│  │  └─ (Files I shared)                                        │
-│  │                                                              │
-│  └─ sharedWithMeList                                           │
-│     └─ (Files shared with me)                                  │
-│                                                                 │
-└──────────────────────────────────────────────────────────────────┘
+register.xhtml
+  -> UserBean.createUser()
+  -> BCrypt.hashpw(rawPassword, gensalt)
+  -> UserFacade.create(user)
+
+login.xhtml
+  -> LoginBean.login()
+  -> UserFacade.login(email, rawPassword)
+  -> BCrypt.checkpw(rawPassword, storedHash)
+  -> session user set -> dashboard.xhtml
 ```
 
----
-
-## 5️⃣ Forms and Links Diagram
+## 4) Soft Delete and Trash Flow
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      dashboard.xhtml                            │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ┌──────────────────────────────────────────────────────────┐  │
-│  │                   Action Bar (Header)                    │  │
-│  ├──────────────────────────────────────────────────────────┤  │
-│  │                                                          │  │
-│  │  ┌─────────────────────┐  ┌──────────────────────────┐ │  │
-│  │  │  New Folder Link    │  │  File Upload Link        │ │  │
-│  │  │  ┌───────────────┐  │  │  ┌────────────────────┐  │ │  │
-│  │  │  │ Routes to:    │  │  │  │ Routes to:         │  │ │  │
-│  │  │  │ new-folder.   │  │  │  │ upload-file.       │  │ │  │
-│  │  │  │ xhtml         │  │  │  │ xhtml              │  │ │  │
-│  │  │  └───────────────┘  │  │  └────────────────────┘  │ │  │
-│  │  └─────────────────────┘  └──────────────────────────┘ │  │
-│  │                                                          │  │
-│  └───────────────────────────┼──────────────────────────────┘  │
-│                              │                                 │
-│  ┌───────────────────────────┴──────────────────────────────┐  │
-│  │                 Data Display (My Drive)                  │  │
-│  ├──────────────────────────────────────────────────────────┤  │
-│  │                                                          │  │
-│  │  ┌────────────────────────────────────────────────────┐  │  │
-│  │  │  My Folders (foldersList)                          │  │  │
-│  │  │  - Displayed as Grid Cards                         │  │  │
-│  │  │  - Click -> Routes to folder-content.xhtml         │  │  │
-│  │  │  - Delete Action via FolderBean                    │  │  │
-│  │  └────────────────────────────────────────────────────┘  │  │
-│  │                                                          │  │
-│  └───────────────────────────┼──────────────────────────────┘  │
-│                              │                                 │
-└──────────────────────────────┴──────────────────────────────────┘
+Active page action (dashboard/folder-content)
+  -> set deleted=true
+  -> facade.edit(entity)
+  -> hidden from active lists (findAll uses deleted=false)
+  -> visible in trash lists (findDeleted uses deleted=true)
 
-┌─────────────────────────────────────────────────────────────────┐
-│                      shared.xhtml                               │
-├─────────────────────────────────────────────────────────────────┤
-│                                                                 │
-│  ┌────────────────────────────────────────────────────────┐ │  │
-│  │                 Sharing Section ⭐                     │ │  │
-│  ├────────────────────────────────────────────────────────┤ │  │
-│  │                                                        │ │  │
-│  │  ┌─────────────────────────────────────────────────┐  │ │  │
-│  │  │  Files Shared by Me                             │  │ │  │
-│  │  │  (sharedFilesList)                              │  │ │  │
-│  │  │  - file.name                                    │  │ │  │
-│  │  │  - recipient.email                              │  │ │  │
-│  │  │  - permission                                   │  │ │  │
-│  │  │  - removeBtn                                    │  │ │  │
-│  │  └─────────────────────────────────────────────────┘  │ │  │
-│  │                                                        │ │  │
-│  │  ┌─────────────────────────────────────────────────┐  │ │  │
-│  │  │  Files Shared with Me                           │  │ │  │
-│  │  │  (sharedWithMeList)                             │  │ │  │
-│  │  │  - file.name                                    │  │ │  │
-│  │  │  - owner.email                                  │  │ │  │
-│  │  │  - permission                                   │  │ │  │
-│  │  └─────────────────────────────────────────────────┘  │ │  │
-│  │                                                        │ │  │
-│  └────────────────────────────────────────────────────────┘ │  │
-│                                                             │  │
-└─────────────────────────────────────────────────────────────┘
+trash.xhtml restore
+  -> set deleted=false -> facade.edit
+
+trash.xhtml permanent delete
+  -> remove share links (for files)
+  -> delete DB row
+  -> attempt filesystem cleanup
 ```
 
----
-
-## 6️⃣ Layer Communication Diagram
+## 5) Starred and Recent Flow
 
 ```
-      PRESENTATION LAYER
-          (XHTML)
-            │
-    ┌───────┼───────────────┬───────────────┐
-    │       │               │               │
-login   register  dashboard/views      shared
-    │       │               │               │
-    └───────┼───────────────┴───────────────┘
-            │
-     BUSINESS LOGIC LAYER
-         (Beans)
-            │
-    ┌───────┼─────────────────────────┬─────────┐
-    │       │       │       │         │         │
- LoginBean UserBean FolderBean FileBean FolderContent SharedFiles
-            │       │       │         Bean      Bean ⭐
-    └───────┼─────────────────────────┴─────────┘
-            │
-      SERVICE LAYER
-       (EJB Facades)
-            │
-    ┌───────┼─────────────────────────┐
-    │       │       │       │         │
- UserFacade FolderFacade FileFacade SharedFilesFacade ⭐
-    │       │       │       │         │
-    └───────┼─────────────────────────┘
-            │
-    DATA ACCESS LAYER
-      (JPA Entities)
-            │
-    ┌───────┼─────────────────────────┐
-    │       │       │       │         │
- Users    Folders  Files  SharedFiles ⭐
-    │       │       │       │         │
-    └───────┼─────────────────────────┘
-            │
-      DATABASE LAYER
-            │
-    ┌───────┼─────────────────────────┐
-    │       │       │       │         │
- Users  Folders  Files  SharedFiles ⭐
-  Table  Table   Table    Table
-    │       │       │       │         │
-    └───────┼─────────────────────────┘
+folder-content.xhtml star action
+  -> toggle Files.starred
+  -> FileFacade.edit(file)
+
+starred.xhtml
+  -> FileBean.getStarredFiles()
+  -> FileFacade.findStarredFiles(ownerId)
+  -> filter deleted=false, sort by createdAt desc
+
+recent.xhtml
+  -> FileBean.getRecentFiles()
+  -> FileFacade.findRecentFiles(ownerId)
+  -> filter deleted=false, sort by createdAt desc
 ```
 
----
-
-## 7️⃣ Security & Validation Checks Diagram
+## 6) Sharing Flow
 
 ```
-┌──────────────────────────────────────────────────────────────┐
-│                     Security Checks                          │
-├──────────────────────────────────────────────────────────────┤
-│                                                              │
-│  1️⃣  On Login                                              │
-│      └─ Look up user data                                   │
-│      └─ Verify password                                     │
-│      └─ Save in SessionMap                                  │
-│                                                              │
-│  2️⃣  On Folder Creation                                    │
-│      └─ Check for user in session                           │
-│      └─ Link folder to current user                         │
-│      └─ Create secure physical path                         │
-│                                                              │
-│  3️⃣  On File Upload                                        │
-│      └─ Verify file exists                                  │
-│      └─ Verify folder exists                                │
-│      └─ Verify user owns folder (implied/needed)            │
-│      └─ Copy file to protected path                         │
-│                                                              │
-│  4️⃣  On File Share ⭐                                      │
-│      └─ ✅ Verify file exists                                │
-│      └─ ✅ Verify user owns file                             │
-│      └─ ✅ Verify recipient exists                           │
-│      └─ ✅ Prevent duplicate shares                          │
-│      └─ ✅ Validate permission enum                          │
-│                                                              │
-│  5️⃣  On Delete                                             │
-│      └─ Verify ownership                                    │
-│      └─ Delete from database                                │
-│      └─ Delete physical file (if implemented)               │
-│                                                              │
-└──────────────────────────────────────────────────────────────┘
+shared.xhtml
+  -> SharedFilesBean.shareFile()
+      - validate current user
+      - validate file exists and owner matches
+      - block deleted file sharing
+      - validate recipient exists
+      - prevent duplicate share
+  -> SharedFilesFacade.create(shared)
+
+Shared lists
+  - my shared files: owner scope, deleted files excluded
+  - shared with me: recipient scope, deleted files excluded
 ```
 
----
+## 7) Integration Tracking Table
 
-## 📊 Integration Tracking Table
+| Component | Status | Notes |
+|---|---|---|
+| `login.xhtml` | integrated | login routing and error messages |
+| `register.xhtml` | integrated | hashed password registration flow |
+| `dashboard.xhtml` | integrated | folder list and main actions |
+| `folder-content.xhtml` | integrated | file list, delete, star toggle |
+| `upload-file.xhtml` | integrated | upload with target folder selection |
+| `shared.xhtml` | integrated | share/list/revoke flows |
+| `recent.xhtml` | integrated | recent query-backed list |
+| `starred.xhtml` | integrated | starred query-backed list |
+| `trash.xhtml` | integrated | deleted lists, restore, permanent delete |
+| `TrashBean` | integrated | full lifecycle management |
+| `FileFacade` | integrated | active/deleted/starred/recent queries |
+| `FolderFacade` | integrated | active/deleted folder queries |
+| `UserFacade` | integrated | BCrypt-based login verification |
 
-| Component | Type | Status | Notes |
-|-------|------|--------|---------|
-| login.xhtml | XHTML | ✅ | Routes to dashboard or register |
-| register.xhtml | XHTML | ✅ | Routes to login after creation |
-| dashboard.xhtml | XHTML | ✅ | Forms and grids connected |
-| template.xhtml | XHTML | ✅ | Layout with header and sidebar |
-| new-folder.xhtml | XHTML | ✅ | Connected to FolderBean |
-| upload-file.xhtml | XHTML | ✅ | Connected to FileBean |
-| folder-content.xhtml| XHTML | ✅ | Connected to FolderContentBean |
-| shared.xhtml | XHTML | ✅ | Connected to SharedFilesBean |
-| LoginBean | Java | ✅ | Connected to UserFacade |
-| UserBean | Java | ✅ | Connected to UserFacade |
-| FolderBean | Java | ✅ | Connected to FolderFacade |
-| FileBean | Java | ✅ | Connected to FileFacade |
-| FolderContentBean| Java | ✅ | Connected to Folder/FileFacade |
-| SharedFilesBean | Java | ✅ | Connected to SharedFilesFacade ⭐ |
-| UserFacade | Java | ✅ | Implements UserFacadeLocal |
-| FolderFacade | Java | ✅ | Implements FolderFacadeLocal |
-| FileFacade | Java | ✅ | Implements FileFacadeLocal |
-| SharedFilesFacade | Java | ✅ | Implements SharedFilesFacadeLocal ⭐ |
-| Users Entity | Java | ✅ | Database table |
-| Folders Entity | Java | ✅ | Database table |
-| Files Entity | Java | ✅ | Database table |
-| SharedFiles Entity | Java | ✅ | Database table ⭐ |
-
----
-
-## ✅ Conclusion
-
-```
-┌────────────────────────────────────────────────────────────┐
-│  All components are correctly and smoothly integrated.   │
-│  ✅ Routing works correctly                              │
-│  ✅ Data flow is sound                                   │
-│  ✅ Security is properly implemented                     │
-│  ✅ Errors are handled properly                          │
-│  ✅ Interface is consistent and easy to use              │
-│                                                            │
-│  Status: 🟢 Ready for Launch                             │
-└────────────────────────────────────────────────────────────┘
-```
-
----
-
-**Last Update:** 2024-05-01 (Translated to English)
+Last Update: 2026-05-02

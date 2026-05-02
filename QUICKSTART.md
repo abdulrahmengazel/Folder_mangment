@@ -1,172 +1,101 @@
-# ⚡ Quick Start
+# Quick Start
 
-## 🚀 Get up and running in 5 minutes
+Get the project running quickly and verify the latest functionality.
 
-### Requirements
-- ✅ Java 23+
-- ✅ Maven 3.8.9+
-- ✅ GlassFish 7 (or any Jakarta EE application server)
+## Prerequisites
 
----
+- Java 23
+- Maven 3.8+
+- Jakarta EE server (example: GlassFish 7)
 
-## 📥 Step 1: Preparation
+## 1) Open the project
 
 ```bash
-# 1. Download the project
-cd /path/to/Folder_mangment
-
-# 2. Verify Java
+cd /home/abdulrahman/Documents/Folder_mangment
 java -version
-
-# 3. Verify Maven
 mvn -version
 ```
 
----
-
-## 🔨 Step 2: Build
+## 2) Build
 
 ```bash
-# Build the project
-mvn clean package -DskipTests
-
-# Result:
-# ✅ BUILD SUCCESS
-# 📦 target/Folder_mangment-1.0-SNAPSHOT.war
+./mvnw clean package
 ```
 
----
+Expected artifact:
 
-## 🚀 Step 3: Deployment
+```text
+target/Folder_mangment-1.0-SNAPSHOT.war
+```
+
+## 3) Deploy (GlassFish example)
 
 ```bash
-# Start GlassFish (if not already running)
 $GLASSFISH_HOME/bin/asadmin start-domain
-
-# Deploy the application
-$GLASSFISH_HOME/bin/asadmin deploy --force=true \
-  target/Folder_mangment-1.0-SNAPSHOT.war
+$GLASSFISH_HOME/bin/asadmin deploy --force=true target/Folder_mangment-1.0-SNAPSHOT.war
 ```
 
----
+## 4) Open the app
 
-## 🌐 Step 4: Access
-
-```
+```text
 http://localhost:8080/Folder_mangment/login.xhtml
 ```
 
----
+## 5) 10-minute smoke test
 
-## 👤 Step 5: Testing
+Create a user, then validate the full lifecycle:
 
-### Create a test account:
-```
-Name: John Doe
-Email: john.doe@example.com
-Password: Test@123
-```
+1. Register and log in.
+2. Create a folder from `dashboard.xhtml`.
+3. Upload a file from `upload-file.xhtml`.
+4. Open `folder-content.xhtml` and star/unstar the file.
+5. Open `recent.xhtml` and confirm newest-first ordering.
+6. Open `starred.xhtml` and confirm starred items appear.
+7. Delete a file/folder (soft delete).
+8. Open `trash.xhtml`, restore it, then test permanent delete.
+9. Share a non-deleted file in `shared.xhtml`.
 
-### Then:
-1. ✅ Create a folder
-2. ✅ Upload a file
-3. ✅ Share the file
+## Where Features Live
 
----
+| Feature | Page | Bean/Facade |
+|---|---|---|
+| Registration + password hashing | `register.xhtml` | `UserBean`, `UserFacade` |
+| Login + password verification | `login.xhtml` | `LoginBean`, `UserFacade` |
+| Create folder | `new-folder.xhtml` | `FolderBean`, `FolderFacade` |
+| Upload file | `upload-file.xhtml` | `FileBean`, `FileFacade` |
+| Folder files + star/delete | `folder-content.xhtml` | `FolderContentBean` |
+| Recent files | `recent.xhtml` | `FileBean`, `FileFacade.findRecentFiles` |
+| Starred files | `starred.xhtml` | `FileBean`, `FileFacade.findStarredFiles` |
+| Trash lifecycle | `trash.xhtml` | `TrashBean`, `FileFacade`, `FolderFacade` |
+| Sharing | `shared.xhtml` | `SharedFilesBean`, `SharedFilesFacade` |
 
-## 🎯 Key Functionalities
+## Troubleshooting
 
-| Functionality | Where to find |
-|--------|----------------|
-| **Registration** | register.xhtml |
-| **Login** | login.xhtml |
-| **Create Folder** | Dashboard → New folder (button) |
-| **Upload File** | Dashboard → File upload (button) |
-| **Sharing** | Dashboard → Right sidebar (Sharing Settings) |
+### Application not reachable
 
----
-
-## 🐛 Troubleshooting
-
-### Error: Connection Refused
 ```bash
-# Make sure GlassFish is started
-$GLASSFISH_HOME/bin/asadmin start-domain
+$GLASSFISH_HOME/bin/asadmin list-applications
+$GLASSFISH_HOME/bin/asadmin list-domains
 ```
 
-### Error: Port Already in Use
+### Port already in use
+
 ```bash
-# Change the port or stop the other application
-$GLASSFISH_HOME/bin/asadmin set \
-  server.http-service.http-listener.http-listener-1.port=8081
+$GLASSFISH_HOME/bin/asadmin set server.http-service.http-listener.http-listener-1.port=8081
 ```
 
-### Error: Database Connection Failed
+### JDBC resource missing
+
 ```bash
-# Check the Data Source
 $GLASSFISH_HOME/bin/asadmin list-jdbc-resources
-
-# Recreate Connection Pool if necessary
-$GLASSFISH_HOME/bin/asadmin create-jdbc-connection-pool \
-  --datasourceclassname org.apache.derby.jdbc.embedded.EmbeddedDataSource \
-  --property databaseName=/path/to/db:user=admin:password=admin \
-  CloudDrivePool
 ```
 
----
+## More Docs
 
-## 📚 Further Information
+- `README.md`
+- `FEATURES.md`
+- `TESTING_GUIDE.md`
+- `INTEGRATION_CHECK.md`
+- `INTEGRATION_DIAGRAMS.md`
 
-| File | Topic |
-|------|---------|
-| **README.md** | Comprehensive Overview |
-| **INSTALL.md** | Detailed Installation |
-| **FEATURES.md** | Features Explanation |
-| **TESTING_GUIDE.md** | Testing Plan |
-| **COMPLETION_SUMMARY.md** | Completion Summary |
-
----
-
-## 💡 Useful Tips
-
-### Rapid Development
-```bash
-# Quick rebuild and deploy
-mvn clean package -DskipTests && \
-  $GLASSFISH_HOME/bin/asadmin deploy --force=true target/*.war
-```
-
-### View Logs
-```bash
-# In real-time
-tail -f $GLASSFISH_HOME/domains/domain1/logs/server.log
-```
-
-### Access Admin Console
-```
-http://localhost:4848
-Username: admin
-Password: admin (or just press Enter)
-```
-
----
-
-## 🎉 That's it!
-
-You are now ready to use the system!
-
-**Status Report:** ✅ **Ready for Launch**
-
----
-
-## 🆘 Need Help?
-
-1. Read `README.md`
-2. Read `INSTALL.md`
-3. Open an Issue on GitHub
-4. Contact us
-
----
-
-**Last Update:** 2024-05-01 (Translated to English)
-**Version:** 1.0.0
+Last Update: 2026-05-02
