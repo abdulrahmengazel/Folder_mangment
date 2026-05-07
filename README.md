@@ -334,21 +334,12 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 📞 Contact
 
-- 📧 Email: [your-email@example.com]
-- 🐙 GitHub: [your-github-profile]
-- 💬 Discord: [your-discord-username]
+- 📧 Email: [abdulrahmengazel@gmail.com]
+- 🐙 GitHub: [github.com/abdulrahmengazel/]
+-
 
 ---
 
-## 🙏 Acknowledgments
 
-Special thanks to:
-- The Jakarta EE Team
-- The Java Community
-- All contributors and supporters
-
----
-
-**Last Update:** 2024-05-01 (Translated to English)
 **Version:** 1.0.0
 **Status:** ✅ Ready for Production
