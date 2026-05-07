@@ -1,12 +1,13 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
+      lang="tr"
       xmlns:h="jakarta.faces.html"
       xmlns:ui="jakarta.faces.facelets">
 <h:head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title><ui:insert name="title">Drive</ui:insert></title>
+    <title><ui:insert name="title">Cloud System</ui:insert></title>
     <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
     <!-- Google Fonts -->
@@ -22,20 +23,22 @@
     <!-- Header -->
     <header class="app-header">
         <div class="header-brand">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="Drive Logo" style="width: 32px; height: 32px;"/>
-            <span>Drive</span>
+            <span style="width: 34px; height: 34px; border-radius: 12px; display: inline-flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary-color), #7c3aed); color: white; box-shadow: 0 8px 16px rgba(37, 99, 235, 0.25);">
+                <i class="fas fa-cloud"></i>
+            </span>
+            <span>Cloud System</span>
         </div>
 
         <!-- Search bar -->
         <div class="search-bar">
             <i class="fas fa-search"></i>
-            <input type="text" placeholder="Search in Drive..."/>
+            <input type="text" placeholder="Cloud System içinde ara..."/>
         </div>
 
         <!-- User profile & Logout -->
         <div class="header-actions">
             <h:form style="margin:0; display:flex; align-items:center;">
-                <h:commandLink action="#{loginBean.logout()}" title="Sign out" style="color: var(--text-secondary); font-size: 20px; transition: color 0.2s;">
+                <h:commandLink action="#{loginBean.logout()}" title="Çıkış yap" style="color: var(--text-secondary); font-size: 20px; transition: color 0.2s;">
                     <i class="fas fa-sign-out-alt"></i>
                 </h:commandLink>
             </h:form>
@@ -53,38 +56,38 @@
         <aside class="app-sidebar">
             <h:link outcome="new-folder.xhtml" styleClass="sidebar-btn-new" style="text-decoration:none;">
                 <i class="fas fa-plus" style="color: var(--primary-color);"></i>
-                New
+                Yeni
             </h:link>
 
             <ul class="sidebar-nav">
                 <li>
                     <h:link outcome="dashboard.xhtml" styleClass="sidebar-item #{view.viewId == '/dashboard.xhtml' or view.viewId == '/folder-content.xhtml' ? 'active' : ''}">
                         <i class="fas fa-hdd"></i>
-                        My Drive
+                        Dosyalarım
                     </h:link>
                 </li>
                 <li>
                     <h:link outcome="shared.xhtml" styleClass="sidebar-item #{view.viewId == '/shared.xhtml' ? 'active' : ''}">
                         <i class="fas fa-user-friends"></i>
-                        Shared with me
+                        Benimle paylaşılanlar
                     </h:link>
                 </li>
                 <li>
                     <h:link outcome="recent.xhtml" styleClass="sidebar-item #{view.viewId == '/recent.xhtml' ? 'active' : ''}">
                         <i class="fas fa-clock"></i>
-                        Recent
+                        Son dosyalar
                     </h:link>
                 </li>
                 <li>
                     <h:link outcome="starred.xhtml" styleClass="sidebar-item #{view.viewId == '/starred.xhtml' ? 'active' : ''}">
                         <i class="fas fa-star"></i>
-                        Starred
+                        Yıldızlılar
                     </h:link>
                 </li>
                 <li>
                     <h:link outcome="trash.xhtml" styleClass="sidebar-item #{view.viewId == '/trash.xhtml' ? 'active' : ''}">
                         <i class="fas fa-trash"></i>
-                        Trash
+                        Çöp kutusu
                     </h:link>
                 </li>
             </ul>
@@ -92,12 +95,12 @@
             <div class="storage-container">
                 <div class="storage-title">
                     <i class="fas fa-cloud"></i>
-                    Storage
+                    Depolama
                 </div>
                 <div class="storage-progress">
                     <div class="storage-progress-bar"></div>
                 </div>
-                <div class="storage-text">2.1 GB of 15 GB used</div>
+                <div class="storage-text">15 GB'nin 2,1 GB'ı kullanıldı</div>
             </div>
         </aside>
 

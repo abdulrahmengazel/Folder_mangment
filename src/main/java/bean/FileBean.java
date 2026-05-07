@@ -47,13 +47,13 @@ public class FileBean implements Serializable {
 
         // التحقق من وصول الملف
         if (uploadedFile == null) {
-            context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Error", "No file received."));
+            context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Hata", "Dosya alınamadı."));
             return null;
         }
 
         // التحقق من وصول رقم المجلد
         if (targetFolderId == null) {
-            context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Error", "Target folder not identified."));
+            context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Hata", "Hedef klasör belirlenemedi."));
             return null;
         }
 
@@ -91,16 +91,16 @@ public class FileBean implements Serializable {
 
                     fileFacade.create(fileEntity);
 
-                    context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_INFO, "Success", "File uploaded successfully!"));
+                    context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_INFO, "Başarılı", "Dosya başarıyla yüklendi!"));
                     clearForm();
                     
                     return "dashboard.xhtml?faces-redirect=true";
 
                 } catch (Exception e) {
-                    context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "System Error", e.getMessage()));
+                    context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Sistem hatası", e.getMessage()));
                 }
             } else {
-                context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Error", "Access denied to folder."));
+                context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Hata", "Klasöre erişim reddedildi."));
             }
         }
         return null;
@@ -114,9 +114,9 @@ public class FileBean implements Serializable {
             file.setDeleted(true);
             fileFacade.edit(file);
             filesList = null; // force reload
-            context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_INFO, "Success", "File deleted."));
+            context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_INFO, "Başarılı", "Dosya silindi."));
         } else {
-             context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Error", "You do not have permission to delete this file."));
+             context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Hata", "Bu dosyayı silme izniniz yok."));
         }
     }
 

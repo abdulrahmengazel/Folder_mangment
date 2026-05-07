@@ -8,7 +8,7 @@
 <ui:composition template="./template.xhtml">
 
     <ui:define name="title">
-        Trash - Drive
+        Çöp kutusu - Cloud System
     </ui:define>
 
     <ui:define name="content">
@@ -67,23 +67,23 @@
         <h:messages globalOnly="true" styleClass="messages" />
 
         <div class="page-header">
-            <h2 class="page-title">Trash</h2>
+            <h2 class="page-title">Çöp kutusu</h2>
         </div>
 
         <div class="trash-info-banner">
             <i class="fas fa-info-circle" />
-            <span>Items in trash can be restored or deleted permanently.</span>
+            <span>Çöp kutusundaki öğeler geri yüklenebilir veya kalıcı olarak silinebilir.</span>
         </div>
 
         <h:panelGroup rendered="#{trashBean.deletedFolders.size() > 0}">
-            <h3 class="form-label" style="margin-bottom: 16px; font-size: 15px; color: var(--text-secondary);">Deleted folders</h3>
+            <h3 class="form-label" style="margin-bottom: 16px; font-size: 15px; color: var(--text-secondary);">Silinmiş klasörler</h3>
             <div class="table-container" style="margin-bottom: 32px;">
                 <h:form style="margin: 0;">
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th style="width: 180px; text-align: center;">Actions</th>
+                                <th>Ad</th>
+                                <th style="width: 180px; text-align: center;">İşlemler</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -96,10 +96,10 @@
                                         </div>
                                     </td>
                                     <td style="text-align: center; display: flex; justify-content: center; gap: 10px;">
-                                        <h:commandLink action="#{trashBean.restoreFolder(folder)}" styleClass="table-action-btn" title="Restore folder">
+                                        <h:commandLink action="#{trashBean.restoreFolder(folder)}" styleClass="table-action-btn" title="Klasörü geri yükle">
                                             <i class="fas fa-undo" />
                                         </h:commandLink>
-                                        <h:commandLink action="#{trashBean.permanentlyDeleteFolder(folder)}" styleClass="table-action-btn" title="Delete permanently" onclick="return confirm('Delete this folder permanently? This cannot be undone.');">
+                                        <h:commandLink action="#{trashBean.permanentlyDeleteFolder(folder)}" styleClass="table-action-btn" title="Kalıcı olarak sil" onclick="return confirm('Bu klasörü kalıcı olarak silmek istediğinize emin misiniz? Bu işlem geri alınamaz.');">
                                             <i class="fas fa-trash-alt" />
                                         </h:commandLink>
                                     </td>
@@ -112,16 +112,16 @@
         </h:panelGroup>
 
         <h:panelGroup rendered="#{trashBean.deletedFiles.size() > 0}">
-            <h3 class="form-label" style="margin-bottom: 16px; font-size: 15px; color: var(--text-secondary);">Deleted files</h3>
+            <h3 class="form-label" style="margin-bottom: 16px; font-size: 15px; color: var(--text-secondary);">Silinmiş dosyalar</h3>
             <div class="table-container">
                 <h:form style="margin: 0;">
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th style="width: 150px;">Size</th>
-                                <th style="width: 150px;">Type</th>
-                                <th style="width: 180px; text-align: center;">Actions</th>
+                                <th>Ad</th>
+                                <th style="width: 150px;">Boyut</th>
+                                <th style="width: 150px;">Tür</th>
+                                <th style="width: 180px; text-align: center;">İşlemler</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -140,10 +140,10 @@
                                     </td>
                                     <td style="color: var(--text-secondary);"><h:outputText value="#{file.type}" /></td>
                                     <td style="text-align: center; display: flex; justify-content: center; gap: 10px;">
-                                        <h:commandLink action="#{trashBean.restoreFile(file)}" styleClass="table-action-btn" title="Restore file">
+                                        <h:commandLink action="#{trashBean.restoreFile(file)}" styleClass="table-action-btn" title="Dosyayı geri yükle">
                                             <i class="fas fa-undo" />
                                         </h:commandLink>
-                                        <h:commandLink action="#{trashBean.permanentlyDeleteFile(file)}" styleClass="table-action-btn" title="Delete permanently" onclick="return confirm('Delete this file permanently? This cannot be undone.');">
+                                        <h:commandLink action="#{trashBean.permanentlyDeleteFile(file)}" styleClass="table-action-btn" title="Kalıcı olarak sil" onclick="return confirm('Bu dosyayı kalıcı olarak silmek istediğinize emin misiniz? Bu işlem geri alınamaz.');">
                                             <i class="fas fa-trash-alt" />
                                         </h:commandLink>
                                     </td>
@@ -157,9 +157,9 @@
 
         <h:panelGroup rendered="#{trashBean.deletedFiles.size() == 0 and trashBean.deletedFolders.size() == 0}">
             <div class="empty-state">
-                <img src="https://ssl.gstatic.com/docs/doclist/images/empty_state_trash_v2.svg" alt="Trash is empty" class="empty-state-img"/>
-                <h3>Trash is empty</h3>
-                <p>No items have been moved to the trash.</p>
+                <img src="https://ssl.gstatic.com/docs/doclist/images/empty_state_trash_v2.svg" alt="Çöp kutusu boş" class="empty-state-img"/>
+                <h3>Çöp kutusu boş</h3>
+                <p>Henüz çöp kutusuna taşınmış bir öğe yok.</p>
             </div>
         </h:panelGroup>
 

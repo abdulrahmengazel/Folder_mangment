@@ -47,7 +47,7 @@ public class FolderContentBean implements Serializable {
                 loadFilesInFolder(currentUser.getId());
             } else {
                 currentFolder = null; // Prevent access to others' folders
-                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Access denied or folder not found."));
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Hata", "Erişim reddedildi veya klasör bulunamadı."));
             }
         }
     }
@@ -74,9 +74,9 @@ public class FolderContentBean implements Serializable {
             file.setDeleted(true);
             fileFacade.edit(file);
             loadFilesInFolder(currentUser.getId()); // Reload list after deletion
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "File deleted successfully."));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Başarılı", "Dosya başarıyla silindi."));
         } else {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "You don't have permission to delete this file."));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Hata", "Bu dosyayı silme izniniz yok."));
         }
     }
 

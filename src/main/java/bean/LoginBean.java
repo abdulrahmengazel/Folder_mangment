@@ -33,7 +33,7 @@ public class LoginBean implements Serializable {
             facesContext.getExternalContext().getSessionMap().put("user", u);
             return "dashboard.xhtml?faces-redirect=true";
         } else {
-            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Login failed", "Incorrect email or password.");
+            FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_ERROR, "Giriş başarısız", "E-posta veya şifre hatalı.");
             facesContext.addMessage(null, msg);
             return null;
         }

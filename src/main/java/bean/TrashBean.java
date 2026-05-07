@@ -18,7 +18,6 @@ import java.io.Serializable;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Named
 @ViewScoped
@@ -47,7 +46,7 @@ public class TrashBean implements Serializable {
 
         deletedFiles = fileFacade.findDeleted().stream()
                 .filter(file -> file.getOwner().getId().equals(currentUser.getId()))
-                .collect(Collectors.toList());
+                .toList();
         return deletedFiles;
     }
 
@@ -60,7 +59,7 @@ public class TrashBean implements Serializable {
 
         deletedFolders = folderFacade.findDeleted().stream()
                 .filter(folder -> folder.getOwner().getId().equals(currentUser.getId()))
-                .collect(Collectors.toList());
+                .toList();
         return deletedFolders;
     }
 
@@ -68,34 +67,34 @@ public class TrashBean implements Serializable {
         Users currentUser = getCurrentUser();
 
         if (currentUser == null || file == null || !file.getOwner().getId().equals(currentUser.getId())) {
-            addMessage(FacesMessage.SEVERITY_ERROR, "Error", "You do not have permission to restore this file.");
+            addMessage(FacesMessage.SEVERITY_ERROR, "Hata", "Bu dosyayı geri yükleme izniniz yok.");
             return;
         }
 
         file.setDeleted(false);
         fileFacade.edit(file);
         refreshLists();
-        addMessage(FacesMessage.SEVERITY_INFO, "Success", "File restored successfully.");
+        addMessage(FacesMessage.SEVERITY_INFO, "Başarılı", "Dosya başarıyla geri yüklendi.");
     }
 
     public void restoreFolder(Folders folder) {
         Users currentUser = getCurrentUser();
 
         if (currentUser == null || folder == null || !folder.getOwner().getId().equals(currentUser.getId())) {
-            addMessage(FacesMessage.SEVERITY_ERROR, "Error", "You do not have permission to restore this folder.");
+            addMessage(FacesMessage.SEVERITY_ERROR, "Hata", "Bu klasörü geri yükleme izniniz yok.");
             return;
         }
 
         restoreFolderTree(folder, currentUser.getId());
         refreshLists();
-        addMessage(FacesMessage.SEVERITY_INFO, "Success", "Folder restored successfully.");
+        addMessage(FacesMessage.SEVERITY_INFO, "Başarılı", "Klasör başarıyla geri yüklendi.");
     }
 
     public void permanentlyDeleteFile(Files file) {
         Users currentUser = getCurrentUser();
 
         if (currentUser == null || file == null || !file.getOwner().getId().equals(currentUser.getId())) {
-            addMessage(FacesMessage.SEVERITY_ERROR, "Error", "You do not have permission to delete this file permanently.");
+            addMessage(FacesMessage.SEVERITY_ERROR, "Hata", "Bu dosyayı kalıcı olarak silme izniniz yok.");
             return;
         }
 
@@ -103,20 +102,20 @@ public class TrashBean implements Serializable {
         removeSharesForFile(file.getId());
         fileFacade.remove(file);
         refreshLists();
-        addMessage(FacesMessage.SEVERITY_INFO, "Success", "File deleted permanently.");
+        addMessage(FacesMessage.SEVERITY_INFO, "Başarılı", "Dosya kalıcı olarak silindi.");
     }
 
     public void permanentlyDeleteFolder(Folders folder) {
         Users currentUser = getCurrentUser();
 
         if (currentUser == null || folder == null || !folder.getOwner().getId().equals(currentUser.getId())) {
-            addMessage(FacesMessage.SEVERITY_ERROR, "Error", "You do not have permission to delete this folder permanently.");
+            addMessage(FacesMessage.SEVERITY_ERROR, "Hata", "Bu klasörü kalıcı olarak silme izniniz yok.");
             return;
         }
 
         permanentlyDeleteFolderTree(folder, currentUser.getId());
         refreshLists();
-        addMessage(FacesMessage.SEVERITY_INFO, "Success", "Folder deleted permanently.");
+        addMessage(FacesMessage.SEVERITY_INFO, "Başarılı", "Klasör kalıcı olarak silindi.");
     }
 
     private void restoreFolderTree(Folders folder, Long ownerId) {
@@ -130,7 +129,7 @@ public class TrashBean implements Serializable {
         List<Files> folderFiles = fileFacade.findDeleted().stream()
                 .filter(file -> file.getOwner().getId().equals(ownerId))
                 .filter(file -> file.getFolder() != null && file.getFolder().getId().equals(folder.getId()))
-                .collect(Collectors.toList());
+                .toList();
 
         for (Files file : folderFiles) {
             file.setDeleted(false);
@@ -140,7 +139,7 @@ public class TrashBean implements Serializable {
         List<Folders> childFolders = folderFacade.findDeleted().stream()
                 .filter(child -> child.getOwner().getId().equals(ownerId))
                 .filter(child -> child.getParentFolder() != null && child.getParentFolder().getId().equals(folder.getId()))
-                .collect(Collectors.toList());
+                .toList();
 
         for (Folders childFolder : childFolders) {
             restoreFolderTree(childFolder, ownerId);
@@ -155,7 +154,7 @@ public class TrashBean implements Serializable {
         List<Folders> childFolders = folderFacade.findDeleted().stream()
                 .filter(child -> child.getOwner().getId().equals(ownerId))
                 .filter(child -> child.getParentFolder() != null && child.getParentFolder().getId().equals(folder.getId()))
-                .collect(Collectors.toList());
+                .toList();
         for (Folders childFolder : childFolders) {
             permanentlyDeleteFolderTree(childFolder, ownerId);
         }
@@ -163,7 +162,7 @@ public class TrashBean implements Serializable {
         List<Files> folderFiles = fileFacade.findDeleted().stream()
                 .filter(file -> file.getOwner().getId().equals(ownerId))
                 .filter(file -> file.getFolder() != null && file.getFolder().getId().equals(folder.getId()))
-                .collect(Collectors.toList());
+                .toList();
         for (Files file : folderFiles) {
             permanentlyDeleteFile(file);
         }
@@ -179,7 +178,7 @@ public class TrashBean implements Serializable {
 
         List<SharedFiles> shares = sharedFilesFacade.findAll().stream()
                 .filter(sf -> sf.getFile() != null && sf.getFile().getId().equals(fileId))
-                .collect(Collectors.toList());
+                .toList();
 
         for (SharedFiles share : shares) {
             sharedFilesFacade.remove(share);
@@ -194,7 +193,7 @@ public class TrashBean implements Serializable {
         try {
             java.nio.file.Files.deleteIfExists(Path.of(filePath));
         } catch (IOException e) {
-            addMessage(FacesMessage.SEVERITY_WARN, "Warning", "Could not delete file from storage: " + e.getMessage());
+            addMessage(FacesMessage.SEVERITY_WARN, "Uyarı", "Dosya depolamadan silinemedi: " + e.getMessage());
         }
     }
 
@@ -217,7 +216,7 @@ public class TrashBean implements Serializable {
                 }
             }
         } catch (IOException e) {
-            addMessage(FacesMessage.SEVERITY_WARN, "Warning", "Could not delete folder from storage: " + e.getMessage());
+            addMessage(FacesMessage.SEVERITY_WARN, "Uyarı", "Klasör depolamadan silinemedi: " + e.getMessage());
         }
     }
 

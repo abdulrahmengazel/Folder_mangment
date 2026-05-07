@@ -256,7 +256,7 @@ http://localhost:8080/Folder_mangment/login.xhtml
 
 ### persistence.xml
 ```xml
-<persistence-unit name="CloudDrivePu" transaction-type="JTA">
+<persistence-unit name="CloudSystemPu" transaction-type="JTA">
     <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
     <jta-data-source>jdbc/CloudDrivePu</jta-data-source>
     <properties>

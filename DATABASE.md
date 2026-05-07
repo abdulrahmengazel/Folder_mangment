@@ -14,7 +14,7 @@ This document describes the current database model used by the Cloud File Manage
 
 Defined in `src/main/resources/META-INF/persistence.xml`:
 
-- Persistence unit: `CloudDrivePu`
+- Persistence unit: `CloudSystemPu`
 - Provider: EclipseLink
 - Data source: `jdbc/CloudDrivePu`
 - DDL generation: `create-or-extend-tables`

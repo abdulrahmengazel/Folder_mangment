@@ -12,7 +12,6 @@ import jakarta.inject.Named;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Named
 @ViewScoped
@@ -53,18 +52,18 @@ public class FolderBean implements Serializable {
 
                 if (!java.nio.file.Files.exists(physicalPath)) {
                     java.nio.file.Files.createDirectories(physicalPath);
-                    System.out.println("Physical folder created at: " + physicalPath.toString());
+                    System.out.println("Fiziksel klasör oluşturuldu: " + physicalPath);
                 }
             } catch (Exception e) {
-                System.out.println("Error creating physical folder: " + e.getMessage());
+                System.out.println("Fiziksel klasör oluşturulurken hata oluştu: " + e.getMessage());
             }
 
-            System.out.println("Folder created successfully in DB and Linux!");
+            System.out.println("Klasör veritabanında ve dosya sisteminde başarıyla oluşturuldu");
             clearForm();
             
             return "dashboard.xhtml?faces-redirect=true";
         } else {
-            System.out.println("Error: No user logged in.");
+            System.out.println("Hata: Oturum açmış kullanıcı bulunamadı.");
             return null;
         }
     }
@@ -75,7 +74,7 @@ public class FolderBean implements Serializable {
 
         if (currentUser != null && f != null && f.getOwner().getId().equals(currentUser.getId())) {
             softDeleteFolderTree(f, currentUser.getId());
-            System.out.println("Folder deleted");
+            System.out.println("Klasör silindi");
             foldersList = null; // force reload
         }
     }
@@ -91,7 +90,7 @@ public class FolderBean implements Serializable {
         List<Files> filesToDelete = fileFacade.findAll().stream()
                 .filter(file -> file.getOwner().getId().equals(ownerId))
                 .filter(file -> file.getFolder() != null && file.getFolder().getId().equals(folderToDelete.getId()))
-                .collect(Collectors.toList());
+                .toList();
 
         for (Files file : filesToDelete) {
             file.setDeleted(true);
@@ -101,7 +100,7 @@ public class FolderBean implements Serializable {
         List<Folders> childFolders = folderFacade.findAll().stream()
                 .filter(folder -> folder.getOwner().getId().equals(ownerId))
                 .filter(folder -> folder.getParentFolder() != null && folder.getParentFolder().getId().equals(folderToDelete.getId()))
-                .collect(Collectors.toList());
+                .toList();
 
         for (Folders childFolder : childFolders) {
             softDeleteFolderTree(childFolder, ownerId);
@@ -127,7 +126,7 @@ public class FolderBean implements Serializable {
             foldersList = folderFacade.findAll().stream()
                     .filter(f -> f.getOwner().getId().equals(currentUser.getId()))
                     .filter(f -> !f.isDeleted())
-                    .collect(Collectors.toList());
+                    .toList();
         } else {
             foldersList = java.util.Collections.emptyList();
         }

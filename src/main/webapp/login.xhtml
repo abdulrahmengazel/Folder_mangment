@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
+      lang="tr"
       xmlns:h="jakarta.faces.html"
       xmlns:f="jakarta.faces.core"
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
 <h:head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sign In - Drive</title>
+    <title>Giriş Yap - Cloud System</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet"/>
     <!-- Load CSS correctly -->
     <h:outputStylesheet name="css/style.css" />
@@ -39,8 +40,8 @@
         }
 
         .auth-logo {
-            width: 48px;
-            height: 48px;
+            width: 56px;
+            height: 56px;
             margin-bottom: 24px;
         }
 
@@ -90,9 +91,11 @@
 
     <div class="auth-container">
         <div class="auth-header">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="Drive Logo" class="auth-logo"/>
-            <h1 class="auth-title">Sign in</h1>
-            <p class="auth-subtitle">to continue to Drive</p>
+            <div class="auth-logo" style="margin-left: auto; margin-right: auto; border-radius: 18px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary-color), #7c3aed); color: white; box-shadow: 0 12px 24px rgba(37, 99, 235, 0.22);">
+                <i class="fas fa-cloud" style="font-size: 22px;"></i>
+            </div>
+            <h1 class="auth-title">Giriş yap</h1>
+            <p class="auth-subtitle">Cloud System'e devam etmek için giriş yapın</p>
         </div>
 
         <div class="auth-form">
@@ -100,20 +103,20 @@
                 <h:messages globalOnly="true" styleClass="messages" />
 
                 <div class="form-group">
-                    <label class="form-label">Email or Phone</label>
+                    <label class="form-label">E-posta veya telefon</label>
                     <h:inputText id="email" value="#{loginBean.user.email}" required="true"
-                                 requiredMessage="Enter an email" styleClass="form-control" a:placeholder="name@example.com"/>
+                                  requiredMessage="Lütfen bir e-posta girin" styleClass="form-control" a:placeholder="ornek@site.com"/>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Password</label>
+                    <label class="form-label">Şifre</label>
                     <h:inputSecret id="password" value="#{loginBean.user.password}" required="true"
-                                   requiredMessage="Enter your password" styleClass="form-control" a:placeholder="Enter your password"/>
+                                   requiredMessage="Lütfen şifrenizi girin" styleClass="form-control" a:placeholder="Şifrenizi girin"/>
                 </div>
 
                 <div class="auth-actions">
-                    <h:link value="Create account" outcome="register.xhtml" styleClass="auth-link"/>
-                    <h:commandButton value="Next" action="#{loginBean.login()}" styleClass="btn btn-primary" style="padding: 12px 24px; font-size: 15px; border-radius: 12px;"/>
+                    <h:link value="Hesap oluştur" outcome="register.xhtml" styleClass="auth-link"/>
+                    <h:commandButton value="Giriş yap" action="#{loginBean.login()}" styleClass="btn btn-primary" style="padding: 12px 24px; font-size: 15px; border-radius: 12px;"/>
                 </div>
 
             </h:form>

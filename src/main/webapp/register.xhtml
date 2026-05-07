@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
+      lang="tr"
       xmlns:h="jakarta.faces.html"
       xmlns:f="jakarta.faces.core"
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
 <h:head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Create Account - Drive</title>
+    <title>Hesap Oluştur - Cloud System</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet"/>
     <!-- Load CSS correctly -->
     <h:outputStylesheet name="css/style.css" />
@@ -39,8 +40,8 @@
         }
 
         .auth-logo {
-            width: 48px;
-            height: 48px;
+            width: 56px;
+            height: 56px;
             margin-bottom: 24px;
         }
 
@@ -90,9 +91,11 @@
 
     <div class="auth-container">
         <div class="auth-header">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Google_Drive_icon_%282020%29.svg" alt="Drive Logo" class="auth-logo"/>
-            <h1 class="auth-title">Create your Account</h1>
-            <p class="auth-subtitle">to continue to Drive</p>
+            <div class="auth-logo" style="margin-left: auto; margin-right: auto; border-radius: 18px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary-color), #7c3aed); color: white; box-shadow: 0 12px 24px rgba(37, 99, 235, 0.22);">
+                <i class="fas fa-cloud" style="font-size: 22px;"></i>
+            </div>
+            <h1 class="auth-title">Hesap oluştur</h1>
+            <p class="auth-subtitle">Cloud System'e devam etmek için kaydolun</p>
         </div>
 
         <div class="auth-form">
@@ -100,30 +103,30 @@
                 <h:messages globalOnly="true" styleClass="messages" />
 
                 <div class="form-group">
-                    <label class="form-label">Full Name</label>
+                    <label class="form-label">Ad Soyad</label>
                     <h:inputText id="name" value="#{userBean.user.name}" required="true"
-                                 requiredMessage="Enter first and last name" styleClass="form-control" a:placeholder="e.g. John Doe"/>
+                                 requiredMessage="Lütfen adınızı ve soyadınızı girin" styleClass="form-control" a:placeholder="Örn. Ahmet Yılmaz"/>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Email Address</label>
+                    <label class="form-label">E-posta adresi</label>
                     <h:inputText id="email" value="#{userBean.user.email}" required="true"
-                                 requiredMessage="Enter your email" styleClass="form-control" a:placeholder="john@example.com"/>
+                                 requiredMessage="Lütfen e-posta adresinizi girin" styleClass="form-control" a:placeholder="ornek@site.com"/>
                 </div>
 
                 <div class="form-group" style="margin-bottom: 8px;">
-                    <label class="form-label">Password</label>
+                    <label class="form-label">Şifre</label>
                     <h:inputSecret id="password" value="#{userBean.user.password}" required="true"
-                                   requiredMessage="Enter a password" styleClass="form-control" a:placeholder="Create a strong password"/>
+                                   requiredMessage="Lütfen bir şifre girin" styleClass="form-control" a:placeholder="Güçlü bir şifre oluşturun"/>
                 </div>
 
                 <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 24px;">
-                    Use 8 or more characters with a mix of letters, numbers &amp; symbols
+                    8 veya daha fazla karakter kullanın; harf, rakam ve sembolleri karıştırın
                 </p>
 
                 <div class="auth-actions">
-                    <h:link value="Sign in instead" outcome="login.xhtml" styleClass="auth-link"/>
-                    <h:commandButton value="Create Account" action="#{userBean.createUser()}" styleClass="btn btn-primary" style="padding: 12px 24px; font-size: 15px; border-radius: 12px;"/>
+                    <h:link value="Giriş yap" outcome="login.xhtml" styleClass="auth-link"/>
+                    <h:commandButton value="Hesap oluştur" action="#{userBean.createUser()}" styleClass="btn btn-primary" style="padding: 12px 24px; font-size: 15px; border-radius: 12px;"/>
                 </div>
 
             </h:form>

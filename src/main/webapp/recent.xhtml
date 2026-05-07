@@ -8,14 +8,14 @@
 <ui:composition template="./template.xhtml">
 
     <ui:define name="title">
-        Recent - Drive
+        Son dosyalar - Cloud System
     </ui:define>
 
     <ui:define name="content">
         <h:messages globalOnly="true" styleClass="messages" />
 
         <div class="page-header">
-            <h2 class="page-title">Recent</h2>
+            <h2 class="page-title">Son dosyalar</h2>
         </div>
 
         <h:panelGroup rendered="#{fileBean.recentFiles.size() > 0}">
@@ -24,10 +24,10 @@
                     <table class="data-table">
                         <thead>
                             <tr>
-                                <th>Name</th>
-                                <th style="width: 160px;">Created at</th>
-                                <th style="width: 150px;">Type</th>
-                                <th style="width: 180px; text-align: center;">Actions</th>
+                                <th>Ad</th>
+                                <th style="width: 160px;">Oluşturulma</th>
+                                <th style="width: 150px;">Tür</th>
+                                <th style="width: 180px; text-align: center;">İşlemler</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -46,7 +46,7 @@
                                     </td>
                                     <td style="color: var(--text-secondary);"><h:outputText value="#{file.type}" /></td>
                                     <td style="text-align: center; display: flex; justify-content: center; gap: 10px;">
-                                        <h:commandLink action="#{fileBean.toggleStar(file)}" styleClass="table-action-btn" title="#{file.starred ? 'Remove from starred' : 'Add to starred'}">
+                                        <h:commandLink action="#{fileBean.toggleStar(file)}" styleClass="table-action-btn" title="#{file.starred ? 'Yıldızdan kaldır' : 'Yıldız ekle'}">
                                             <i class="fas fa-star" style="color: #{file.starred ? '#f59e0b' : 'var(--text-secondary)'};" />
                                         </h:commandLink>
                                     </td>
@@ -61,8 +61,8 @@
         <h:panelGroup rendered="#{fileBean.recentFiles.size() == 0}">
             <div class="empty-state">
                 <i class="fas fa-clock" style="font-size: 80px; color: #cbd5e1; margin-bottom: 24px;" />
-                <h3>No recent files</h3>
-                <p>Files you upload will appear here, sorted from newest to oldest.</p>
+                <h3>Son dosya yok</h3>
+                <p>Yüklediğiniz dosyalar burada en yeniden eskiye doğru listelenecektir.</p>
             </div>
         </h:panelGroup>
 

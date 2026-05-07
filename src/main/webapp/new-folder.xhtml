@@ -10,7 +10,7 @@
 <ui:composition template="./template.xhtml">
 
     <ui:define name="title">
-        New Folder - Drive
+        Yeni Klasör - Cloud System
     </ui:define>
 
     <ui:define name="content">
@@ -20,7 +20,7 @@
             <h:link outcome="dashboard.xhtml" style="color: var(--text-secondary); text-decoration: none; font-size: 20px; transition: color 0.2s;">
                 <i class="fas fa-arrow-left"></i>
             </h:link>
-            <h2 class="page-title" style="font-weight: 600;">Create new folder</h2>
+            <h2 class="page-title" style="font-weight: 600;">Yeni klasör oluştur</h2>
         </div>
 
         <div class="form-card" style="margin-top: 24px;">
@@ -30,13 +30,13 @@
 
             <h:form id="folderForm">
                 <div class="form-group">
-                    <label class="form-label">Folder name</label>
-                    <h:inputText value="#{folderBean.folder.name}" required="true" requiredMessage="Please enter a folder name" styleClass="form-control" a:placeholder="Untitled folder"/>
+                    <label class="form-label">Klasör adı</label>
+                    <h:inputText value="#{folderBean.folder.name}" required="true" requiredMessage="Lütfen bir klasör adı girin" styleClass="form-control" a:placeholder="Adsız klasör"/>
                 </div>
 
                 <div class="form-actions">
-                    <h:link value="Cancel" outcome="dashboard.xhtml" styleClass="btn btn-outline" />
-                    <h:commandButton value="Create" action="#{folderBean.createFolder()}" styleClass="btn btn-primary" />
+                    <h:link value="İptal" outcome="dashboard.xhtml" styleClass="btn btn-outline" />
+                    <h:commandButton value="Oluştur" action="#{folderBean.createFolder()}" styleClass="btn btn-primary" />
                 </div>
             </h:form>
         </div>

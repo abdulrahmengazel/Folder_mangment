@@ -35,7 +35,7 @@ public class UserBean implements Serializable {
 
             // 1. حفظ المستخدم في قاعدة البيانات أولاً ليحصل على ID
             userFacade.create(user);
-            System.out.println("User saved to database with ID: " + user.getId());
+            System.out.println("Kullanıcı veritabanına kaydedildi. ID: " + user.getId());
 
             // 2. بناء المسار الفيزيائي للمستخدم الجديد على نظام لينكس
             try {
@@ -45,18 +45,18 @@ public class UserBean implements Serializable {
                 // أمر نظام التشغيل بإنشاء المجلد
                 if (!java.nio.file.Files.exists(userPath)) {
                     java.nio.file.Files.createDirectories(userPath);
-                    System.out.println("Physical root folder created for user at: " + userPath.toString());
+                    System.out.println("Kullanıcı için fiziksel kök klasör oluşturuldu: " + userPath.toString());
                 }
             } catch (Exception e) {
                 // في حال فشل نظام التشغيل، نطبع الخطأ لكن لا نوقف التسجيل
-                System.out.println("Warning: Failed to create OS folder for user: " + e.getMessage());
+                System.out.println("Uyarı: Kullanıcı için işletim sistemi klasörü oluşturulamadı: " + e.getMessage());
             }
 
             // توجيه المستخدم إلى صفحة الدخول بعد نجاح العملية
             return "login.xhtml?faces-redirect=true";
 
         } catch (Exception e) {
-            System.out.println("Error registering user: " + e.getMessage());
+            System.out.println("Kullanıcı kaydı sırasında hata oluştu: " + e.getMessage());
             return null;
         }
     }
@@ -64,7 +64,7 @@ public class UserBean implements Serializable {
     public void editUser() {
         // إذا كان هناك تعديل لكلمة المرور يجب تشفيرها أيضاً (يعتمد على تصميم الواجهة)
         userFacade.edit(user);
-        System.out.println("User edited");
+        System.out.println("Kullanıcı güncellendi");
     }
 
     public void updateForm(Users u) {
@@ -73,7 +73,7 @@ public class UserBean implements Serializable {
 
     public void deleteUser(Users u) {
         userFacade.remove(u);
-        System.out.println("User deleted");
+        System.out.println("Kullanıcı silindi");
     }
 
     public Users getUser() {

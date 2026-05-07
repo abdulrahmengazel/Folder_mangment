@@ -7,7 +7,7 @@ import java.util.Locale;
 
 @Stateless
 public abstract class AbstractFacade {
-    @PersistenceContext(unitName = "CloudDrivePu")
+    @PersistenceContext(unitName = "CloudSystemPu")
     protected EntityManager entityManager;
 
     protected static final Locale TURKISH = Locale.forLanguageTag("tr-TR");
