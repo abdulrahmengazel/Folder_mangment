@@ -17,5 +17,5 @@ public interface UserFacadeLocal {
 
     List<Users> findAll();
 
-    Users login (String email, String password);
+    Users login(String email, String password);
 }

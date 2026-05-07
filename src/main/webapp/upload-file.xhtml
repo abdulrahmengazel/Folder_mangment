@@ -4,7 +4,7 @@
       xmlns:h="jakarta.faces.html"
       xmlns:f="jakarta.faces.core"
       xmlns:ui="jakarta.faces.facelets"
-      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+>
 
 <ui:composition template="./template.xhtml">
 
@@ -13,10 +13,11 @@
     </ui:define>
 
     <ui:define name="content">
-        <h:messages globalOnly="true" styleClass="messages" />
+        <h:messages globalOnly="true" styleClass="messages"/>
 
         <div class="page-header" style="justify-content: flex-start; gap: 16px; border: none;">
-            <h:link outcome="dashboard.xhtml" style="color: var(--text-secondary); text-decoration: none; font-size: 20px; transition: color 0.2s;">
+            <h:link outcome="dashboard.xhtml"
+                    style="color: var(--text-secondary); text-decoration: none; font-size: 20px; transition: color 0.2s;">
                 <i class="fas fa-arrow-left"></i>
             </h:link>
             <h2 class="page-title" style="font-weight: 600;">Dosya yükle</h2>
@@ -27,23 +28,28 @@
             <h:form id="uploadForm" enctype="multipart/form-data">
                 <div class="form-group">
                     <label class="form-label">Hedef klasörü seçin</label>
-                    <h:selectOneMenu value="#{fileBean.targetFolderId}" required="true" requiredMessage="Lütfen bir klasör seçin" styleClass="form-control">
-                        <f:selectItem itemLabel="Bir klasör seçin..." itemValue="#{null}" noSelectionOption="true" />
-                        <f:selectItems value="#{folderBean.foldersList}" var="folder" itemLabel="#{folder.name}" itemValue="#{folder.id}" />
+                    <h:selectOneMenu value="#{fileBean.targetFolderId}" required="true"
+                                     requiredMessage="Lütfen bir klasör seçin" styleClass="form-control">
+                        <f:selectItem itemLabel="Bir klasör seçin..." itemValue="#{null}" noSelectionOption="true"/>
+                        <f:selectItems value="#{folderBean.foldersList}" var="folder" itemLabel="#{folder.name}"
+                                       itemValue="#{folder.id}"/>
                     </h:selectOneMenu>
                 </div>
 
                 <div class="form-group" style="margin-top: 32px;">
-                     <div style="border: 2px dashed #cbd5e1; border-radius: 12px; padding: 48px 24px; text-align: center; background-color: #f8fafc; transition: all 0.2s;">
-                        <i class="fas fa-cloud-upload-alt" style="font-size: 48px; color: var(--primary-color); margin-bottom: 16px;"></i>
+                    <div style="border: 2px dashed #cbd5e1; border-radius: 12px; padding: 48px 24px; text-align: center; background-color: #f8fafc; transition: all 0.2s;">
+                        <i class="fas fa-cloud-upload-alt"
+                           style="font-size: 48px; color: var(--primary-color); margin-bottom: 16px;"></i>
                         <div style="margin-bottom: 16px; color: var(--text-primary); font-weight: 500;">Yüklenecek dosyayı seçin</div>
-                        <h:inputFile value="#{fileBean.uploadedFile}" required="true" requiredMessage="Lütfen yüklenecek bir dosya seçin" style="width: 100%; max-width: 300px; margin: 0 auto; color: var(--text-secondary); cursor: pointer;"/>
+                        <h:inputFile value="#{fileBean.uploadedFile}" required="true"
+                                     requiredMessage="Lütfen yüklenecek bir dosya seçin"
+                                     style="width: 100%; max-width: 300px; margin: 0 auto; color: var(--text-secondary); cursor: pointer;"/>
                     </div>
                 </div>
 
                 <div class="form-actions">
-                    <h:link value="İptal" outcome="dashboard.xhtml" styleClass="btn btn-outline" />
-                    <h:commandButton value="Yükle" action="#{fileBean.uploadFile()}" styleClass="btn btn-primary" />
+                    <h:link value="İptal" outcome="dashboard.xhtml" styleClass="btn btn-outline"/>
+                    <h:commandButton value="Yükle" action="#{fileBean.uploadFile()}" styleClass="btn btn-primary"/>
                 </div>
             </h:form>
         </div>

@@ -1,6 +1,7 @@
 package entity;
 
 import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -17,7 +18,7 @@ public class Files implements Serializable {
     @Column(name = "Size", nullable = false)
     private Long size;
 
-    @Column(name ="Type", nullable = false, length = 50)
+    @Column(name = "Type", nullable = false, length = 50)
     private String type;
 
     // تمت إضافة مسار الملف هنا ليتم حفظه في قاعدة البيانات
@@ -52,34 +53,84 @@ public class Files implements Serializable {
         }
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     // توحيد أسماء الدوال لتتوافق مع معايير JSF
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public String getName() {
+        return name;
+    }
 
-    public Long getSize() { return size; }
-    public void setSize(Long size) { this.size = size; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public String getType() { return type; }
-    public void setType(String type) { this.type = type; }
+    public Long getSize() {
+        return size;
+    }
 
-    public String getPath() { return path; }
-    public void setPath(String path) { this.path = path; }
+    public void setSize(Long size) {
+        this.size = size;
+    }
 
-    public boolean isDeleted() { return deleted; }
-    public void setDeleted(boolean deleted) { this.deleted = deleted; }
+    public String getType() {
+        return type;
+    }
 
-    public boolean isStarred() { return starred; }
-    public void setStarred(boolean starred) { this.starred = starred; }
+    public void setType(String type) {
+        this.type = type;
+    }
 
-    public Date getCreatedAt() { return createdAt; }
-    public void setCreatedAt(Date createdAt) { this.createdAt = createdAt; }
+    public String getPath() {
+        return path;
+    }
 
-    public Folders getFolder() { return folder; }
-    public void setFolder(Folders folder) { this.folder = folder; }
+    public void setPath(String path) {
+        this.path = path;
+    }
 
-    public Users getOwner() { return owner; }
-    public void setOwner(Users owner) { this.owner = owner; }
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public boolean isStarred() {
+        return starred;
+    }
+
+    public void setStarred(boolean starred) {
+        this.starred = starred;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public Folders getFolder() {
+        return folder;
+    }
+
+    public void setFolder(Folders folder) {
+        this.folder = folder;
+    }
+
+    public Users getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Users owner) {
+        this.owner = owner;
+    }
 }

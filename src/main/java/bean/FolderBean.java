@@ -1,8 +1,8 @@
 package bean;
 
+import entity.Files;
 import entity.Folders;
 import entity.Users;
-import entity.Files;
 import facadeLocal.FileFacadeLocal;
 import facadeLocal.FolderFacadeLocal;
 import jakarta.ejb.EJB;
@@ -17,21 +17,18 @@ import java.util.List;
 @ViewScoped
 public class FolderBean implements Serializable {
 
+    // يجب إضافة هذا المسار الثابت في أعلى الكلاس إذا لم يكن موجوداً
+    private static final String ROOT_UPLOAD_DIR = "/home/abdulrahman/cloud_uploads";
     private Folders folder;
     private List<Folders> foldersList;
-
     @EJB
     private FolderFacadeLocal folderFacade;
-
     @EJB
     private FileFacadeLocal fileFacade;
 
     public void clearForm() {
         folder = new Folders();
     }
-
-    // يجب إضافة هذا المسار الثابت في أعلى الكلاس إذا لم يكن موجوداً
-    private static final String ROOT_UPLOAD_DIR = "/home/abdulrahman/cloud_uploads";
 
     public String createFolder() {
         FacesContext context = FacesContext.getCurrentInstance();
@@ -60,7 +57,7 @@ public class FolderBean implements Serializable {
 
             System.out.println("Klasör veritabanında ve dosya sisteminde başarıyla oluşturuldu");
             clearForm();
-            
+
             return "dashboard.xhtml?faces-redirect=true";
         } else {
             System.out.println("Hata: Oturum açmış kullanıcı bulunamadı.");

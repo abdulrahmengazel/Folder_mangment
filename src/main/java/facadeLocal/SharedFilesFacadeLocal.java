@@ -4,6 +4,7 @@ import entity.SharedFiles;
 import jakarta.ejb.Local;
 
 import java.util.List;
+
 @Local
 public interface SharedFilesFacadeLocal {
     void create(SharedFiles sharedFiles);

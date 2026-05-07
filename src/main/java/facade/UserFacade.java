@@ -9,6 +9,7 @@ import jakarta.persistence.criteria.Root;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.List;
+
 @Stateless
 public class UserFacade extends AbstractFacade implements UserFacadeLocal {
 
@@ -54,7 +55,7 @@ public class UserFacade extends AbstractFacade implements UserFacadeLocal {
                 return user;
             }
             return null;
-        }catch (Exception e){
+        } catch (Exception e) {
             return null;
         }
     }

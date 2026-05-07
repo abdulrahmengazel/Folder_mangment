@@ -2,11 +2,10 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core"
       xmlns:ui="jakarta.faces.facelets"
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
-<h:outputStylesheet name="css/style.css" />
-<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/style.css?v=2.0" />
+<h:outputStylesheet name="css/style.css"/>
+<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/style.css?v=2.0"/>
 <ui:composition template="./template.xhtml">
 
     <ui:define name="title">
@@ -14,10 +13,11 @@
     </ui:define>
 
     <ui:define name="content">
-        <h:messages globalOnly="true" styleClass="messages" />
+        <h:messages globalOnly="true" styleClass="messages"/>
 
         <div class="page-header" style="justify-content: flex-start; gap: 16px; border: none;">
-            <h:link outcome="dashboard.xhtml" style="color: var(--text-secondary); text-decoration: none; font-size: 20px; transition: color 0.2s;">
+            <h:link outcome="dashboard.xhtml"
+                    style="color: var(--text-secondary); text-decoration: none; font-size: 20px; transition: color 0.2s;">
                 <i class="fas fa-arrow-left"></i>
             </h:link>
             <h2 class="page-title" style="font-weight: 600;">Yeni klasör oluştur</h2>
@@ -31,12 +31,15 @@
             <h:form id="folderForm">
                 <div class="form-group">
                     <label class="form-label">Klasör adı</label>
-                    <h:inputText value="#{folderBean.folder.name}" required="true" requiredMessage="Lütfen bir klasör adı girin" styleClass="form-control" a:placeholder="Adsız klasör"/>
+                    <h:inputText value="#{folderBean.folder.name}" required="true"
+                                 requiredMessage="Lütfen bir klasör adı girin" styleClass="form-control"
+                                 a:placeholder="Adsız klasör"/>
                 </div>
 
                 <div class="form-actions">
-                    <h:link value="İptal" outcome="dashboard.xhtml" styleClass="btn btn-outline" />
-                    <h:commandButton value="Oluştur" action="#{folderBean.createFolder()}" styleClass="btn btn-primary" />
+                    <h:link value="İptal" outcome="dashboard.xhtml" styleClass="btn btn-outline"/>
+                    <h:commandButton value="Oluştur" action="#{folderBean.createFolder()}"
+                                     styleClass="btn btn-primary"/>
                 </div>
             </h:form>
         </div>

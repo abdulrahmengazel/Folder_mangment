@@ -4,6 +4,7 @@ import entity.Files;
 import jakarta.ejb.Local;
 
 import java.util.List;
+
 @Local
 public interface FileFacadeLocal {
     void create(Files files);
@@ -11,6 +12,7 @@ public interface FileFacadeLocal {
     void edit(Files files);
 
     void remove(Files files);
+
     Files find(Object id);
 
     List<Files> findAll();

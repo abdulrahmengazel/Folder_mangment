@@ -15,13 +15,11 @@ import java.io.Serializable;
 @ViewScoped
 public class LoginBean implements Serializable {
 
-    private Users user;
-
     @EJB
     UserFacadeLocal userFacade;
-
     @Inject
     FacesContext facesContext;
+    private Users user;
 
     public String login() {
         String email = user.getEmail() != null ? user.getEmail().trim() : null;

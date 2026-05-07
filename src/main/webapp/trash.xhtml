@@ -21,12 +21,14 @@
                 margin-bottom: 24px;
                 border-bottom: 1px solid var(--border-color);
             }
+
             .page-title {
                 font-size: 18px;
                 color: var(--text-primary);
                 margin: 0;
                 font-weight: 500;
             }
+
             .empty-state {
                 display: flex;
                 flex-direction: column;
@@ -35,22 +37,26 @@
                 padding: 80px 24px;
                 text-align: center;
             }
+
             .empty-state-img {
                 width: 250px;
                 margin-bottom: 24px;
                 opacity: 0.9;
             }
+
             .empty-state h3 {
                 font-size: 20px;
                 font-weight: 400;
                 color: var(--text-primary);
                 margin-bottom: 12px;
             }
+
             .empty-state p {
                 font-size: 14px;
                 color: var(--text-secondary);
                 max-width: 400px;
             }
+
             .trash-info-banner {
                 background-color: #f1f3f4;
                 padding: 12px 16px;
@@ -64,47 +70,51 @@
             }
         </style>
 
-        <h:messages globalOnly="true" styleClass="messages" />
+        <h:messages globalOnly="true" styleClass="messages"/>
 
         <div class="page-header">
             <h2 class="page-title">Çöp kutusu</h2>
         </div>
 
         <div class="trash-info-banner">
-            <i class="fas fa-info-circle" />
+            <i class="fas fa-info-circle"/>
             <span>Çöp kutusundaki öğeler geri yüklenebilir veya kalıcı olarak silinebilir.</span>
         </div>
 
         <h:panelGroup rendered="#{trashBean.deletedFolders.size() > 0}">
-            <h3 class="form-label" style="margin-bottom: 16px; font-size: 15px; color: var(--text-secondary);">Silinmiş klasörler</h3>
+            <h3 class="form-label"
+                style="margin-bottom: 16px; font-size: 15px; color: var(--text-secondary);">Silinmiş klasörler</h3>
             <div class="table-container" style="margin-bottom: 32px;">
                 <h:form style="margin: 0;">
                     <table class="data-table">
                         <thead>
-                            <tr>
-                                <th>Ad</th>
-                                <th style="width: 180px; text-align: center;">İşlemler</th>
-                            </tr>
+                        <tr>
+                            <th>Ad</th>
+                            <th style="width: 180px; text-align: center;">İşlemler</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <ui:repeat value="#{trashBean.deletedFolders}" var="folder">
-                                <tr>
-                                    <td>
-                                        <div class="file-name-cell">
-                                            <i class="fas fa-folder file-icon" style="color: #f59e0b;" />
-                                            <h:outputText value="#{folder.name}" />
-                                        </div>
-                                    </td>
-                                    <td style="text-align: center; display: flex; justify-content: center; gap: 10px;">
-                                        <h:commandLink action="#{trashBean.restoreFolder(folder)}" styleClass="table-action-btn" title="Klasörü geri yükle">
-                                            <i class="fas fa-undo" />
-                                        </h:commandLink>
-                                        <h:commandLink action="#{trashBean.permanentlyDeleteFolder(folder)}" styleClass="table-action-btn" title="Kalıcı olarak sil" onclick="return confirm('Bu klasörü kalıcı olarak silmek istediğinize emin misiniz? Bu işlem geri alınamaz.');">
-                                            <i class="fas fa-trash-alt" />
-                                        </h:commandLink>
-                                    </td>
-                                </tr>
-                            </ui:repeat>
+                        <ui:repeat value="#{trashBean.deletedFolders}" var="folder">
+                            <tr>
+                                <td>
+                                    <div class="file-name-cell">
+                                        <i class="fas fa-folder file-icon" style="color: #f59e0b;"/>
+                                        <h:outputText value="#{folder.name}"/>
+                                    </div>
+                                </td>
+                                <td style="text-align: center; display: flex; justify-content: center; gap: 10px;">
+                                    <h:commandLink action="#{trashBean.restoreFolder(folder)}"
+                                                   styleClass="table-action-btn" title="Klasörü geri yükle">
+                                        <i class="fas fa-undo"/>
+                                    </h:commandLink>
+                                    <h:commandLink action="#{trashBean.permanentlyDeleteFolder(folder)}"
+                                                   styleClass="table-action-btn" title="Kalıcı olarak sil"
+                                                   onclick="return confirm('Bu klasörü kalıcı olarak silmek istediğinize emin misiniz? Bu işlem geri alınamaz.');">
+                                        <i class="fas fa-trash-alt"/>
+                                    </h:commandLink>
+                                </td>
+                            </tr>
+                        </ui:repeat>
                         </tbody>
                     </table>
                 </h:form>
@@ -112,43 +122,47 @@
         </h:panelGroup>
 
         <h:panelGroup rendered="#{trashBean.deletedFiles.size() > 0}">
-            <h3 class="form-label" style="margin-bottom: 16px; font-size: 15px; color: var(--text-secondary);">Silinmiş dosyalar</h3>
+            <h3 class="form-label"
+                style="margin-bottom: 16px; font-size: 15px; color: var(--text-secondary);">Silinmiş dosyalar</h3>
             <div class="table-container">
                 <h:form style="margin: 0;">
                     <table class="data-table">
                         <thead>
-                            <tr>
-                                <th>Ad</th>
-                                <th style="width: 150px;">Boyut</th>
-                                <th style="width: 150px;">Tür</th>
-                                <th style="width: 180px; text-align: center;">İşlemler</th>
-                            </tr>
+                        <tr>
+                            <th>Ad</th>
+                            <th style="width: 150px;">Boyut</th>
+                            <th style="width: 150px;">Tür</th>
+                            <th style="width: 180px; text-align: center;">İşlemler</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <ui:repeat value="#{trashBean.deletedFiles}" var="file">
-                                <tr>
-                                    <td>
-                                        <div class="file-name-cell">
-                                            <i class="fas fa-file-alt file-icon" />
-                                            <h:outputText value="#{file.name}" />
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <h:outputText value="#{file.size / 1024}">
-                                            <f:convertNumber maxFractionDigits="2"/>
-                                        </h:outputText> KB
-                                    </td>
-                                    <td style="color: var(--text-secondary);"><h:outputText value="#{file.type}" /></td>
-                                    <td style="text-align: center; display: flex; justify-content: center; gap: 10px;">
-                                        <h:commandLink action="#{trashBean.restoreFile(file)}" styleClass="table-action-btn" title="Dosyayı geri yükle">
-                                            <i class="fas fa-undo" />
-                                        </h:commandLink>
-                                        <h:commandLink action="#{trashBean.permanentlyDeleteFile(file)}" styleClass="table-action-btn" title="Kalıcı olarak sil" onclick="return confirm('Bu dosyayı kalıcı olarak silmek istediğinize emin misiniz? Bu işlem geri alınamaz.');">
-                                            <i class="fas fa-trash-alt" />
-                                        </h:commandLink>
-                                    </td>
-                                </tr>
-                            </ui:repeat>
+                        <ui:repeat value="#{trashBean.deletedFiles}" var="file">
+                            <tr>
+                                <td>
+                                    <div class="file-name-cell">
+                                        <i class="fas fa-file-alt file-icon"/>
+                                        <h:outputText value="#{file.name}"/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <h:outputText value="#{file.size / 1024}">
+                                        <f:convertNumber maxFractionDigits="2"/>
+                                    </h:outputText> KB
+                                </td>
+                                <td style="color: var(--text-secondary);"><h:outputText value="#{file.type}"/></td>
+                                <td style="text-align: center; display: flex; justify-content: center; gap: 10px;">
+                                    <h:commandLink action="#{trashBean.restoreFile(file)}" styleClass="table-action-btn"
+                                                   title="Dosyayı geri yükle">
+                                        <i class="fas fa-undo"/>
+                                    </h:commandLink>
+                                    <h:commandLink action="#{trashBean.permanentlyDeleteFile(file)}"
+                                                   styleClass="table-action-btn" title="Kalıcı olarak sil"
+                                                   onclick="return confirm('Bu dosyayı kalıcı olarak silmek istediğinize emin misiniz? Bu işlem geri alınamaz.');">
+                                        <i class="fas fa-trash-alt"/>
+                                    </h:commandLink>
+                                </td>
+                            </tr>
+                        </ui:repeat>
                         </tbody>
                     </table>
                 </h:form>
@@ -157,7 +171,8 @@
 
         <h:panelGroup rendered="#{trashBean.deletedFiles.size() == 0 and trashBean.deletedFolders.size() == 0}">
             <div class="empty-state">
-                <img src="https://ssl.gstatic.com/docs/doclist/images/empty_state_trash_v2.svg" alt="Çöp kutusu boş" class="empty-state-img"/>
+                <img src="https://ssl.gstatic.com/docs/doclist/images/empty_state_trash_v2.svg" alt="Çöp kutusu boş"
+                     class="empty-state-img"/>
                 <h3>Çöp kutusu boş</h3>
                 <p>Henüz çöp kutusuna taşınmış bir öğe yok.</p>
             </div>

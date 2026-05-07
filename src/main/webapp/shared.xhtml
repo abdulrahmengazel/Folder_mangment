@@ -12,7 +12,7 @@
     </ui:define>
 
     <ui:define name="content">
-        <h:messages globalOnly="true" styleClass="messages" />
+        <h:messages globalOnly="true" styleClass="messages"/>
 
         <div class="page-header">
             <h2 class="page-title">Benimle paylaşılanlar</h2>
@@ -27,30 +27,38 @@
 
             <h:form id="shareForm" style="display: flex; gap: 16px; align-items: flex-end; flex-wrap: wrap;">
                 <div style="flex: 2; min-width: 200px;">
-                    <label class="form-label" style="font-weight: 500; color: var(--text-secondary);">Dosya seçin</label>
-                    <h:selectOneMenu value="#{sharedFilesBean.selectedFileId}" required="true" requiredMessage="Lütfen bir dosya seçin" styleClass="form-control">
+                    <label class="form-label"
+                           style="font-weight: 500; color: var(--text-secondary);">Dosya seçin</label>
+                    <h:selectOneMenu value="#{sharedFilesBean.selectedFileId}" required="true"
+                                     requiredMessage="Lütfen bir dosya seçin" styleClass="form-control">
                         <f:selectItem itemLabel="Bir dosya seçin..." itemValue="#{null}" noSelectionOption="true"/>
-                        <f:selectItems value="#{sharedFilesBean.availableFiles}" var="f" itemLabel="#{f.name}" itemValue="#{f.id}"/>
+                        <f:selectItems value="#{sharedFilesBean.availableFiles}" var="f" itemLabel="#{f.name}"
+                                       itemValue="#{f.id}"/>
                     </h:selectOneMenu>
                 </div>
 
                 <div style="flex: 2; min-width: 200px;">
-                    <label class="form-label" style="font-weight: 500; color: var(--text-secondary);">Kişi ekleyin</label>
-                    <h:selectOneMenu value="#{sharedFilesBean.selectedUserId}" required="true" requiredMessage="Lütfen bir kullanıcı seçin" styleClass="form-control">
+                    <label class="form-label"
+                           style="font-weight: 500; color: var(--text-secondary);">Kişi ekleyin</label>
+                    <h:selectOneMenu value="#{sharedFilesBean.selectedUserId}" required="true"
+                                     requiredMessage="Lütfen bir kullanıcı seçin" styleClass="form-control">
                         <f:selectItem itemLabel="Bir kişi seçin..." itemValue="#{null}" noSelectionOption="true"/>
-                        <f:selectItems value="#{sharedFilesBean.availableUsers}" var="u" itemLabel="#{u.email}" itemValue="#{u.id}"/>
+                        <f:selectItems value="#{sharedFilesBean.availableUsers}" var="u" itemLabel="#{u.email}"
+                                       itemValue="#{u.id}"/>
                     </h:selectOneMenu>
                 </div>
 
                 <div style="flex: 1; min-width: 120px;">
                     <label class="form-label" style="font-weight: 500; color: var(--text-secondary);">İzin</label>
                     <h:selectOneMenu value="#{sharedFilesBean.selectedPermission}" styleClass="form-control">
-                        <f:selectItems value="#{sharedFilesBean.permissions}" var="p" itemLabel="#{p == 'READ' ? 'Görüntüleyici' : 'Düzenleyici'}" itemValue="#{p}"/>
+                        <f:selectItems value="#{sharedFilesBean.permissions}" var="p"
+                                       itemLabel="#{p == 'READ' ? 'Görüntüleyici' : 'Düzenleyici'}" itemValue="#{p}"/>
                     </h:selectOneMenu>
                 </div>
 
                 <div>
-                    <h:commandButton value="Paylaş" action="#{sharedFilesBean.shareFile()}" styleClass="btn btn-primary" />
+                    <h:commandButton value="Paylaş" action="#{sharedFilesBean.shareFile()}"
+                                     styleClass="btn btn-primary"/>
                 </div>
             </h:form>
         </div>
@@ -58,41 +66,45 @@
 
         <!-- Kullanıcıyla paylaşılan dosyalar -->
         <h:panelGroup rendered="#{sharedFilesBean.sharedWithMeList.size() > 0}">
-            <h3 class="form-label" style="margin-bottom: 16px; font-size: 15px; color: var(--text-secondary);">Benimle paylaşılan dosyalar</h3>
+            <h3 class="form-label"
+                style="margin-bottom: 16px; font-size: 15px; color: var(--text-secondary);">Benimle paylaşılan dosyalar</h3>
             <div class="table-container" style="margin-bottom: 40px;">
                 <h:form id="sharedWithMeForm" style="margin: 0;">
                     <table class="data-table">
                         <thead>
-                            <tr>
-                                <th>Ad</th>
-                                <th>Paylaşan</th>
-                                <th style="width: 150px;">İzin</th>
-                            </tr>
+                        <tr>
+                            <th>Ad</th>
+                            <th>Paylaşan</th>
+                            <th style="width: 150px;">İzin</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <ui:repeat value="#{sharedFilesBean.sharedWithMeList}" var="sf">
-                                <tr>
-                                    <td>
-                                        <div class="file-name-cell">
-                                            <i class="fas fa-file file-icon" style="color: #10b981;"></i>
-                                            <h:outputText value="#{sf.file.name}" />
+                        <ui:repeat value="#{sharedFilesBean.sharedWithMeList}" var="sf">
+                            <tr>
+                                <td>
+                                    <div class="file-name-cell">
+                                        <i class="fas fa-file file-icon" style="color: #10b981;"></i>
+                                        <h:outputText value="#{sf.file.name}"/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div class="user-avatar"
+                                             style="width: 28px; height: 28px; font-size: 12px; background-color: #f59e0b;">
+                                            <h:outputText value="#{sf.file.owner.name.substring(0,1).toUpperCase()}"
+                                                          rendered="#{not empty sf.file.owner.name}"/>
                                         </div>
-                                    </td>
-                                    <td>
-                                        <div style="display: flex; align-items: center; gap: 12px;">
-                                            <div class="user-avatar" style="width: 28px; height: 28px; font-size: 12px; background-color: #f59e0b;">
-                                                <h:outputText value="#{sf.file.owner.name.substring(0,1).toUpperCase()}" rendered="#{not empty sf.file.owner.name}"/>
-                                            </div>
-                                            <span style="font-weight: 500; color: var(--text-primary);">#{sf.file.owner.name}</span>
-                                        </div>
-                                    </td>
-                                    <td>
+                                        <span style="font-weight: 500; color: var(--text-primary);">#{sf.file.owner.name}</span>
+                                    </div>
+                                </td>
+                                <td>
                                         <span style="display: inline-block; padding: 4px 12px; background-color: #f3f4f6; border-radius: 12px; font-size: 12px; font-weight: 600; color: var(--text-secondary);">
-                                                    <h:outputText value="#{sf.permission == 'READ' ? 'Görüntüleyici' : 'Düzenleyici'}" />
+                                                    <h:outputText
+                                                            value="#{sf.permission == 'READ' ? 'Görüntüleyici' : 'Düzenleyici'}"/>
                                         </span>
-                                    </td>
-                                </tr>
-                            </ui:repeat>
+                                </td>
+                            </tr>
+                        </ui:repeat>
                         </tbody>
                     </table>
                 </h:form>
@@ -101,54 +113,61 @@
 
         <!-- Kullanıcının başkalarıyla paylaştığı dosyalar -->
         <h:panelGroup rendered="#{sharedFilesBean.sharedFilesList.size() > 0}">
-            <h3 class="form-label" style="margin-bottom: 16px; font-size: 15px; color: var(--text-secondary);">Paylaştığım dosyalar</h3>
+            <h3 class="form-label"
+                style="margin-bottom: 16px; font-size: 15px; color: var(--text-secondary);">Paylaştığım dosyalar</h3>
             <div class="table-container">
                 <h:form id="mySharedForm" style="margin: 0;">
                     <table class="data-table">
                         <thead>
-                            <tr>
-                                <th>Ad</th>
-                                <th>Paylaşılan kişi</th>
-                                <th style="width: 150px;">İzin</th>
-                                <th style="width: 80px; text-align: center;">İşlemler</th>
-                            </tr>
+                        <tr>
+                            <th>Ad</th>
+                            <th>Paylaşılan kişi</th>
+                            <th style="width: 150px;">İzin</th>
+                            <th style="width: 80px; text-align: center;">İşlemler</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <ui:repeat value="#{sharedFilesBean.sharedFilesList}" var="sf">
-                                <tr>
-                                    <td>
-                                        <div class="file-name-cell">
-                                            <i class="fas fa-share-alt file-icon" style="color: var(--primary-color);"></i>
-                                            <h:outputText value="#{sf.file.name}" />
+                        <ui:repeat value="#{sharedFilesBean.sharedFilesList}" var="sf">
+                            <tr>
+                                <td>
+                                    <div class="file-name-cell">
+                                        <i class="fas fa-share-alt file-icon" style="color: var(--primary-color);"></i>
+                                        <h:outputText value="#{sf.file.name}"/>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div class="user-avatar"
+                                             style="width: 28px; height: 28px; font-size: 12px; background-color: #8b5cf6;">
+                                            <h:outputText value="#{sf.recipient.name.substring(0,1).toUpperCase()}"
+                                                          rendered="#{not empty sf.recipient.name}"/>
                                         </div>
-                                    </td>
-                                    <td>
-                                        <div style="display: flex; align-items: center; gap: 12px;">
-                                             <div class="user-avatar" style="width: 28px; height: 28px; font-size: 12px; background-color: #8b5cf6;">
-                                                <h:outputText value="#{sf.recipient.name.substring(0,1).toUpperCase()}" rendered="#{not empty sf.recipient.name}"/>
-                                            </div>
-                                            <span style="font-weight: 500; color: var(--text-primary);">#{sf.recipient.name}</span>
-                                        </div>
-                                    </td>
-                                    <td>
+                                        <span style="font-weight: 500; color: var(--text-primary);">#{sf.recipient.name}</span>
+                                    </div>
+                                </td>
+                                <td>
                                         <span style="display: inline-block; padding: 4px 12px; background-color: #f3f4f6; border-radius: 12px; font-size: 12px; font-weight: 600; color: var(--text-secondary);">
-                                                  <h:outputText value="#{sf.permission == 'READ' ? 'Görüntüleyici' : 'Düzenleyici'}" />
+                                                  <h:outputText
+                                                          value="#{sf.permission == 'READ' ? 'Görüntüleyici' : 'Düzenleyici'}"/>
                                         </span>
-                                    </td>
-                                    <td style="text-align: center;">
-                                              <h:commandLink action="#{sharedFilesBean.removeSharedFile(sf)}" styleClass="table-action-btn" title="Erişimi kaldır" onclick="return confirm('Bu kişinin erişimini kaldırmak istediğinize emin misiniz?');">
-                                            <i class="fas fa-user-times"></i>
-                                        </h:commandLink>
-                                    </td>
-                                </tr>
-                            </ui:repeat>
+                                </td>
+                                <td style="text-align: center;">
+                                    <h:commandLink action="#{sharedFilesBean.removeSharedFile(sf)}"
+                                                   styleClass="table-action-btn" title="Erişimi kaldır"
+                                                   onclick="return confirm('Bu kişinin erişimini kaldırmak istediğinize emin misiniz?');">
+                                        <i class="fas fa-user-times"></i>
+                                    </h:commandLink>
+                                </td>
+                            </tr>
+                        </ui:repeat>
                         </tbody>
                     </table>
                 </h:form>
             </div>
         </h:panelGroup>
 
-        <h:panelGroup rendered="#{sharedFilesBean.sharedWithMeList.size() == 0 and sharedFilesBean.sharedFilesList.size() == 0}">
+        <h:panelGroup
+                rendered="#{sharedFilesBean.sharedWithMeList.size() == 0 and sharedFilesBean.sharedFilesList.size() == 0}">
             <div class="empty-state">
                 <i class="fas fa-user-friends" style="font-size: 80px; color: #cbd5e1; margin-bottom: 24px;"></i>
                 <h3>Paylaşılan dosya yok</h3>

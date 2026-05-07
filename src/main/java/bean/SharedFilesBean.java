@@ -1,11 +1,11 @@
 package bean;
 
-import entity.SharedFiles;
 import entity.Files;
+import entity.SharedFiles;
 import entity.Users;
 import enums.PermissionEnum;
-import facadeLocal.SharedFilesFacadeLocal;
 import facadeLocal.FileFacadeLocal;
+import facadeLocal.SharedFilesFacadeLocal;
 import facadeLocal.UserFacadeLocal;
 import jakarta.ejb.EJB;
 import jakarta.faces.application.FacesMessage;

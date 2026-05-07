@@ -13,18 +13,16 @@ import java.util.List;
 @Named
 @ViewScoped
 public class UserBean implements Serializable {
+    // تأكد من تعريف المسار الأساسي في أعلى الكلاس
+    private static final String ROOT_UPLOAD_DIR = "/home/abdulrahman/cloud_uploads";
     private Users user;
     private List<Users> users;
-
     @EJB
     private UserFacadeLocal userFacade;
 
     public void clearForm() {
         user = new Users();
     }
-
-    // تأكد من تعريف المسار الأساسي في أعلى الكلاس
-    private static final String ROOT_UPLOAD_DIR = "/home/abdulrahman/cloud_uploads";
 
     public String createUser() {
         try {

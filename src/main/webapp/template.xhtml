@@ -5,18 +5,20 @@
       xmlns:h="jakarta.faces.html"
       xmlns:ui="jakarta.faces.facelets">
 <h:head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title><ui:insert name="title">Cloud System</ui:insert></title>
     <!-- FontAwesome for Icons -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Roboto:wght@400;500&amp;display=swap"
+          rel="stylesheet"/>
 
     <!-- IMPORTANT: Output stylesheet JSF way -->
-    <h:outputStylesheet name="css/style.css" />
+    <h:outputStylesheet name="css/style.css"/>
     <!-- AND traditional way to ensure it loads in case of pathing issues -->
-    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/style.css?v=#{facesContext.application.projectStage}" />
+    <link rel="stylesheet" type="text/css"
+          href="#{request.contextPath}/resources/css/style.css?v=#{facesContext.application.projectStage}"/>
 </h:head>
 <h:body>
 
@@ -38,13 +40,15 @@
         <!-- User profile & Logout -->
         <div class="header-actions">
             <h:form style="margin:0; display:flex; align-items:center;">
-                <h:commandLink action="#{loginBean.logout()}" title="Çıkış yap" style="color: var(--text-secondary); font-size: 20px; transition: color 0.2s;">
+                <h:commandLink action="#{loginBean.logout()}" title="Çıkış yap"
+                               style="color: var(--text-secondary); font-size: 20px; transition: color 0.2s;">
                     <i class="fas fa-sign-out-alt"></i>
                 </h:commandLink>
             </h:form>
 
             <div class="user-avatar" title="#{sessionScope.user.email}">
-                <h:outputText value="#{sessionScope.user.name.substring(0,1).toUpperCase()}" rendered="#{not empty sessionScope.user.name}"/>
+                <h:outputText value="#{sessionScope.user.name.substring(0,1).toUpperCase()}"
+                              rendered="#{not empty sessionScope.user.name}"/>
             </div>
         </div>
     </header>
@@ -61,31 +65,36 @@
 
             <ul class="sidebar-nav">
                 <li>
-                    <h:link outcome="dashboard.xhtml" styleClass="sidebar-item #{view.viewId == '/dashboard.xhtml' or view.viewId == '/folder-content.xhtml' ? 'active' : ''}">
+                    <h:link outcome="dashboard.xhtml"
+                            styleClass="sidebar-item #{view.viewId == '/dashboard.xhtml' or view.viewId == '/folder-content.xhtml' ? 'active' : ''}">
                         <i class="fas fa-hdd"></i>
                         Dosyalarım
                     </h:link>
                 </li>
                 <li>
-                    <h:link outcome="shared.xhtml" styleClass="sidebar-item #{view.viewId == '/shared.xhtml' ? 'active' : ''}">
+                    <h:link outcome="shared.xhtml"
+                            styleClass="sidebar-item #{view.viewId == '/shared.xhtml' ? 'active' : ''}">
                         <i class="fas fa-user-friends"></i>
                         Benimle paylaşılanlar
                     </h:link>
                 </li>
                 <li>
-                    <h:link outcome="recent.xhtml" styleClass="sidebar-item #{view.viewId == '/recent.xhtml' ? 'active' : ''}">
+                    <h:link outcome="recent.xhtml"
+                            styleClass="sidebar-item #{view.viewId == '/recent.xhtml' ? 'active' : ''}">
                         <i class="fas fa-clock"></i>
                         Son dosyalar
                     </h:link>
                 </li>
                 <li>
-                    <h:link outcome="starred.xhtml" styleClass="sidebar-item #{view.viewId == '/starred.xhtml' ? 'active' : ''}">
+                    <h:link outcome="starred.xhtml"
+                            styleClass="sidebar-item #{view.viewId == '/starred.xhtml' ? 'active' : ''}">
                         <i class="fas fa-star"></i>
                         Yıldızlılar
                     </h:link>
                 </li>
                 <li>
-                    <h:link outcome="trash.xhtml" styleClass="sidebar-item #{view.viewId == '/trash.xhtml' ? 'active' : ''}">
+                    <h:link outcome="trash.xhtml"
+                            styleClass="sidebar-item #{view.viewId == '/trash.xhtml' ? 'active' : ''}">
                         <i class="fas fa-trash"></i>
                         Çöp kutusu
                     </h:link>

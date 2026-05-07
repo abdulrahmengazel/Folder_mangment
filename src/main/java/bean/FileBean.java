@@ -20,22 +20,18 @@ import java.util.stream.Collectors;
 @ViewScoped
 public class FileBean implements Serializable {
 
+    private static final String ROOT_UPLOAD_DIR = "/home/abdulrahman/cloud_uploads";
     private Files fileEntity;
     private List<Files> filesList;
     private Part uploadedFile;
     private Folders targetFolder;
-
     // التعديل الأول: نستقبل رقم المجلد بدلاً من الكائن الكامل
     private Long targetFolderId;
-
     @EJB
     private FileFacadeLocal fileFacade;
-
     // التعديل الثاني: نحتاج طبقة المجلدات للبحث عن المجلد برقمه
     @EJB
     private FolderFacadeLocal folderFacade;
-
-    private static final String ROOT_UPLOAD_DIR = "/home/abdulrahman/cloud_uploads";
 
     public void clearForm() {
         fileEntity = new Files();
@@ -93,7 +89,7 @@ public class FileBean implements Serializable {
 
                     context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_INFO, "Başarılı", "Dosya başarıyla yüklendi!"));
                     clearForm();
-                    
+
                     return "dashboard.xhtml?faces-redirect=true";
 
                 } catch (Exception e) {
@@ -116,7 +112,7 @@ public class FileBean implements Serializable {
             filesList = null; // force reload
             context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_INFO, "Başarılı", "Dosya silindi."));
         } else {
-             context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Hata", "Bu dosyayı silme izniniz yok."));
+            context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Hata", "Bu dosyayı silme izniniz yok."));
         }
     }
 
@@ -163,14 +159,18 @@ public class FileBean implements Serializable {
         Users currentUser = (Users) context.getExternalContext().getSessionMap().get("user");
 
         if (currentUser != null) {
-             filesList = fileFacade.findAll().stream()
+            filesList = fileFacade.findAll().stream()
                     .filter(f -> f.getOwner().getId().equals(currentUser.getId()))
                     .filter(f -> !f.isDeleted())
                     .collect(Collectors.toList());
         } else {
-             filesList = java.util.Collections.emptyList();
+            filesList = java.util.Collections.emptyList();
         }
         return filesList;
+    }
+
+    public void setFilesList(List<Files> filesList) {
+        this.filesList = filesList;
     }
 
     public List<Files> getStarredFiles() {
@@ -195,13 +195,19 @@ public class FileBean implements Serializable {
         return java.util.Collections.emptyList();
     }
 
-    public void setFilesList(List<Files> filesList) {
-        this.filesList = filesList;
+    public Part getUploadedFile() {
+        return uploadedFile;
     }
 
-    public Part getUploadedFile() { return uploadedFile; }
-    public void setUploadedFile(Part uploadedFile) { this.uploadedFile = uploadedFile; }
+    public void setUploadedFile(Part uploadedFile) {
+        this.uploadedFile = uploadedFile;
+    }
 
-    public Folders getTargetFolder() { return targetFolder; }
-    public void setTargetFolder(Folders targetFolder) { this.targetFolder = targetFolder; }
+    public Folders getTargetFolder() {
+        return targetFolder;
+    }
+
+    public void setTargetFolder(Folders targetFolder) {
+        this.targetFolder = targetFolder;
+    }
 }

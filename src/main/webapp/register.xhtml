@@ -3,16 +3,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       lang="tr"
       xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core"
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
 <h:head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Hesap Oluştur - Cloud System</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Roboto:wght@400;500&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Roboto:wght@400;500&amp;display=swap"
+          rel="stylesheet"/>
     <!-- Load CSS correctly -->
-    <h:outputStylesheet name="css/style.css" />
-    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/style.css?v=2.0" />
+    <h:outputStylesheet name="css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/style.css?v=2.0"/>
     <style>
         body {
             background-color: var(--bg-color);
@@ -91,7 +91,8 @@
 
     <div class="auth-container">
         <div class="auth-header">
-            <div class="auth-logo" style="margin-left: auto; margin-right: auto; border-radius: 18px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary-color), #7c3aed); color: white; box-shadow: 0 12px 24px rgba(37, 99, 235, 0.22);">
+            <div class="auth-logo"
+                 style="margin-left: auto; margin-right: auto; border-radius: 18px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary-color), #7c3aed); color: white; box-shadow: 0 12px 24px rgba(37, 99, 235, 0.22);">
                 <i class="fas fa-cloud" style="font-size: 22px;"></i>
             </div>
             <h1 class="auth-title">Hesap oluştur</h1>
@@ -100,24 +101,27 @@
 
         <div class="auth-form">
             <h:form id="registerForm">
-                <h:messages globalOnly="true" styleClass="messages" />
+                <h:messages globalOnly="true" styleClass="messages"/>
 
                 <div class="form-group">
                     <label class="form-label">Ad Soyad</label>
                     <h:inputText id="name" value="#{userBean.user.name}" required="true"
-                                 requiredMessage="Lütfen adınızı ve soyadınızı girin" styleClass="form-control" a:placeholder="Örn. Ahmet Yılmaz"/>
+                                 requiredMessage="Lütfen adınızı ve soyadınızı girin" styleClass="form-control"
+                                 a:placeholder="Örn. Ahmet Yılmaz"/>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label">E-posta adresi</label>
                     <h:inputText id="email" value="#{userBean.user.email}" required="true"
-                                 requiredMessage="Lütfen e-posta adresinizi girin" styleClass="form-control" a:placeholder="ornek@site.com"/>
+                                 requiredMessage="Lütfen e-posta adresinizi girin" styleClass="form-control"
+                                 a:placeholder="ornek@site.com"/>
                 </div>
 
                 <div class="form-group" style="margin-bottom: 8px;">
                     <label class="form-label">Şifre</label>
                     <h:inputSecret id="password" value="#{userBean.user.password}" required="true"
-                                   requiredMessage="Lütfen bir şifre girin" styleClass="form-control" a:placeholder="Güçlü bir şifre oluşturun"/>
+                                   requiredMessage="Lütfen bir şifre girin" styleClass="form-control"
+                                   a:placeholder="Güçlü bir şifre oluşturun"/>
                 </div>
 
                 <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 24px;">
@@ -126,7 +130,9 @@
 
                 <div class="auth-actions">
                     <h:link value="Giriş yap" outcome="login.xhtml" styleClass="auth-link"/>
-                    <h:commandButton value="Hesap oluştur" action="#{userBean.createUser()}" styleClass="btn btn-primary" style="padding: 12px 24px; font-size: 15px; border-radius: 12px;"/>
+                    <h:commandButton value="Hesap oluştur" action="#{userBean.createUser()}"
+                                     styleClass="btn btn-primary"
+                                     style="padding: 12px 24px; font-size: 15px; border-radius: 12px;"/>
                 </div>
 
             </h:form>

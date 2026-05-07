@@ -1,11 +1,6 @@
 package filter;
 
-import jakarta.servlet.Filter;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.FilterConfig;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
+import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -35,11 +30,11 @@ public class AuthFilter implements Filter {
 
             // التحقق مما إذا كان المستخدم مسجلاً الدخول
             boolean loggedIn = (session != null && session.getAttribute("user") != null);
-            
+
             // السماح بالوصول لصفحات تسجيل الدخول والتسجيل
             boolean loginRequest = reqURI.contains("/login.xhtml");
             boolean registerRequest = reqURI.contains("/register.xhtml");
-            
+
             // السماح بالوصول لموارد النظام (مثل ملفات CSS)
             boolean resourceRequest = reqURI.startsWith(req.getContextPath() + "/resources/") || reqURI.startsWith(req.getContextPath() + "/jakarta.faces.resource/");
 

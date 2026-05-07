@@ -1,5 +1,7 @@
 package entity;
+
 import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -28,6 +30,9 @@ public class Folders implements Serializable {
     @Column(name = "Deleted", nullable = false)
     private boolean deleted = false;
 
+    public Folders() {
+    }
+
     // هذا الوسم يخبر النظام بتنفيذ هذه الدالة تلقائياً قبل عملية الحفظ (Insert)
     @PrePersist
     public void prePersist() {
@@ -36,8 +41,6 @@ public class Folders implements Serializable {
             this.createdAt = new java.util.Date();
             // ملاحظة: إذا كان نوع المتغير عندك هو LocalDateTime، استخدم LocalDateTime.now() بدلاً من Date
         }
-    }
-    public Folders(){
     }
 
     public Long getId() {

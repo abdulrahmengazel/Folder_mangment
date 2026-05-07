@@ -7,32 +7,35 @@
       xmlns:ui="jakarta.faces.facelets">
 
 <f:metadata>
-    <f:viewParam name="folderId" value="#{folderContentBean.folderId}" />
-    <f:viewAction action="#{folderContentBean.init}" />
+    <f:viewParam name="folderId" value="#{folderContentBean.folderId}"/>
+    <f:viewAction action="#{folderContentBean.init}"/>
 </f:metadata>
 
 <ui:composition template="./template.xhtml">
 
     <ui:define name="title">
-        <h:outputText value="#{not empty folderContentBean.currentFolder ? folderContentBean.currentFolder.name : 'Klasör'}" /> - Cloud System
+        <h:outputText
+                value="#{not empty folderContentBean.currentFolder ? folderContentBean.currentFolder.name : 'Klasör'}"/> - Cloud System
     </ui:define>
 
     <ui:define name="content">
-        <h:messages globalOnly="true" styleClass="messages" />
+        <h:messages globalOnly="true" styleClass="messages"/>
 
         <h:panelGroup rendered="#{not empty folderContentBean.currentFolder}">
             <div class="page-header" style="justify-content: flex-start; gap: 16px;">
-                <h:link outcome="dashboard.xhtml" style="color: var(--text-secondary); text-decoration: none; font-size: 20px; font-weight: 500; transition: color 0.2s;">
+                <h:link outcome="dashboard.xhtml"
+                        style="color: var(--text-secondary); text-decoration: none; font-size: 20px; font-weight: 500; transition: color 0.2s;">
                     Dosyalarım
                 </h:link>
-                <i class="fas fa-chevron-right" style="color: #94a3b8; font-size: 14px;" />
-                <h2 class="page-title" style="font-weight: 600;"><h:outputText value="#{folderContentBean.currentFolder.name}" /></h2>
+                <i class="fas fa-chevron-right" style="color: #94a3b8; font-size: 14px;"/>
+                <h2 class="page-title" style="font-weight: 600;"><h:outputText
+                        value="#{folderContentBean.currentFolder.name}"/></h2>
             </div>
 
             <div style="display: flex; justify-content: flex-end; margin-bottom: 24px;">
                 <h:link outcome="upload-file.xhtml" styleClass="btn btn-outline" style="box-shadow: var(--shadow-sm);">
-                    <f:param name="targetFolderId" value="#{folderContentBean.currentFolder.id}" />
-                    <i class="fas fa-file-upload" /> Bu klasöre yükle
+                    <f:param name="targetFolderId" value="#{folderContentBean.currentFolder.id}"/>
+                    <i class="fas fa-file-upload"/> Bu klasöre yükle
                 </h:link>
             </div>
 
@@ -41,41 +44,47 @@
                     <h:form id="folderFilesForm" style="margin: 0;">
                         <table class="data-table">
                             <thead>
-                                <tr>
-                                    <th>Ad</th>
-                                    <th style="width: 150px;">Boyut</th>
-                                    <th style="width: 150px;">Tür</th>
-                                    <th style="width: 120px; text-align: center;">Yıldız</th>
-                                    <th style="width: 120px; text-align: center;">Sil</th>
-                                </tr>
+                            <tr>
+                                <th>Ad</th>
+                                <th style="width: 150px;">Boyut</th>
+                                <th style="width: 150px;">Tür</th>
+                                <th style="width: 120px; text-align: center;">Yıldız</th>
+                                <th style="width: 120px; text-align: center;">Sil</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <ui:repeat value="#{folderContentBean.filesInFolder}" var="file">
-                                    <tr>
-                                        <td>
-                                            <div class="file-name-cell">
-                                                <i class="fas fa-file-alt file-icon" />
-                                                <span><h:outputText value="#{file.name}" /></span>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <h:outputText value="#{file.size / 1024}">
-                                                <f:convertNumber maxFractionDigits="2"/>
-                                            </h:outputText> KB
-                                        </td>
-                                        <td style="color: var(--text-secondary);"><h:outputText value="#{file.type}" /></td>
-                                        <td style="text-align: center;">
-                                            <h:commandLink action="#{folderContentBean.toggleStar(file)}" styleClass="table-action-btn" title="#{file.starred ? 'Yıldızı kaldır' : 'Yıldız ekle'}" style="margin-right: 10px;">
-                                                <i class="fas fa-star" style="color: #{file.starred ? '#f59e0b' : 'var(--text-secondary)'};" />
-                                            </h:commandLink>
-                                        </td>
-                                        <td style="text-align: center;">
-                                            <h:commandLink action="#{folderContentBean.deleteFile(file)}" styleClass="table-action-btn" title="Dosyayı sil" onclick="return confirm('Bu dosyayı silmek istediğinize emin misiniz?');">
-                                                <i class="fas fa-trash-alt" />
-                                            </h:commandLink>
-                                        </td>
-                                    </tr>
-                                </ui:repeat>
+                            <ui:repeat value="#{folderContentBean.filesInFolder}" var="file">
+                                <tr>
+                                    <td>
+                                        <div class="file-name-cell">
+                                            <i class="fas fa-file-alt file-icon"/>
+                                            <span><h:outputText value="#{file.name}"/></span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <h:outputText value="#{file.size / 1024}">
+                                            <f:convertNumber maxFractionDigits="2"/>
+                                        </h:outputText> KB
+                                    </td>
+                                    <td style="color: var(--text-secondary);"><h:outputText value="#{file.type}"/></td>
+                                    <td style="text-align: center;">
+                                        <h:commandLink action="#{folderContentBean.toggleStar(file)}"
+                                                       styleClass="table-action-btn"
+                                                       title="#{file.starred ? 'Yıldızı kaldır' : 'Yıldız ekle'}"
+                                                       style="margin-right: 10px;">
+                                            <i class="fas fa-star"
+                                               style="color: #{file.starred ? '#f59e0b' : 'var(--text-secondary)'};"/>
+                                        </h:commandLink>
+                                    </td>
+                                    <td style="text-align: center;">
+                                        <h:commandLink action="#{folderContentBean.deleteFile(file)}"
+                                                       styleClass="table-action-btn" title="Dosyayı sil"
+                                                       onclick="return confirm('Bu dosyayı silmek istediğinize emin misiniz?');">
+                                            <i class="fas fa-trash-alt"/>
+                                        </h:commandLink>
+                                    </td>
+                                </tr>
+                            </ui:repeat>
                             </tbody>
                         </table>
                     </h:form>
@@ -85,15 +94,16 @@
 
         <h:panelGroup rendered="#{empty folderContentBean.currentFolder}">
             <div class="empty-state">
-                <i class="fas fa-exclamation-triangle" style="font-size: 80px; color: #cbd5e1; margin-bottom: 24px;" />
+                <i class="fas fa-exclamation-triangle" style="font-size: 80px; color: #cbd5e1; margin-bottom: 24px;"/>
                 <h3>Klasör erişilebilir değil</h3>
                 <p>Klasör silinmiş olabilir veya artık bu klasöre erişim izniniz olmayabilir.</p>
             </div>
         </h:panelGroup>
 
-        <h:panelGroup rendered="#{not empty folderContentBean.currentFolder and folderContentBean.filesInFolder.size() == 0}">
+        <h:panelGroup
+                rendered="#{not empty folderContentBean.currentFolder and folderContentBean.filesInFolder.size() == 0}">
             <div class="empty-state">
-                <i class="fas fa-folder-open" style="font-size: 80px; color: #cbd5e1; margin-bottom: 24px;" />
+                <i class="fas fa-folder-open" style="font-size: 80px; color: #cbd5e1; margin-bottom: 24px;"/>
                 <h3>Bu klasör boş</h3>
                 <p>Bu klasöre içerik eklemek için "Bu klasöre yükle" düğmesini kullanın.</p>
             </div>

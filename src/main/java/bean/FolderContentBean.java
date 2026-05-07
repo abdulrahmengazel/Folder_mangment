@@ -12,8 +12,8 @@ import jakarta.faces.view.ViewScoped;
 import jakarta.inject.Named;
 
 import java.io.Serializable;
-import java.util.Comparator;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,7 +41,7 @@ public class FolderContentBean implements Serializable {
 
         if (folderId != null) {
             currentFolder = folderFacade.find(folderId);
-            
+
             // Check if folder exists and belongs to the current user
             if (currentFolder != null && !currentFolder.isDeleted() && currentFolder.getOwner().getId().equals(currentUser.getId())) {
                 loadFilesInFolder(currentUser.getId());

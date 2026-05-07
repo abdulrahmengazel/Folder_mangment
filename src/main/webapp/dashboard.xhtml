@@ -3,8 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
       xmlns:ui="jakarta.faces.facelets">
-<h:outputStylesheet name="css/style.css" />
-<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/style.css?v=2.0" />
+<h:outputStylesheet name="css/style.css"/>
+<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/style.css?v=2.0"/>
 <ui:composition template="./template.xhtml">
 
     <ui:define name="title">
@@ -13,24 +13,28 @@
 
     <ui:define name="content">
 
-        <h:messages globalOnly="true" styleClass="messages" />
+        <h:messages globalOnly="true" styleClass="messages"/>
 
         <div class="page-header">
             <h2 class="page-title">Dosyalarım</h2>
         </div>
 
         <h:panelGroup rendered="#{folderBean.foldersList.size() > 0}">
-            <h3 class="form-label" style="margin-bottom: 20px; font-size: 15px; color: var(--text-secondary);">Klasörler</h3>
+            <h3 class="form-label"
+                style="margin-bottom: 20px; font-size: 15px; color: var(--text-secondary);">Klasörler</h3>
             <div class="grid-folders">
                 <ui:repeat value="#{folderBean.foldersList}" var="folder">
                     <!-- Note: onclick inside the card wrapper for better click area, maintaining the inner commandLink for delete -->
-                    <div class="card-folder" onclick="window.location.href='folder-content.xhtml?folderId=#{folder.id}'">
+                    <div class="card-folder"
+                         onclick="window.location.href='folder-content.xhtml?folderId=#{folder.id}'">
                         <div class="card-folder-info">
                             <i class="fas fa-folder card-folder-icon"></i>
                             <span class="card-folder-name" title="#{folder.name}">#{folder.name}</span>
                         </div>
                         <h:form style="margin: 0; padding: 0;" onclick="event.stopPropagation();">
-                            <h:commandLink action="#{folderBean.deleteFolder(folder)}" styleClass="card-action-btn" title="Klasörü sil" onclick="return confirm('Bu klasörü silmek istediğinize emin misiniz? İçindeki tüm içerikler silinecektir.');">
+                            <h:commandLink action="#{folderBean.deleteFolder(folder)}" styleClass="card-action-btn"
+                                           title="Klasörü sil"
+                                           onclick="return confirm('Bu klasörü silmek istediğinize emin misiniz? İçindeki tüm içerikler silinecektir.');">
                                 <i class="fas fa-trash-alt"></i>
                             </h:commandLink>
                         </h:form>
