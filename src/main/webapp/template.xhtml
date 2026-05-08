@@ -112,16 +112,6 @@
                         Profilim
                     </h:link>
                 </li>
-                <!-- Sadece Admin için göster -->
-                <h:panelGroup rendered="#{sessionScope.user.id == 1}">
-                    <li>
-                        <h:link outcome="users-management.xhtml"
-                                styleClass="sidebar-item #{view.viewId == '/users-management.xhtml' ? 'active' : ''}">
-                            <i class="fas fa-users-cog"></i>
-                            Kullanıcı Yönetimi
-                        </h:link>
-                    </li>
-                </h:panelGroup>
             </ul>
 
             <div class="storage-container">

@@ -56,19 +56,19 @@ public class SharedFilesBean implements Serializable {
         // التحقق من البيانات المدخلة
         if (selectedFileId == null || selectedFileId <= 0) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "خطأ", "يرجى اختيار ملف"));
+                    "error", "please select a file"));
             return;
         }
 
         if (selectedUserId == null || selectedUserId <= 0) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "خطأ", "يرجى اختيار مستخدم"));
+                    "error", "please select a user"));
             return;
         }
 
         if (currentUser == null) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "خطأ", "لم يتم العثور على المستخدم الحالي"));
+                    "error", "current user is not found"));
             return;
         }
 
@@ -76,19 +76,19 @@ public class SharedFilesBean implements Serializable {
         Files file = fileFacade.find(selectedFileId);
         if (file == null) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "خطأ", "الملف غير موجود"));
+                    "error", "file not found"));
             return;
         }
 
         if (file.isDeleted()) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "خطأ", "لا يمكن مشاركة ملف في سلة المهملات"));
+                    "error", "file is deleted"));
             return;
         }
 
         if (!file.getOwner().getId().equals(currentUser.getId())) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "خطأ", "لا يمكنك مشاركة ملف لا تملكه"));
+                    "error", "you are not the owner of this file"));
             return;
         }
 
@@ -96,7 +96,7 @@ public class SharedFilesBean implements Serializable {
         Users recipient = userFacade.find(selectedUserId);
         if (recipient == null) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "خطأ", "المستخدم المختار غير موجود"));
+                    "error", "user not found"));
             return;
         }
 
@@ -108,7 +108,7 @@ public class SharedFilesBean implements Serializable {
 
         if (!existing.isEmpty()) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
-                    "تحذير", "هذا الملف مشارك مسبقاً مع هذا المستخدم"));
+                    "error", "file already shared with this user"));
             return;
         }
 
@@ -122,14 +122,14 @@ public class SharedFilesBean implements Serializable {
             sharedFilesFacade.create(sharedFile);
 
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    "نجاح", "تم مشاركة الملف بنجاح!"));
+                    "done", "file shared successfully"));
 
             clearForm();
             refreshLists();
 
         } catch (Exception e) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "خطأ في النظام", e.getMessage()));
+                    "system error", e.getMessage()));
         }
     }
 
@@ -142,20 +142,20 @@ public class SharedFilesBean implements Serializable {
         try {
             if (sf == null || sf.getId() == null) {
                 context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "خطأ", "لا يمكن حذف مشاركة فارغة"));
+                        "error", "shared file cannot be deleted"));
                 return;
             }
 
             sharedFilesFacade.remove(sf);
 
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    "نجاح", "تم إلغاء المشاركة بنجاح"));
+                    "done!", "sharing removed successfully"));
 
             refreshLists();
 
         } catch (Exception e) {
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "خطأ", e.getMessage()));
+                    "error", e.getMessage()));
         }
     }
 
@@ -168,7 +168,7 @@ public class SharedFilesBean implements Serializable {
         try {
             if (sf == null || sf.getId() == null) {
                 context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "خطأ", "لا يمكن تعديل مشاركة فارغة"));
+                        "error", "shared file cannot be updated"));
                 return;
             }
 
@@ -176,7 +176,7 @@ public class SharedFilesBean implements Serializable {
             sharedFilesFacade.edit(sf);
 
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    "نجاح", "تم تحديث الصلاحيات بنجاح"));
+                    "done", "permission updated successfully"));
 
             refreshLists();
 
@@ -278,9 +278,9 @@ public class SharedFilesBean implements Serializable {
                 sf.getPermission() == PermissionEnum.WRITE);
     }
 
-    /**
-     * تنظيف نموذج الإدخال
-     */
+
+//     تنظيف نموذج الإدخال
+
     public void clearForm() {
         sharedFile = null;
         selectedFileId = null;
@@ -288,9 +288,8 @@ public class SharedFilesBean implements Serializable {
         selectedPermission = PermissionEnum.READ;
     }
 
-    /**
-     * تحديث القوائم
-     */
+    //تحديث القوائم
+
     public void refreshLists() {
         getMySharedFiles();
         getSharedWithMe();
@@ -298,14 +297,7 @@ public class SharedFilesBean implements Serializable {
         getAvailableUsers();
     }
 
-    // ============ GETTERS AND SETTERS ============
 
-    public SharedFiles getSharedFile() {
-        if (sharedFile == null) {
-            sharedFile = new SharedFiles();
-        }
-        return sharedFile;
-    }
 
     public List<SharedFiles> getSharedFilesList() {
         if (sharedFilesList == null) {

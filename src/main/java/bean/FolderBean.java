@@ -17,7 +17,6 @@ import java.util.List;
 @ViewScoped
 public class FolderBean implements Serializable {
 
-    // يجب إضافة هذا المسار الثابت في أعلى الكلاس إذا لم يكن موجوداً
     private static final String ROOT_UPLOAD_DIR = "/home/abdulrahman/cloud_uploads";
     private Folders folder;
     private List<Folders> foldersList;
