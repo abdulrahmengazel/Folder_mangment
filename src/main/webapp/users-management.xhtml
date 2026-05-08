@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      lang="tr"
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:f="jakarta.faces.core">
+
+<ui:composition template="/template.xhtml">
+    <ui:define name="title">Kullanıcı Yönetimi - Cloud System</ui:define>
+
+    <ui:define name="content">
+        <div style="padding: 24px;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                <h1 style="font-size: 24px; color: var(--text-primary); margin: 0;">Kullanıcı Yönetimi</h1>
+                <h:form>
+                    <h:commandButton value="Yeni Kullanıcı" action="#{userBean.clearForm()}"
+                                     styleClass="btn btn-primary"
+                                     style="padding: 10px 20px; border-radius: 8px;"/>
+                </h:form>
+            </div>
+
+            <!-- Kullanıcı Listesi -->
+            <div style="background: var(--surface-color); border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 20px; margin-bottom: 24px; overflow-x: auto;">
+                <h:form id="usersTableForm">
+                    <h:dataTable value="#{userBean.users}" var="u"
+                                 style="width: 100%; border-collapse: collapse; text-align: left;">
+                        <h:column>
+                            <f:facet name="header"><span style="color: var(--text-secondary); font-size: 14px; font-weight: 600; padding: 12px;">ID</span></f:facet>
+                            <span style="padding: 12px; display: block; border-bottom: 1px solid var(--border-color);">#{u.id}</span>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header"><span style="color: var(--text-secondary); font-size: 14px; font-weight: 600; padding: 12px;">Ad Soyad</span></f:facet>
+                            <span style="padding: 12px; display: block; border-bottom: 1px solid var(--border-color);">#{u.name}</span>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header"><span style="color: var(--text-secondary); font-size: 14px; font-weight: 600; padding: 12px;">E-posta</span></f:facet>
+                            <span style="padding: 12px; display: block; border-bottom: 1px solid var(--border-color);">#{u.email}</span>
+                        </h:column>
+                        <h:column>
+                            <f:facet name="header"><span style="color: var(--text-secondary); font-size: 14px; font-weight: 600; padding: 12px; text-align: right; display: block;">İşlemler</span></f:facet>
+                            <div style="padding: 12px; border-bottom: 1px solid var(--border-color); text-align: right;">
+                                <h:commandLink action="#{userBean.updateForm(u)}" title="Düzenle"
+                                               style="color: var(--primary-color); margin-right: 16px; font-size: 16px;">
+                                    <i class="fas fa-edit"></i>
+                                    <f:ajax render=":editFormContainer" />
+                                </h:commandLink>
+                                <h:commandLink action="#{userBean.deleteUser(u)}" title="Sil"
+                                               onclick="return confirm('Bu kullanıcıyı silmek istediğinize emin misiniz?');"
+                                               style="color: #ef4444; font-size: 16px;">
+                                    <i class="fas fa-trash-alt"></i>
+                                </h:commandLink>
+                            </div>
+                        </h:column>
+                    </h:dataTable>
+                </h:form>
+            </div>
+
+            <!-- Düzenleme Formu -->
+            <h:panelGroup id="editFormContainer" layout="block" style="background: var(--surface-color); border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 24px; max-width: 500px;">
+                <h3 style="margin-top: 0; margin-bottom: 20px; color: var(--text-primary);">Kullanıcı Düzenle</h3>
+                <h:form id="editForm">
+                    <h:inputHidden value="#{userBean.user.id}" />
+
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; margin-bottom: 8px; color: var(--text-secondary); font-size: 14px; font-weight: 500;">Ad Soyad</label>
+                        <h:inputText value="#{userBean.user.name}" styleClass="form-control" style="width: 100%; box-sizing: border-box;" required="true" requiredMessage="Ad gerekli" />
+                    </div>
+
+                    <div style="margin-bottom: 16px;">
+                        <label style="display: block; margin-bottom: 8px; color: var(--text-secondary); font-size: 14px; font-weight: 500;">E-posta</label>
+                        <h:inputText value="#{userBean.user.email}" styleClass="form-control" style="width: 100%; box-sizing: border-box;" required="true" requiredMessage="E-posta gerekli" />
+                    </div>
+
+                    <!-- Şifre alanı (Opsiyonel) -->
+                    <div style="margin-bottom: 24px;">
+                        <label style="display: block; margin-bottom: 8px; color: var(--text-secondary); font-size: 14px; font-weight: 500;">Yeni Şifre (Değiştirmek istemiyorsanız boş bırakın)</label>
+                        <h:inputSecret value="#{userBean.user.password}" styleClass="form-control" style="width: 100%; box-sizing: border-box;" />
+                    </div>
+
+                    <h:commandButton value="Değişiklikleri Kaydet" action="#{userBean.editUser()}"
+                                     styleClass="btn btn-primary"
+                                     style="width: 100%; padding: 12px; border-radius: 8px;" />
+                </h:form>
+            </h:panelGroup>
+
+        </div>
+    </ui:define>
+</ui:composition>
+</html>

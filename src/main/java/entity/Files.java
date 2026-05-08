@@ -61,7 +61,6 @@ public class Files implements Serializable {
         this.id = id;
     }
 
-    // توحيد أسماء الدوال لتتوافق مع معايير JSF
     public String getName() {
         return name;
     }

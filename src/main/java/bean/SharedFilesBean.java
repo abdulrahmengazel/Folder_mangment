@@ -307,10 +307,6 @@ public class SharedFilesBean implements Serializable {
         return sharedFile;
     }
 
-    public void setSharedFile(SharedFiles sharedFile) {
-        this.sharedFile = sharedFile;
-    }
-
     public List<SharedFiles> getSharedFilesList() {
         if (sharedFilesList == null) {
             getMySharedFiles();
@@ -318,9 +314,6 @@ public class SharedFilesBean implements Serializable {
         return sharedFilesList;
     }
 
-    public void setSharedFilesList(List<SharedFiles> sharedFilesList) {
-        this.sharedFilesList = sharedFilesList;
-    }
 
     public List<SharedFiles> getSharedWithMeList() {
         if (sharedWithMeList == null) {
@@ -329,9 +322,6 @@ public class SharedFilesBean implements Serializable {
         return sharedWithMeList;
     }
 
-    public void setSharedWithMeList(List<SharedFiles> sharedWithMeList) {
-        this.sharedWithMeList = sharedWithMeList;
-    }
 
     public Long getSelectedFileId() {
         return selectedFileId;

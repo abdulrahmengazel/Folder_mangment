@@ -3,7 +3,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml"
       lang="tr"
       xmlns:h="jakarta.faces.html"
-      xmlns:ui="jakarta.faces.facelets">
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
 <h:head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -41,7 +42,7 @@
         <div class="header-actions">
             <h:form style="margin:0; display:flex; align-items:center;">
                 <h:commandLink action="#{loginBean.logout()}" title="Çıkış yap"
-                               style="color: var(--text-secondary); font-size: 20px; transition: color 0.2s;">
+                               style="color: var(--text-secondary); font-size: 20px; transition: color 0.2s; margin-right: 20px;">
                     <i class="fas fa-sign-out-alt"></i>
                 </h:commandLink>
             </h:form>
@@ -50,6 +51,9 @@
                 <h:outputText value="#{sessionScope.user.name.substring(0,1).toUpperCase()}"
                               rendered="#{not empty sessionScope.user.name}"/>
             </div>
+            <span style="margin-left: 12px; font-weight: 600; color: var(--text-primary);">
+                <h:outputText value="#{sessionScope.user.name}" rendered="#{not empty sessionScope.user.name}"/>
+            </span>
         </div>
     </header>
 
@@ -99,6 +103,25 @@
                         Çöp kutusu
                     </h:link>
                 </li>
+
+                <!-- Ayarlar ve Yönetim Bölümü -->
+                <li style="margin-top: 16px; border-top: 1px solid var(--border-color); padding-top: 16px;">
+                    <h:link outcome="profile.xhtml"
+                            styleClass="sidebar-item #{view.viewId == '/profile.xhtml' ? 'active' : ''}">
+                        <i class="fas fa-user-circle"></i>
+                        Profilim
+                    </h:link>
+                </li>
+                <!-- Sadece Admin için göster -->
+                <h:panelGroup rendered="#{sessionScope.user.id == 1}">
+                    <li>
+                        <h:link outcome="users-management.xhtml"
+                                styleClass="sidebar-item #{view.viewId == '/users-management.xhtml' ? 'active' : ''}">
+                            <i class="fas fa-users-cog"></i>
+                            Kullanıcı Yönetimi
+                        </h:link>
+                    </li>
+                </h:panelGroup>
             </ul>
 
             <div class="storage-container">

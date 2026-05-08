@@ -36,10 +36,8 @@ public class Folders implements Serializable {
     // هذا الوسم يخبر النظام بتنفيذ هذه الدالة تلقائياً قبل عملية الحفظ (Insert)
     @PrePersist
     public void prePersist() {
-        // نتحقق إذا كان التاريخ فارغاً، نقوم بإعطائه وقت الخادم الحالي
         if (this.createdAt == null) {
             this.createdAt = new java.util.Date();
-            // ملاحظة: إذا كان نوع المتغير عندك هو LocalDateTime، استخدم LocalDateTime.now() بدلاً من Date
         }
     }
 

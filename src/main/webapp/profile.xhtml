@@ -1,0 +1,69 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      lang="tr"
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets"
+      xmlns:f="jakarta.faces.core">
+
+<ui:composition template="/template.xhtml">
+    <ui:define name="title">Profilim - Cloud System</ui:define>
+
+    <ui:define name="content">
+        <div style="padding: 24px; max-width: 600px; margin: 0 auto;">
+            <div style="margin-bottom: 24px;">
+                <h1 style="font-size: 24px; color: var(--text-primary); margin: 0;">Profilim</h1>
+                <p style="color: var(--text-secondary); font-size: 14px; margin-top: 8px;">Kişisel bilgilerinizi buradan güncelleyebilirsiniz.</p>
+            </div>
+
+            <h:panelGroup layout="block" style="background: var(--surface-color); border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 32px; margin-bottom: 24px;">
+                <h:form id="profileForm">
+                    <f:event type="preRenderView" listener="#{userBean.loadCurrentUser}" />
+
+                    <h:messages globalOnly="true" styleClass="messages" style="color: green; margin-bottom: 16px; list-style: none; padding: 12px; background: #e6f4ea; border-radius: 8px;" />
+
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; color: var(--text-secondary); font-size: 14px; font-weight: 500;">Ad Soyad</label>
+                        <h:inputText value="#{userBean.user.name}" styleClass="form-control" style="width: 100%; box-sizing: border-box; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);" required="true" requiredMessage="Ad gerekli" />
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 8px; color: var(--text-secondary); font-size: 14px; font-weight: 500;">E-posta (Değiştirilemez)</label>
+                        <h:inputText value="#{userBean.user.email}" disabled="true" styleClass="form-control" style="width: 100%; box-sizing: border-box; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); background-color: #f3f4f6;" />
+                    </div>
+
+                    <div style="margin-bottom: 32px;">
+                        <label style="display: block; margin-bottom: 8px; color: var(--text-secondary); font-size: 14px; font-weight: 500;">Yeni Şifre (Değiştirmek istemiyorsanız boş bırakın)</label>
+                        <h:inputSecret value="#{userBean.user.password}" styleClass="form-control" style="width: 100%; box-sizing: border-box; padding: 12px; border-radius: 8px; border: 1px solid var(--border-color);" />
+                    </div>
+
+                    <h:commandButton value="Bilgileri Güncelle" action="#{userBean.updateProfile()}"
+                                     styleClass="btn btn-primary"
+                                     style="width: 100%; padding: 14px; border-radius: 8px; font-size: 16px; font-weight: 600;" />
+                </h:form>
+            </h:panelGroup>
+
+            <!-- Hesap Silme Bölümü -->
+            <h:panelGroup layout="block" style="background: #fef2f2; border: 1px solid #fca5a5; border-radius: 12px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); padding: 32px;">
+                <div style="margin-bottom: 16px;">
+                    <h3 style="color: #ef4444; margin-top: 0; display: flex; align-items: center;">
+                        <i class="fas fa-exclamation-triangle" style="margin-right: 8px;"></i>
+                        Tehlikeli Bölge
+                    </h3>
+                    <p style="color: #7f1d1d; font-size: 14px; margin-bottom: 20px;">
+                        Hesabınızı silmek geri alınamaz bir işlemdir. Tüm verileriniz, dosyalarınız ve paylaşımlarınız kalıcı olarak silinecektir.
+                    </p>
+                </div>
+
+                <h:form id="deleteAccountForm">
+                    <h:commandButton value="Hesabımı Kalıcı Olarak Sil" action="#{userBean.deleteMyAccount()}"
+                                     styleClass="btn btn-danger"
+                                     style="background-color: #ef4444; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: background-color 0.2s;"
+                                     onclick="return confirm('UYARI! Hesabınızı ve tüm verilerinizi kalıcı olarak silmek istediğinize emin misiniz? Bu işlem Geri Alınamaz!');" />
+                </h:form>
+            </h:panelGroup>
+
+        </div>
+    </ui:define>
+</ui:composition>
+</html>
