@@ -67,34 +67,34 @@ public class TrashBean implements Serializable {
         Users currentUser = getCurrentUser();
 
         if (currentUser == null || file == null || !file.getOwner().getId().equals(currentUser.getId())) {
-            addMessage(FacesMessage.SEVERITY_ERROR, "Hata", "Bu dosyayı geri yükleme izniniz yok.");
+            addMessage(FacesMessage.SEVERITY_ERROR, "Error", "You do not have permission to restore this file.");
             return;
         }
 
         file.setDeleted(false);
         fileFacade.edit(file);
         refreshLists();
-        addMessage(FacesMessage.SEVERITY_INFO, "Başarılı", "Dosya başarıyla geri yüklendi.");
+        addMessage(FacesMessage.SEVERITY_INFO, "Success", "File successfully restored.");
     }
 
     public void restoreFolder(Folders folder) {
         Users currentUser = getCurrentUser();
 
         if (currentUser == null || folder == null || !folder.getOwner().getId().equals(currentUser.getId())) {
-            addMessage(FacesMessage.SEVERITY_ERROR, "Hata", "Bu klasörü geri yükleme izniniz yok.");
+            addMessage(FacesMessage.SEVERITY_ERROR, "Error", "You do not have permission to restore this folder.");
             return;
         }
 
         restoreFolderTree(folder, currentUser.getId());
         refreshLists();
-        addMessage(FacesMessage.SEVERITY_INFO, "Başarılı", "Klasör başarıyla geri yüklendi.");
+        addMessage(FacesMessage.SEVERITY_INFO, "Success", "Folder successfully restored.");
     }
 
     public void permanentlyDeleteFile(Files file) {
         Users currentUser = getCurrentUser();
 
         if (currentUser == null || file == null || !file.getOwner().getId().equals(currentUser.getId())) {
-            addMessage(FacesMessage.SEVERITY_ERROR, "Hata", "Bu dosyayı kalıcı olarak silme izniniz yok.");
+            addMessage(FacesMessage.SEVERITY_ERROR, "Error", "You do not have permission to permanently delete this file.");
             return;
         }
 
@@ -102,20 +102,20 @@ public class TrashBean implements Serializable {
         removeSharesForFile(file.getId());
         fileFacade.remove(file);
         refreshLists();
-        addMessage(FacesMessage.SEVERITY_INFO, "Başarılı", "Dosya kalıcı olarak silindi.");
+        addMessage(FacesMessage.SEVERITY_INFO, "Success", "File permanently deleted.");
     }
 
     public void permanentlyDeleteFolder(Folders folder) {
         Users currentUser = getCurrentUser();
 
         if (currentUser == null || folder == null || !folder.getOwner().getId().equals(currentUser.getId())) {
-            addMessage(FacesMessage.SEVERITY_ERROR, "Hata", "Bu klasörü kalıcı olarak silme izniniz yok.");
+            addMessage(FacesMessage.SEVERITY_ERROR, "Error", "You do not have permission to permanently delete this folder.");
             return;
         }
 
         permanentlyDeleteFolderTree(folder, currentUser.getId());
         refreshLists();
-        addMessage(FacesMessage.SEVERITY_INFO, "Başarılı", "Klasör kalıcı olarak silindi.");
+        addMessage(FacesMessage.SEVERITY_INFO, "Success", "Folder permanently deleted.");
     }
 
     private void restoreFolderTree(Folders folder, Long ownerId) {
@@ -193,7 +193,7 @@ public class TrashBean implements Serializable {
         try {
             java.nio.file.Files.deleteIfExists(Path.of(filePath));
         } catch (IOException e) {
-            addMessage(FacesMessage.SEVERITY_WARN, "Uyarı", "Dosya depolamadan silinemedi: " + e.getMessage());
+            addMessage(FacesMessage.SEVERITY_WARN, "Warning", "File could not be deleted from storage: " + e.getMessage());
         }
     }
 
@@ -216,7 +216,7 @@ public class TrashBean implements Serializable {
                 }
             }
         } catch (IOException e) {
-            addMessage(FacesMessage.SEVERITY_WARN, "Uyarı", "Klasör depolamadan silinemedi: " + e.getMessage());
+            addMessage(FacesMessage.SEVERITY_WARN, "Warning", "Folder could not be deleted from storage: " + e.getMessage());
         }
     }
 
@@ -241,4 +241,3 @@ public class TrashBean implements Serializable {
     }
 
 }
-

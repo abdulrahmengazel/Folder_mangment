@@ -2,25 +2,36 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
       xmlns:h="jakarta.faces.html"
+      xmlns:f="jakarta.faces.core"
       xmlns:ui="jakarta.faces.facelets"
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+
+<f:metadata>
+    <f:viewParam name="parentFolderId" value="#{folderBean.parentFolderId}"/>
+</f:metadata>
+
 <h:outputStylesheet name="css/style.css"/>
 <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/style.css?v=2.0"/>
 <ui:composition template="./template.xhtml">
 
     <ui:define name="title">
-        Yeni Klasör - Cloud System
+        New Folder - Cloud System
     </ui:define>
 
     <ui:define name="content">
         <h:messages globalOnly="true" styleClass="messages"/>
 
         <div class="page-header" style="justify-content: flex-start; gap: 16px; border: none;">
-            <h:link outcome="dashboard.xhtml"
+            <h:link outcome="dashboard.xhtml" rendered="#{empty folderBean.parentFolderId}"
                     style="color: var(--text-secondary); text-decoration: none; font-size: 20px; transition: color 0.2s;">
                 <i class="fas fa-arrow-left"></i>
             </h:link>
-            <h2 class="page-title" style="font-weight: 600;">Yeni klasör oluştur</h2>
+            <h:link outcome="folder-content.xhtml" rendered="#{not empty folderBean.parentFolderId}"
+                    style="color: var(--text-secondary); text-decoration: none; font-size: 20px; transition: color 0.2s;">
+                <f:param name="folderId" value="#{folderBean.parentFolderId}"/>
+                <i class="fas fa-arrow-left"></i>
+            </h:link>
+            <h2 class="page-title" style="font-weight: 600;">Create new folder</h2>
         </div>
 
         <div class="form-card" style="margin-top: 24px;">
@@ -30,15 +41,18 @@
 
             <h:form id="folderForm">
                 <div class="form-group">
-                    <label class="form-label">Klasör adı</label>
+                    <label class="form-label">Folder name</label>
                     <h:inputText value="#{folderBean.folder.name}" required="true"
-                                 requiredMessage="Lütfen bir klasör adı girin" styleClass="form-control"
-                                 a:placeholder="Adsız klasör"/>
+                                 requiredMessage="Please enter a folder name" styleClass="form-control"
+                                 a:placeholder="Untitled folder"/>
                 </div>
 
                 <div class="form-actions">
-                    <h:link value="İptal" outcome="dashboard.xhtml" styleClass="btn btn-outline"/>
-                    <h:commandButton value="Oluştur" action="#{folderBean.createFolder()}"
+                    <h:link value="Cancel" outcome="dashboard.xhtml" rendered="#{empty folderBean.parentFolderId}" styleClass="btn btn-outline"/>
+                    <h:link value="Cancel" outcome="folder-content.xhtml" rendered="#{not empty folderBean.parentFolderId}" styleClass="btn btn-outline">
+                        <f:param name="folderId" value="#{folderBean.parentFolderId}"/>
+                    </h:link>
+                    <h:commandButton value="Create" action="#{folderBean.createFolder()}"
                                      styleClass="btn btn-primary"/>
                 </div>
             </h:form>

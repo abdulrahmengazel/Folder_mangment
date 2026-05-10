@@ -37,15 +37,15 @@ public class FileBean implements Serializable {
     public String uploadFile() {
         FacesContext context = FacesContext.getCurrentInstance();
 
-        // التحقق من وصول الملف
+        // Check if file is provided
         if (uploadedFile == null) {
-            context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Hata", "Dosya alınamadı."));
+            context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Error", "File could not be received."));
             return null;
         }
 
-        // التحقق من وصول رقم المجلد
+        // Check if target folder ID is provided
         if (targetFolderId == null) {
-            context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Hata", "Hedef klasör belirlenemedi."));
+            context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Error", "Target folder could not be determined."));
             return null;
         }
 
@@ -83,16 +83,16 @@ public class FileBean implements Serializable {
 
                     fileFacade.create(fileEntity);
 
-                    context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_INFO, "Başarılı", "Dosya başarıyla yüklendi!"));
+                    context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_INFO, "Success", "File uploaded successfully!"));
                     clearForm();
 
                     return "dashboard.xhtml?faces-redirect=true";
 
                 } catch (Exception e) {
-                    context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Sistem hatası", e.getMessage()));
+                    context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "System Error", e.getMessage()));
                 }
             } else {
-                context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Hata", "Klasöre erişim reddedildi."));
+                context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Error", "Access to the folder is denied."));
             }
         }
         return null;

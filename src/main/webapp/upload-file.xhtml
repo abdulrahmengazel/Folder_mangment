@@ -9,7 +9,7 @@
 <ui:composition template="./template.xhtml">
 
     <ui:define name="title">
-        Dosya Yükleme - Cloud System
+        Upload File - Cloud System
     </ui:define>
 
     <ui:define name="content">
@@ -20,17 +20,17 @@
                     style="color: var(--text-secondary); text-decoration: none; font-size: 20px; transition: color 0.2s;">
                 <i class="fas fa-arrow-left"></i>
             </h:link>
-            <h2 class="page-title" style="font-weight: 600;">Dosya yükle</h2>
+            <h2 class="page-title" style="font-weight: 600;">Upload file</h2>
         </div>
 
         <div class="form-card" style="margin-top: 24px;">
 
             <h:form id="uploadForm" enctype="multipart/form-data">
                 <div class="form-group">
-                    <label class="form-label">Hedef klasörü seçin</label>
+                    <label class="form-label">Select target folder</label>
                     <h:selectOneMenu value="#{fileBean.targetFolderId}" required="true"
-                                     requiredMessage="Lütfen bir klasör seçin" styleClass="form-control">
-                        <f:selectItem itemLabel="Bir klasör seçin..." itemValue="#{null}" noSelectionOption="true"/>
+                                     requiredMessage="Please select a folder" styleClass="form-control">
+                        <f:selectItem itemLabel="Select a folder..." itemValue="#{null}" noSelectionOption="true"/>
                         <f:selectItems value="#{folderBean.foldersList}" var="folder" itemLabel="#{folder.name}"
                                        itemValue="#{folder.id}"/>
                     </h:selectOneMenu>
@@ -40,16 +40,16 @@
                     <div style="border: 2px dashed #cbd5e1; border-radius: 12px; padding: 48px 24px; text-align: center; background-color: #f8fafc; transition: all 0.2s;">
                         <i class="fas fa-cloud-upload-alt"
                            style="font-size: 48px; color: var(--primary-color); margin-bottom: 16px;"></i>
-                        <div style="margin-bottom: 16px; color: var(--text-primary); font-weight: 500;">Yüklenecek dosyayı seçin</div>
+                        <div style="margin-bottom: 16px; color: var(--text-primary); font-weight: 500;">Select file to upload</div>
                         <h:inputFile value="#{fileBean.uploadedFile}" required="true"
-                                     requiredMessage="Lütfen yüklenecek bir dosya seçin"
+                                     requiredMessage="Please select a file to upload"
                                      style="width: 100%; max-width: 300px; margin: 0 auto; color: var(--text-secondary); cursor: pointer;"/>
                     </div>
                 </div>
 
                 <div class="form-actions">
-                    <h:link value="İptal" outcome="dashboard.xhtml" styleClass="btn btn-outline"/>
-                    <h:commandButton value="Yükle" action="#{fileBean.uploadFile()}" styleClass="btn btn-primary"/>
+                    <h:link value="Cancel" outcome="dashboard.xhtml" styleClass="btn btn-outline"/>
+                    <h:commandButton value="Upload" action="#{fileBean.uploadFile()}" styleClass="btn btn-primary"/>
                 </div>
             </h:form>
         </div>

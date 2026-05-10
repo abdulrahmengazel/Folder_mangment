@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      lang="tr"
+      lang="en"
       xmlns:h="jakarta.faces.html"
       xmlns:ui="jakarta.faces.facelets"
-      xmlns:f="http://xmlns.jcp.org/jsf/core">
+      >
 <h:head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -35,13 +35,13 @@
         <!-- Search bar -->
         <div class="search-bar">
             <i class="fas fa-search"></i>
-            <input type="text" placeholder="Cloud System içinde ara..."/>
+            <input type="text" placeholder="Search in Cloud System..."/>
         </div>
 
         <!-- User profile & Logout -->
         <div class="header-actions">
             <h:form style="margin:0; display:flex; align-items:center;">
-                <h:commandLink action="#{loginBean.logout()}" title="Çıkış yap"
+                <h:commandLink action="#{loginBean.logout()}" title="Log out"
                                style="color: var(--text-secondary); font-size: 20px; transition: color 0.2s; margin-right: 20px;">
                     <i class="fas fa-sign-out-alt"></i>
                 </h:commandLink>
@@ -64,7 +64,7 @@
         <aside class="app-sidebar">
             <h:link outcome="new-folder.xhtml" styleClass="sidebar-btn-new" style="text-decoration:none;">
                 <i class="fas fa-plus" style="color: var(--primary-color);"></i>
-                Yeni
+                New
             </h:link>
 
             <ul class="sidebar-nav">
@@ -72,44 +72,44 @@
                     <h:link outcome="dashboard.xhtml"
                             styleClass="sidebar-item #{view.viewId == '/dashboard.xhtml' or view.viewId == '/folder-content.xhtml' ? 'active' : ''}">
                         <i class="fas fa-hdd"></i>
-                        Dosyalarım
+                        My Files
                     </h:link>
                 </li>
                 <li>
                     <h:link outcome="shared.xhtml"
                             styleClass="sidebar-item #{view.viewId == '/shared.xhtml' ? 'active' : ''}">
                         <i class="fas fa-user-friends"></i>
-                        Benimle paylaşılanlar
+                        Shared with me
                     </h:link>
                 </li>
                 <li>
                     <h:link outcome="recent.xhtml"
                             styleClass="sidebar-item #{view.viewId == '/recent.xhtml' ? 'active' : ''}">
                         <i class="fas fa-clock"></i>
-                        Son dosyalar
+                        Recent
                     </h:link>
                 </li>
                 <li>
                     <h:link outcome="starred.xhtml"
                             styleClass="sidebar-item #{view.viewId == '/starred.xhtml' ? 'active' : ''}">
                         <i class="fas fa-star"></i>
-                        Yıldızlılar
+                        Starred
                     </h:link>
                 </li>
                 <li>
                     <h:link outcome="trash.xhtml"
                             styleClass="sidebar-item #{view.viewId == '/trash.xhtml' ? 'active' : ''}">
                         <i class="fas fa-trash"></i>
-                        Çöp kutusu
+                        Trash
                     </h:link>
                 </li>
 
-                <!-- Ayarlar ve Yönetim Bölümü -->
+                <!-- Settings and Management Section -->
                 <li style="margin-top: 16px; border-top: 1px solid var(--border-color); padding-top: 16px;">
                     <h:link outcome="profile.xhtml"
                             styleClass="sidebar-item #{view.viewId == '/profile.xhtml' ? 'active' : ''}">
                         <i class="fas fa-user-circle"></i>
-                        Profilim
+                        My Profile
                     </h:link>
                 </li>
 
@@ -119,12 +119,12 @@
             <div class="storage-container">
                 <div class="storage-title">
                     <i class="fas fa-cloud"></i>
-                    Depolama
+                    Storage
                 </div>
                 <div class="storage-progress">
                     <div class="storage-progress-bar"></div>
                 </div>
-                <div class="storage-text">15 GB'nin 2,1 GB'ı kullanıldı</div>
+                <div class="storage-text">2.1 GB of 15 GB used</div>
             </div>
         </aside>
 

@@ -24,6 +24,7 @@ public class FolderContentBean implements Serializable {
     private Long folderId;
     private Folders currentFolder;
     private List<Files> filesInFolder;
+    private List<Folders> subFolders;
 
     @EJB
     private FolderFacadeLocal folderFacade;
@@ -45,9 +46,10 @@ public class FolderContentBean implements Serializable {
             // Check if folder exists and belongs to the current user
             if (currentFolder != null && !currentFolder.isDeleted() && currentFolder.getOwner().getId().equals(currentUser.getId())) {
                 loadFilesInFolder(currentUser.getId());
+                loadSubFolders(currentUser.getId());
             } else {
                 currentFolder = null; // Prevent access to others' folders
-                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Hata", "Erişim reddedildi veya klasör bulunamadı."));
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Access denied or folder not found."));
             }
         }
     }
@@ -65,6 +67,19 @@ public class FolderContentBean implements Serializable {
                     .collect(Collectors.toList());
         }
     }
+    
+    private void loadSubFolders(Long userId) {
+        List<Folders> allFolders = folderFacade.findAll();
+        subFolders = new ArrayList<>();
+        if (allFolders != null && currentFolder != null) {
+             subFolders = allFolders.stream()
+                     .filter(folder -> folder.getParentFolder() != null)
+                     .filter(folder -> folder.getParentFolder().getId().equals(currentFolder.getId()))
+                     .filter(folder -> folder.getOwner().getId().equals(userId))
+                     .filter(folder -> !folder.isDeleted())
+                     .collect(Collectors.toList());
+        }
+    }
 
     public void deleteFile(Files file) {
         FacesContext context = FacesContext.getCurrentInstance();
@@ -74,9 +89,48 @@ public class FolderContentBean implements Serializable {
             file.setDeleted(true);
             fileFacade.edit(file);
             loadFilesInFolder(currentUser.getId()); // Reload list after deletion
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Başarılı", "Dosya başarıyla silindi."));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "File successfully deleted."));
         } else {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Hata", "Bu dosyayı silme izniniz yok."));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "You do not have permission to delete this file."));
+        }
+    }
+    
+    public void deleteFolder(Folders folder) {
+        FacesContext context = FacesContext.getCurrentInstance();
+        Users currentUser = (Users) context.getExternalContext().getSessionMap().get("user");
+
+        if (currentUser != null && folder != null && folder.getOwner().getId().equals(currentUser.getId())) {
+            softDeleteFolderTree(folder, currentUser.getId());
+            loadSubFolders(currentUser.getId()); // Reload list after deletion
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Folder successfully deleted."));
+        }
+    }
+    
+    private void softDeleteFolderTree(Folders folderToDelete, Long ownerId) {
+        if (folderToDelete == null || folderToDelete.isDeleted()) {
+            return;
+        }
+
+        folderToDelete.setDeleted(true);
+        folderFacade.edit(folderToDelete);
+
+        List<Files> filesToDelete = fileFacade.findAll().stream()
+                .filter(file -> file.getOwner().getId().equals(ownerId))
+                .filter(file -> file.getFolder() != null && file.getFolder().getId().equals(folderToDelete.getId()))
+                .toList();
+
+        for (Files file : filesToDelete) {
+            file.setDeleted(true);
+            fileFacade.edit(file);
+        }
+
+        List<Folders> childFolders = folderFacade.findAll().stream()
+                .filter(folder -> folder.getOwner().getId().equals(ownerId))
+                .filter(folder -> folder.getParentFolder() != null && folder.getParentFolder().getId().equals(folderToDelete.getId()))
+                .toList();
+
+        for (Folders childFolder : childFolders) {
+            softDeleteFolderTree(childFolder, ownerId);
         }
     }
 
@@ -113,5 +167,13 @@ public class FolderContentBean implements Serializable {
 
     public void setFilesInFolder(List<Files> filesInFolder) {
         this.filesInFolder = filesInFolder;
+    }
+    
+    public List<Folders> getSubFolders() {
+        return subFolders;
+    }
+    
+    public void setSubFolders(List<Folders> subFolders) {
+        this.subFolders = subFolders;
     }
 }

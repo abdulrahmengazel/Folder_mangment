@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    volumes:
+      - cloud_storage:/home/abdulrahman/cloud_uploads
+    environment:
+      # Instructs Payara to wait for the DB to be ready, though derby/h2 might not need it, 
+      # this structure allows easy swapping to Postgres/MySQL.
+      # By default the application uses JTA datasource 'jdbc/CloudDrivePu'.
+      # For a fully self-contained quickstart, we'll let Payara create a default embedded DB 
+      # mapped to that JNDI name via a post-boot script if necessary, or just rely on 
+      # the container's built-in memory/file database.
+      - PAYARA_ARGS=--autoBindHttp
+    depends_on:
+      - db
+
+  # Optional database service (if you want to use PostgreSQL instead of the default embedded one)
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: clouduser
+      POSTGRES_PASSWORD: cloudpassword
+      POSTGRES_DB: clouddb
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  cloud_storage:
+  pgdata:

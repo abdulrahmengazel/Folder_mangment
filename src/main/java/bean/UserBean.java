@@ -30,30 +30,30 @@ public class UserBean implements Serializable {
             String hashedPassword = BCrypt.hashpw(plainPassword, BCrypt.gensalt(12)); // Cost factor 12
             user.setPassword(hashedPassword);
 
-            // 1. حفظ المستخدم في قاعدة البيانات أولاً ليحصل على ID
+            // 1. Save user to DB first to generate ID
             userFacade.create(user);
-            System.out.println("Kullanıcı veritabanına kaydedildi. ID: " + user.getId());
+            System.out.println("User saved to database. ID: " + user.getId());
 
-            // 2. بناء المسار الفيزيائي للمستخدم الجديد على نظام لينكس
+            // 2. Create the physical path on the system for the new user
             try {
                 String userDirectory = "user_" + user.getId();
                 java.nio.file.Path userPath = java.nio.file.Paths.get(ROOT_UPLOAD_DIR, userDirectory);
 
-                // أمر نظام التشغيل بإنشاء المجلد
+                // OS command to create directory
                 if (!java.nio.file.Files.exists(userPath)) {
                     java.nio.file.Files.createDirectories(userPath);
-                    System.out.println("Kullanıcı için fiziksel kök klasör oluşturuldu: " + userPath.toString());
+                    System.out.println("Physical root folder created for user: " + userPath.toString());
                 }
             } catch (Exception e) {
-                // في حال فشل نظام التشغيل، نطبع الخطأ لكن لا نوقف التسجيل
-                System.out.println("Uyarı: Kullanıcı için işletim sistemi klasörü oluşturulamadı: " + e.getMessage());
+                // In case of OS failure, print error but do not stop registration
+                System.out.println("Warning: Could not create OS directory for user: " + e.getMessage());
             }
 
-            // توجيه المستخدم إلى صفحة الدخول بعد نجاح العملية
+            // Redirect user to login page upon success
             return "login.xhtml?faces-redirect=true";
 
         } catch (Exception e) {
-            System.out.println("Kullanıcı kaydı sırasında hata oluştu: " + e.getMessage());
+            System.out.println("Error during user registration: " + e.getMessage());
             return null;
         }
     }
@@ -62,14 +62,14 @@ public class UserBean implements Serializable {
         if (!FacesContext.getCurrentInstance().isPostback()) {
             Users sessionUser = (Users) FacesContext.getCurrentInstance().getExternalContext().getSessionMap().get("user");
             if (sessionUser != null) {
-                // جلب بيانات المستخدم من قاعدة البيانات لضمان تحديثها
+                // Fetch user data from database to ensure it's up to date
                 Users dbUser = userFacade.find(sessionUser.getId());
                 if (dbUser != null) {
                     this.user = new Users();
                     this.user.setId(dbUser.getId());
                     this.user.setName(dbUser.getName());
                     this.user.setEmail(dbUser.getEmail());
-                    // لا نحمل كلمة المرور، لتبقى فارغة في حقل الإدخال
+                    // Do not load password, leave it empty in input field
                 }
             }
         }
@@ -82,10 +82,10 @@ public class UserBean implements Serializable {
 
         Users oldUser = userFacade.find(user.getId());
         if (oldUser != null) {
-            // تحديث الاسم
+            // Update name
             oldUser.setName(user.getName());
 
-            // تحديث كلمة المرور فقط في حال قام المستخدم بإدخال واحدة جديدة
+            // Update password only if the user entered a new one
             if (user.getPassword() != null && !user.getPassword().trim().isEmpty()) {
                 String hashedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(12));
                 oldUser.setPassword(hashedPassword);
@@ -93,13 +93,13 @@ public class UserBean implements Serializable {
 
             userFacade.edit(oldUser);
 
-            // تحديث بيانات الجلسة (Session)
+            // Update Session data
             FacesContext.getCurrentInstance().getExternalContext().getSessionMap().put("user", oldUser);
 
             FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Başarılı", "Profiliniz güncellendi."));
+                    new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Profile updated."));
 
-            // تفريغ حقل كلمة المرور من الواجهة بعد التحديث
+            // Clear password field from UI after update
             user.setPassword("");
         }
     }
@@ -110,17 +110,17 @@ public class UserBean implements Serializable {
         }
 
         try {
-            // حذف حساب المستخدم
+            // Delete user account
             userFacade.remove(userFacade.find(user.getId()));
 
-            // إنهاء جلسة المستخدم
+            // Invalidate user session
             FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 
-            // توجيه المستخدم لصفحة تسجيل الدخول
+            // Redirect user to login page
             return "login.xhtml?faces-redirect=true";
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null,
-                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Hata", "Hesap silinirken bir hata oluştu: " + e.getMessage()));
+                    new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Error deleting account: " + e.getMessage()));
             return null;
         }
     }

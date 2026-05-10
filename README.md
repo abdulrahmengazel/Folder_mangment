@@ -35,6 +35,32 @@ An advanced local storage file management system, built using **Jakarta EE** and
 
 ---
 
+## 🐳 Running with Docker
+
+For a quick and easy setup, you can run the entire application using Docker.
+
+1. **Prerequisites:**
+   - Docker
+   - Docker Compose
+
+2. **Build and Run:**
+   Clone the repository and run the following command from the project root:
+   ```bash
+   docker-compose up --build
+   ```
+   This will:
+   - Build the Java application using Maven.
+   - Create a Docker image with the Payara Micro server.
+   - Start the application container.
+   - *(Optional)* Start a PostgreSQL database container.
+
+3. **Access the application:**
+   ```text
+   http://localhost:8080/Folder_mangment-1.0-SNAPSHOT
+   ```
+
+---
+
 ## 🏗️ Architecture
 
 ```
@@ -97,10 +123,11 @@ src/
 | **EJB 4.0** | Included | Business Services |
 | **jBCrypt** | 0.4 | Password Security |
 | **Maven** | 3.8+ | Build Tool |
+| **Docker** | - | Containerization |
 
 ---
 
-## 🚀 How to Run
+## 🚀 Manual Run (Without Docker)
 
 ### Requirements
 - **JDK 23** or newer
@@ -137,24 +164,6 @@ http://localhost:8080/Folder_mangment/login.xhtml
 
 ---
 
-## ⚙️ Important Configurations
-
-### persistence.xml
-```xml
-<persistence-unit name="CloudSystemPu" transaction-type="JTA">
-    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-    <jta-data-source>jdbc/CloudDrivePu</jta-data-source>
-    <properties>
-        <property name="eclipselink.ddl-generation" value="create-or-extend-tables"/>
-    </properties>
-</persistence-unit>
-```
-
-### Security (AuthFilter)
-The application uses a Servlet Filter (`AuthFilter.java`) to intercept requests and ensure that only authenticated users can access internal pages (`*.xhtml`).
-
----
-
 ## 📈 Future Enhancements
 
 - [ ] Advanced search and sorting
@@ -162,7 +171,7 @@ The application uses a Servlet Filter (`AuthFilter.java`) to intercept requests 
 - [ ] Support for ZIP archives (Upload/Download)
 - [ ] Automatic backups
 - [ ] Email notifications
-- [ ] Dockerization (Dockerfile & docker-compose)
+- [ ] CI/CD with GitHub Actions
 
 ---
 
@@ -190,5 +199,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ---
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 **Status:** ✅ Ready for Open Source / Production

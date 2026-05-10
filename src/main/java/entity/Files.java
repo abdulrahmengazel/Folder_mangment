@@ -21,7 +21,7 @@ public class Files implements Serializable {
     @Column(name = "Type", nullable = false, length = 50)
     private String type;
 
-    // تمت إضافة مسار الملف هنا ليتم حفظه في قاعدة البيانات
+    // File path added here to be saved in the database
     @Column(name = "Path", nullable = false, length = 500)
     private String path;
 

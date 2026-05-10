@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-      lang="tr"
+      lang="en"
       xmlns:h="jakarta.faces.html"
       xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
 <h:head>
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Giriş Yap - Cloud System</title>
+    <title>Login - Cloud System</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=Roboto:wght@400;500&amp;display=swap"
           rel="stylesheet"/>
     <!-- Load CSS correctly -->
@@ -95,8 +95,8 @@
                  style="margin-left: auto; margin-right: auto; border-radius: 18px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, var(--primary-color), #7c3aed); color: white; box-shadow: 0 12px 24px rgba(37, 99, 235, 0.22);">
                 <i class="fas fa-cloud" style="font-size: 22px;"></i>
             </div>
-            <h1 class="auth-title">Giriş yap</h1>
-            <p class="auth-subtitle">Cloud System'e devam etmek için giriş yapın</p>
+            <h1 class="auth-title">Log in</h1>
+            <p class="auth-subtitle">Log in to continue to Cloud System</p>
         </div>
 
         <div class="auth-form">
@@ -104,22 +104,22 @@
                 <h:messages globalOnly="true" styleClass="messages"/>
 
                 <div class="form-group">
-                    <label class="form-label">E-posta veya telefon</label>
+                    <label class="form-label">Email or phone</label>
                     <h:inputText id="email" value="#{loginBean.user.email}" required="true"
-                                 requiredMessage="Lütfen bir e-posta girin" styleClass="form-control"
-                                 a:placeholder="ornek@site.com"/>
+                                 requiredMessage="Please enter an email" styleClass="form-control"
+                                 a:placeholder="example@site.com"/>
                 </div>
 
                 <div class="form-group">
-                    <label class="form-label">Şifre</label>
+                    <label class="form-label">Password</label>
                     <h:inputSecret id="password" value="#{loginBean.user.password}" required="true"
-                                   requiredMessage="Lütfen şifrenizi girin" styleClass="form-control"
-                                   a:placeholder="Şifrenizi girin"/>
+                                   requiredMessage="Please enter your password" styleClass="form-control"
+                                   a:placeholder="Enter your password"/>
                 </div>
 
                 <div class="auth-actions">
-                    <h:link value="Hesap oluştur" outcome="register.xhtml" styleClass="auth-link"/>
-                    <h:commandButton value="Giriş yap" action="#{loginBean.login()}" styleClass="btn btn-primary"
+                    <h:link value="Create account" outcome="register.xhtml" styleClass="auth-link"/>
+                    <h:commandButton value="Log in" action="#{loginBean.login()}" styleClass="btn btn-primary"
                                      style="padding: 12px 24px; font-size: 15px; border-radius: 12px;"/>
                 </div>
 

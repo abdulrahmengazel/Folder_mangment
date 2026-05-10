@@ -20,6 +20,8 @@ public class FolderBean implements Serializable {
     private static final String ROOT_UPLOAD_DIR = "/home/abdulrahman/cloud_uploads";
     private Folders folder;
     private List<Folders> foldersList;
+    private Long parentFolderId;
+    
     @EJB
     private FolderFacadeLocal folderFacade;
     @EJB
@@ -27,6 +29,7 @@ public class FolderBean implements Serializable {
 
     public void clearForm() {
         folder = new Folders();
+        parentFolderId = null;
     }
 
     public String createFolder() {
@@ -35,11 +38,22 @@ public class FolderBean implements Serializable {
 
         if (currentUser != null) {
             getFolder().setOwner(currentUser);
+            
+            // Set parent folder if provided
+            if (parentFolderId != null) {
+                Folders parentFolder = folderFacade.find(parentFolderId);
+                if (parentFolder != null && parentFolder.getOwner().getId().equals(currentUser.getId())) {
+                    getFolder().setParentFolder(parentFolder);
+                } else {
+                    context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Error", "Invalid parent folder."));
+                    return null;
+                }
+            }
 
-            // 1. الحفظ في قاعدة البيانات أولاً لكي يتم توليد المعرف (ID) للمجلد
+            // 1. Save to DB first to generate the Folder ID
             folderFacade.create(folder);
 
-            // 2. إنشاء المسار الفيزيائي على نظام لينكس لكل مستخدم ومجلد
+            // 2. Create the physical path on the system for each user and folder
             try {
                 String userDirectory = "user_" + currentUser.getId();
                 String folderDirectory = "folder_" + getFolder().getId();
@@ -48,18 +62,20 @@ public class FolderBean implements Serializable {
 
                 if (!java.nio.file.Files.exists(physicalPath)) {
                     java.nio.file.Files.createDirectories(physicalPath);
-                    System.out.println("Fiziksel klasör oluşturuldu: " + physicalPath);
+                    System.out.println("Physical folder created: " + physicalPath);
                 }
             } catch (Exception e) {
-                System.out.println("Fiziksel klasör oluşturulurken hata oluştu: " + e.getMessage());
+                System.out.println("Error creating physical folder: " + e.getMessage());
             }
 
-            System.out.println("Klasör veritabanında ve dosya sisteminde başarıyla oluşturuldu");
+            System.out.println("Folder successfully created in DB and filesystem");
+            
+            String redirectUrl = parentFolderId != null ? "folder-content.xhtml?faces-redirect=true&folderId=" + parentFolderId : "dashboard.xhtml?faces-redirect=true";
             clearForm();
 
-            return "dashboard.xhtml?faces-redirect=true";
+            return redirectUrl;
         } else {
-            System.out.println("Hata: Oturum açmış kullanıcı bulunamadı.");
+            System.out.println("Error: Logged in user not found.");
             return null;
         }
     }
@@ -70,7 +86,7 @@ public class FolderBean implements Serializable {
 
         if (currentUser != null && f != null && f.getOwner().getId().equals(currentUser.getId())) {
             softDeleteFolderTree(f, currentUser.getId());
-            System.out.println("Klasör silindi");
+            System.out.println("Folder deleted");
             foldersList = null; // force reload
         }
     }
@@ -119,9 +135,11 @@ public class FolderBean implements Serializable {
         Users currentUser = (Users) context.getExternalContext().getSessionMap().get("user");
 
         if (currentUser != null) {
+            // Only fetch root folders (parent is null) for the dashboard
             foldersList = folderFacade.findAll().stream()
                     .filter(f -> f.getOwner().getId().equals(currentUser.getId()))
                     .filter(f -> !f.isDeleted())
+                    .filter(f -> f.getParentFolder() == null)
                     .toList();
         } else {
             foldersList = java.util.Collections.emptyList();
@@ -131,5 +149,13 @@ public class FolderBean implements Serializable {
 
     public void setFoldersList(List<Folders> foldersList) {
         this.foldersList = foldersList;
+    }
+    
+    public Long getParentFolderId() {
+        return parentFolderId;
+    }
+
+    public void setParentFolderId(Long parentFolderId) {
+        this.parentFolderId = parentFolderId;
     }
 }

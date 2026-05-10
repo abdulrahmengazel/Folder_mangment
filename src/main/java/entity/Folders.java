@@ -33,7 +33,7 @@ public class Folders implements Serializable {
     public Folders() {
     }
 
-    // هذا الوسم يخبر النظام بتنفيذ هذه الدالة تلقائياً قبل عملية الحفظ (Insert)
+    // This annotation tells the system to execute this function automatically before saving (Insert)
     @PrePersist
     public void prePersist() {
         if (this.createdAt == null) {

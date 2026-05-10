@@ -28,22 +28,23 @@ public class AuthFilter implements Filter {
 
             String reqURI = req.getRequestURI();
 
-            // التحقق مما إذا كان المستخدم مسجلاً الدخول
+            // Check if user is logged in
             boolean loggedIn = (session != null && session.getAttribute("user") != null);
 
-            // السماح بالوصول لصفحات تسجيل الدخول والتسجيل
+            // Allow access to login and register pages
             boolean loginRequest = reqURI.contains("/login.xhtml");
             boolean registerRequest = reqURI.contains("/register.xhtml");
 
-            // السماح بالوصول لموارد النظام (مثل ملفات CSS)
+            // Allow access to system resources (like CSS files)
             boolean resourceRequest = reqURI.startsWith(req.getContextPath() + "/resources/") || reqURI.startsWith(req.getContextPath() + "/jakarta.faces.resource/");
 
             if (loggedIn || loginRequest || registerRequest || resourceRequest) {
-                // إذا كان المستخدم مسجلاً للدخول، أو يطلب صفحة مسموحة، دعه يمر
+                // If user is logged in, or requesting allowed pages, let them pass
                 chain.doFilter(request, response);
             } else {
-                // إذا لم يكن مسجلاً ويطلب صفحة محمية (مثل لوحة التحكم)، أعد توجيهه لتسجيل الدخول
-                res.sendRedirect(req.getContextPath() + "/login.xhtml");
+                // If not logged in and requesting a protected page (like dashboard), redirect to login
+                HttpServletResponse httpResponse = (HttpServletResponse) response;
+                httpResponse.sendRedirect(req.getContextPath() + "/login.xhtml");
             }
         } catch (Exception e) {
             System.out.println("Exception in AuthFilter: " + e.getMessage());
