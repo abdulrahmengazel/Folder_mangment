@@ -17,7 +17,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Named
+@Named("folderContentBean")
 @ViewScoped
 public class FolderContentBean implements Serializable {
 

@@ -13,7 +13,7 @@ import jakarta.inject.Named;
 import java.io.Serializable;
 import java.util.List;
 
-@Named
+@Named("folderBean")
 @ViewScoped
 public class FolderBean implements Serializable {
 

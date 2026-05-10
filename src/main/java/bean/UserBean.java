@@ -12,7 +12,7 @@ import org.mindrot.jbcrypt.BCrypt;
 import java.io.Serializable;
 import java.util.List;
 
-@Named
+@Named("userBean")
 @ViewScoped
 public class UserBean implements Serializable {
 

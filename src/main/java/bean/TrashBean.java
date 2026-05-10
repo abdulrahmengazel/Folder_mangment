@@ -19,7 +19,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
-@Named
+@Named("trashBean")
 @ViewScoped
 public class TrashBean implements Serializable {
 

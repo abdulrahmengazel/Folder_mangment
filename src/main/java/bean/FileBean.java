@@ -15,7 +15,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.List;
 
-@Named
+@Named("fileBean")
 @ViewScoped
 public class FileBean implements Serializable {
 
