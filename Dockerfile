@@ -21,6 +21,6 @@ COPY setup.pyara /opt/payara/deployments/setup.pyara
 COPY --from=builder /app/target/Folder_mangment-1.0-SNAPSHOT.war /opt/payara/deployments/app.war
 
 # أمر التشغيل
-ENTRYPOINT ["java", "-jar", "/opt/payara/payara-micro.jar", "--postbootcommandfile", "/opt/payara/deployments/setup.pyara", "--deploy", "/opt/payara/deployments/app.war"]
+ENTRYPOINT ["java", "-jar", "/opt/payara/payara-micro.jar", "--postbootcommandfile", "/opt/payara/deployments/setup.pyara", "--deploy", "/opt/payara/deployments/app.war", "--nocluster"]
 
 EXPOSE 8080
