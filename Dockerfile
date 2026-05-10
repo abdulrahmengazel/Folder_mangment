@@ -9,7 +9,7 @@ COPY src ./src
 RUN mvn clean package -DskipTests
 
 
-FROM payara/micro:6.2023.12-jdk21
+FROM payara/micro:latest
 
 USER root
 RUN mkdir -p /home/abdulrahman/cloud_uploads && \

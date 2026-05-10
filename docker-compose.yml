@@ -17,7 +17,6 @@ services:
       - db
 
   db:
-    # استخدام نسخة postgres 18 كما طلبت
     image: postgres:18-alpine
     environment:
       POSTGRES_USER: clouduser
@@ -26,7 +25,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - pgdata:/var/lib/postgresql  # ← removed /data
 
 volumes:
   cloud_storage:
