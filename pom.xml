@@ -57,5 +57,9 @@
                 <version>3.4.0</version>
             </plugin>
         </plugins>
+
+            <finalName>app</finalName>
+
     </build>
+
 </project>

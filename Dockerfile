@@ -18,8 +18,7 @@ USER payara
 
 # نسخ ملف الإعدادات ونسخ التطبيق
 COPY setup.pyara /opt/payara/deployments/setup.pyara
-COPY --from=builder /app/target/Folder_mangment-1.0-SNAPSHOT.war /opt/payara/deployments/app.war
-
+COPY --from=builder /app/target/app.war /opt/payara/deployments/app.war
 # أمر التشغيل
 
 ENTRYPOINT ["java", "-jar", "/opt/payara/payara-micro.jar", "--postbootcommandfile", "/opt/payara/deployments/setup.pyara", "--deploy", "/opt/payara/deployments/app.war", "--nocluster"]
