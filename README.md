@@ -1,32 +1,37 @@
 # 📁 Cloud File Management System
 
-An advanced local storage file management system, built using **Jakarta EE** and **JavaServer Faces (JSF)** with full support for sharing and permissions.
+An advanced local storage file management system, built using **Jakarta EE** and **JavaServer Faces (JSF)** with full support for sharing, permissions, and file lifecycle management.
 
 ---
 
 ## 🎯 Key Features
 
-✅ **User Management**
-- Secure new account registration with data validation
-- Secure login mechanism
-- Profile management
+✅ **User Management & Security**
+- Secure account registration with **BCrypt password hashing**
+- Secure login mechanism with hashed password verification
+- Profile management and account deletion
 
 ✅ **File and Folder Management**
 - Create multi-level folder structures
-- Upload files of various sizes
-- Delete files and folders
-- View file details (Name, Size, Date)
+- Upload files of various sizes directly to disk
+- Soft delete files and folders (moved to Trash)
+- View file details (Name, Size, Date, Type)
 
 ✅ **File Sharing and Permissions**
 - Share files with other users
 - Two permission levels: **Viewer (Read)** and **Editor (Write)**
-- Manage shares (Add and Revoke)
-- Easily modify permissions
+- Manage shares (Add, Update, Revoke)
+- Secure verification to ensure only owners can share
+
+✅ **Lifecycle Management & Organization**
+- **Trash/Recycle Bin:** Restore soft-deleted items or permanently delete them
+- **Starred Files:** Mark important files as favorites for quick access
+- **Recent Files:** Automatically view recently uploaded files sorted by newest first
 
 ✅ **Modern User Interface**
-- Google Drive-inspired design
-- Responsive and user-friendly interface
-- Clear error messages and alerts
+- Google Drive-inspired design built with JSF and CSS
+- Responsive and user-friendly interface in English
+- Clear error messages and alerts for smooth UX
 
 ---
 
@@ -36,13 +41,14 @@ An advanced local storage file management system, built using **Jakarta EE** and
 src/
 ├── main/
 │   ├── java/
-│   │   ├── bean/                    # JSF Managed Beans
-│   │   │   ├── LoginBean.java       # Login Handling
-│   │   │   ├── UserBean.java        # User Management
-│   │   │   ├── FolderBean.java      # Folder Management
-│   │   │   ├── FileBean.java        # File Management
-│   │   │   ├── SharedFilesBean.java # Sharing Management
-│   │   │   └── FolderContentBean.java # Folder View Logic
+│   │   ├── bean/                    # JSF Managed Beans (@ViewScoped)
+│   │   │   ├── LoginBean.java
+│   │   │   ├── UserBean.java
+│   │   │   ├── FolderBean.java
+│   │   │   ├── FileBean.java
+│   │   │   ├── SharedFilesBean.java
+│   │   │   ├── FolderContentBean.java
+│   │   │   └── TrashBean.java       # Manages Trash Lifecycle
 │   │   │
 │   │   ├── entity/                  # JPA Entities
 │   │   │   ├── Users.java
@@ -51,82 +57,31 @@ src/
 │   │   │   └── SharedFiles.java
 │   │   │
 │   │   ├── facade/                  # EJB Stateless Services
-│   │   │   ├── AbstractFacade.java
 │   │   │   ├── UserFacade.java
 │   │   │   ├── FolderFacade.java
 │   │   │   ├── FileFacade.java
 │   │   │   └── SharedFilesFacade.java
 │   │   │
-│   │   ├── facadeLocal/             # Local Interfaces
-│   │   │   ├── UserFacadeLocal.java
-│   │   │   ├── FolderFacadeLocal.java
-│   │   │   ├── FileFacadeLocal.java
-│   │   │   └── SharedFilesFacadeLocal.java
+│   │   ├── filter/
+│   │   │   └── AuthFilter.java      # Route protection & security
 │   │   │
 │   │   └── enums/                   # Enumerations
 │   │       └── PermissionEnum.java  # READ, WRITE
 │   │
-│   ├── webapp/
-│   │   ├── login.xhtml              # Login Page
-│   │   ├── register.xhtml           # Registration Page
-│   │   ├── dashboard.xhtml          # Main Dashboard
-│   │   ├── template.xhtml           # Layout Template
-│   │   ├── folder-content.xhtml     # Folder Contents View
-│   │   ├── new-folder.xhtml         # Create Folder View
-│   │   ├── shared.xhtml             # Shared Files View
-│   │   ├── upload-file.xhtml        # File Upload View
-│   │   ├── WEB-INF/
-│   │   │   └── web.xml              # Application Configuration
-│   │   └── resources/
-│   │       └── css/
-│   │           └── style.css        # Styles
+│   ├── webapp/                      # JSF Facelets (UI)
+│   │   ├── login.xhtml, register.xhtml
+│   │   ├── dashboard.xhtml, template.xhtml
+│   │   ├── folder-content.xhtml, new-folder.xhtml
+│   │   ├── shared.xhtml, upload-file.xhtml
+│   │   ├── profile.xhtml, recent.xhtml, starred.xhtml, trash.xhtml
+│   │   ├── WEB-INF/web.xml
+│   │   └── resources/css/style.css
 │   │
-│   └── resources/
-│       └── META-INF/
-│           ├── persistence.xml      # JPA Configuration
-│           └── beans.xml            # CDI Configuration
+│   └── resources/META-INF/
+│       ├── persistence.xml          # JPA Configuration
+│       └── beans.xml                # CDI Configuration
 │
-└── pom.xml                          # Maven Build File
-```
-
----
-
-## 🗄️ Data Model
-
-### Users
-```
-id          : Long (Primary Key)
-name        : String
-email       : String (Unique)
-password    : String
-```
-
-### Folders
-```
-id              : Long (Primary Key)
-name            : String
-createdAt       : Date
-owner_id        : Long (FK → Users)
-parent_folder_id: Long (FK → Folders, for hierarchical structure)
-```
-
-### Files
-```
-id        : Long (Primary Key)
-name      : String
-size      : Long
-type      : String (MIME Type)
-path      : String (System path)
-folder_id : Long (FK → Folders)
-owner_id  : Long (FK → Users)
-```
-
-### SharedFiles
-```
-id          : Long (Primary Key)
-file_id     : Long (FK → Files)
-recipient_id: Long (FK → Users)
-permission  : Enum (READ, WRITE)
+└── pom.xml                          # Maven Dependencies
 ```
 
 ---
@@ -139,49 +94,9 @@ permission  : Enum (READ, WRITE)
 | **Jakarta EE** | 10.0.0 | Core Framework |
 | **Jakarta Faces (JSF)** | Included | User Interface |
 | **JPA (EclipseLink)** | 4.0.2 | Database ORM |
-| **Maven** | - | Build Tool |
 | **EJB 4.0** | Included | Business Services |
-| **JUnit 5** | 5.10.2 | Testing |
-
----
-
-## 📋 Core Functionalities
-
-### 1. **Login (LoginBean)**
-```java
-public String login()
-// Validates user credentials
-// Creates user session
-// Redirects to dashboard
-```
-
-### 2. **User Management (UserBean)**
-```java
-public String createUser()        // Creates a new account
-public void editUser()            // Edits user data
-public void deleteUser(Users u)   // Deletes a user
-```
-
-### 3. **Folder Management (FolderBean)**
-```java
-public String createFolder()      // Creates a folder
-public void deleteFolder(Folders) // Deletes a folder
-```
-
-### 4. **File Management (FileBean)**
-```java
-public String uploadFile()        // Uploads a file
-public List<Files> getFilesList() // Retrieves user files
-```
-
-### 5. **File Sharing (SharedFilesBean)**
-```java
-public void shareFile()                        // Shares a file
-public void removeSharedFile(SharedFiles)      // Revokes a share
-public void changePermission(SharedFiles, Perm) // Modifies permissions
-public List<SharedFiles> getSharedWithMe()     // Files shared with me
-public List<SharedFiles> getMySharedFiles()    // Files I shared
-```
+| **jBCrypt** | 0.4 | Password Security |
+| **Maven** | 3.8+ | Build Tool |
 
 ---
 
@@ -189,66 +104,36 @@ public List<SharedFiles> getMySharedFiles()    // Files I shared
 
 ### Requirements
 - **JDK 23** or newer
-- **Maven 3.8.9** or newer
-- **Application Server** (GlassFish 7+, Tomcat 10+)
-- **Database** (Derby, MySQL, PostgreSQL)
+- **Maven 3.8+**
+- **Application Server** (e.g., GlassFish 7+, Payara, Tomcat 10+)
+- **Database** (Configured via your application server's JDBC pool `jdbc/CloudDrivePu`)
 
 ### Execution Steps
 
 1. **Clone the repository:**
 ```bash
-git clone https://github.com/your-repo/Folder_mangment.git
+git clone https://github.com/abdulrahmengazel/Folder_mangment.git
 cd Folder_mangment
 ```
 
 2. **Build the project:**
 ```bash
-mvn clean install
+./mvnw clean package
 ```
 
 3. **Deploy the application:**
 ```bash
 # For GlassFish
-asadmin deploy target/Folder_mangment-1.0-SNAPSHOT.war
-
-# For Tomcat
-cp target/Folder_mangment-1.0-SNAPSHOT.war $CATALINA_HOME/webapps/
+asadmin start-domain
+asadmin deploy --force=true target/Folder_mangment-1.0-SNAPSHOT.war
 ```
 
 4. **Access the application:**
-```
+```text
 http://localhost:8080/Folder_mangment/login.xhtml
 ```
 
----
-
-## 📖 User Guide
-
-### 1️⃣ Create a New Account
-- Navigate to the registration page.
-- Enter your full name, email, and password.
-- Click "Create account".
-
-### 2️⃣ Sign In
-- Enter your email and password.
-- Click "Next".
-
-### 3️⃣ Create Folders
-- In the dashboard, click "New folder".
-- Enter the folder name.
-- Click "Create".
-
-### 4️⃣ Upload Files
-- Click "File upload".
-- Select the target folder.
-- Choose the file to upload.
-- Click "Upload".
-
-### 5️⃣ Share Files
-- Go to "Shared with me" or the sharing settings panel.
-- Select the file and the user.
-- Choose the permission level (Viewer/Editor).
-- Click "Share".
+*(Note: Physical files are saved to `/home/abdulrahman/cloud_uploads` by default. Update the `ROOT_UPLOAD_DIR` in the Beans if running on a different environment/OS.)*
 
 ---
 
@@ -265,59 +150,25 @@ http://localhost:8080/Folder_mangment/login.xhtml
 </persistence-unit>
 ```
 
-### web.xml
-```xml
-<!-- JSF Configuration -->
-<servlet>
-    <servlet-name>Faces Servlet</servlet-name>
-    <servlet-class>jakarta.faces.webapp.FacesServlet</servlet-class>
-    <load-on-startup>1</load-on-startup>
-</servlet>
-
-<servlet-mapping>
-    <servlet-name>Faces Servlet</servlet-name>
-    <url-pattern>*.xhtml</url-pattern>
-</servlet-mapping>
-```
-
----
-
-## 🐛 Error Handling
-
-The system provides clear error messages in the following scenarios:
-- ❌ Invalid input data
-- ❌ Attempting to register an existing email
-- ❌ File upload failure
-- ❌ Attempting to delete a protected folder
-- ❌ Attempting to share a file you do not own
-
----
-
-## 🔐 Security
-
-✅ Server-side data validation
-✅ User permissions verification
-✅ Use of JPA to prevent SQL Injection
-✅ Secure sessions management
+### Security (AuthFilter)
+The application uses a Servlet Filter (`AuthFilter.java`) to intercept requests and ensure that only authenticated users can access internal pages (`*.xhtml`).
 
 ---
 
 ## 📈 Future Enhancements
 
 - [ ] Advanced search and sorting
-- [ ] Mark files as starred/favorite
-- [ ] Trash/Recycle bin functionality
-- [ ] Public sharing (public links)
-- [ ] Sort by date and size
-- [ ] Support for ZIP archives
+- [ ] Public sharing (generate public download links)
+- [ ] Support for ZIP archives (Upload/Download)
 - [ ] Automatic backups
 - [ ] Email notifications
+- [ ] Dockerization (Dockerfile & docker-compose)
 
 ---
 
 ## 👨‍💻 Contributing
 
-You can contribute to the project's development:
+Contributions are welcome!
 1. Fork the project
 2. Create a new branch (`git checkout -b feature/AmazingFeature`)
 3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
@@ -334,12 +185,10 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## 📞 Contact
 
-- 📧 Email: [abdulrahmengazel@gmail.com]
-- 🐙 GitHub: [github.com/abdulrahmengazel/]
--
+- 📧 Email: abdulrahmengazel@gmail.com
+- 🐙 GitHub: [github.com/abdulrahmengazel](https://github.com/abdulrahmengazel)
 
 ---
 
-
 **Version:** 1.0.0
-**Status:** ✅ Ready for Production
+**Status:** ✅ Ready for Open Source / Production
