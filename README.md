@@ -11,10 +11,10 @@ An advanced local storage file management system, built using **Jakarta EE** and
 - Secure login mechanism with hashed password verification
 - Profile management and account deletion
 
-✅ **File and Folder Management**
-- Create multi-level folder structures
+✅ **Hierarchical File and Folder Management**
+- Create **multi-level nested folder structures** (Folders inside Folders)
 - Upload files of various sizes directly to disk
-- Soft delete files and folders (moved to Trash)
+- Soft delete files and nested folders (moved to Trash)
 - View file details (Name, Size, Date, Type)
 
 ✅ **File Sharing and Permissions**
@@ -30,7 +30,7 @@ An advanced local storage file management system, built using **Jakarta EE** and
 
 ✅ **Modern User Interface**
 - Google Drive-inspired design built with JSF and CSS
-- Responsive and user-friendly interface in English
+- Responsive and user-friendly interface fully localized in **English**
 - Clear error messages and alerts for smooth UX
 
 ---
@@ -51,12 +51,12 @@ For a quick and easy setup, you can run the entire application using Docker.
    This will:
    - Build the Java application using Maven.
    - Create a Docker image with the Payara Micro server.
-   - Start the application container.
-   - *(Optional)* Start a PostgreSQL database container.
+   - Start the application container on port `8080`.
+   - Start a PostgreSQL database container.
 
 3. **Access the application:**
    ```text
-   http://localhost:8080/Folder_mangment-1.0-SNAPSHOT
+   http://localhost:8080/
    ```
 
 ---
@@ -70,15 +70,15 @@ src/
 │   │   ├── bean/                    # JSF Managed Beans (@ViewScoped)
 │   │   │   ├── LoginBean.java
 │   │   │   ├── UserBean.java
-│   │   │   ├── FolderBean.java
+│   │   │   ├── FolderBean.java      # Hierarchical Folder Creation
 │   │   │   ├── FileBean.java
 │   │   │   ├── SharedFilesBean.java
-│   │   │   ├── FolderContentBean.java
+│   │   │   ├── FolderContentBean.java # Handles Subfolders & Files view
 │   │   │   └── TrashBean.java       # Manages Trash Lifecycle
 │   │   │
 │   │   ├── entity/                  # JPA Entities
 │   │   │   ├── Users.java
-│   │   │   ├── Folders.java
+│   │   │   ├── Folders.java         # Contains self-referencing parent_folder_id
 │   │   │   ├── Files.java
 │   │   │   └── SharedFiles.java
 │   │   │
@@ -107,7 +107,10 @@ src/
 │       ├── persistence.xml          # JPA Configuration
 │       └── beans.xml                # CDI Configuration
 │
-└── pom.xml                          # Maven Dependencies
+├── .github/workflows/               # CI/CD
+│   └── maven.yml                    # Automated build & testing
+├── Dockerfile                       # Container Build script
+└── docker-compose.yml               # Multi-container orchestration
 ```
 
 ---
@@ -123,7 +126,8 @@ src/
 | **EJB 4.0** | Included | Business Services |
 | **jBCrypt** | 0.4 | Password Security |
 | **Maven** | 3.8+ | Build Tool |
-| **Docker** | - | Containerization |
+| **Docker** | - | Containerization & Deployment |
+| **GitHub Actions** | - | Continuous Integration (CI) |
 
 ---
 
@@ -171,7 +175,6 @@ http://localhost:8080/Folder_mangment/login.xhtml
 - [ ] Support for ZIP archives (Upload/Download)
 - [ ] Automatic backups
 - [ ] Email notifications
-- [ ] CI/CD with GitHub Actions
 
 ---
 
