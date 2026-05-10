@@ -51,8 +51,9 @@ For a quick and easy setup, you can run the entire application using Docker.
    This will:
    - Build the Java application using Maven.
    - Create a Docker image with the Payara Micro server.
+   - Run the custom `setup.pyara` script to automatically configure the JTA datasource and connection pool.
    - Start the application container on port `8080`.
-   - Start a PostgreSQL database container.
+   - Start a PostgreSQL database container and link it seamlessly to Payara.
 
 3. **Access the application:**
    ```text
@@ -110,7 +111,8 @@ src/
 ├── .github/workflows/               # CI/CD
 │   └── maven.yml                    # Automated build & testing
 ├── Dockerfile                       # Container Build script
-└── docker-compose.yml               # Multi-container orchestration
+├── docker-compose.yml               # Multi-container orchestration
+└── setup.pyara                      # Post-boot script for DB config
 ```
 
 ---
@@ -128,6 +130,7 @@ src/
 | **Maven** | 3.8+ | Build Tool |
 | **Docker** | - | Containerization & Deployment |
 | **GitHub Actions** | - | Continuous Integration (CI) |
+| **Payara Micro** | 6.2023 | Lightweight Application Server |
 
 ---
 
