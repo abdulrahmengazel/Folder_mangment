@@ -1,5 +1,4 @@
-
-FROM maven:3.9.9-eclipse-temurin-23-alpine AS builder
+FROM maven:3.9.9-eclipse-temurin-21-alpine AS builder
 
 WORKDIR /app
 COPY pom.xml .
@@ -14,13 +13,15 @@ FROM payara/micro:latest
 USER root
 RUN mkdir -p /home/abdulrahman/cloud_uploads && \
     chown -R payara:payara /home/abdulrahman/cloud_uploads
+
+# نسخ الـ entrypoint
+COPY entrypoint.sh /opt/payara/entrypoint.sh
+RUN chmod +x /opt/payara/entrypoint.sh
+
 USER payara
 
-# نسخ ملف الإعدادات ونسخ التطبيق
-COPY setup.pyara /opt/payara/deployments/setup.pyara
 COPY --from=builder /app/target/app.war /opt/payara/deployments/app.war
-# أمر التشغيل
 
-ENTRYPOINT ["java", "-jar", "/opt/payara/payara-micro.jar", "--postbootcommandfile", "/opt/payara/deployments/setup.pyara", "--deploy", "/opt/payara/deployments/app.war", "--nocluster"]
+ENTRYPOINT ["/opt/payara/entrypoint.sh"]
 
 EXPOSE 8080
