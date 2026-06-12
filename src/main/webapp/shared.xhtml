@@ -39,13 +39,11 @@
 
                 <div style="flex: 2; min-width: 200px;">
                     <label class="form-label"
-                           style="font-weight: 500; color: var(--text-secondary);">Add person</label>
-                    <h:selectOneMenu value="#{sharedFilesBean.selectedUserId}" required="true"
-                                     requiredMessage="Please select a user" styleClass="form-control">
-                        <f:selectItem itemLabel="Select a person..." itemValue="#{null}" noSelectionOption="true"/>
-                        <f:selectItems value="#{sharedFilesBean.availableUsers}" var="u" itemLabel="#{u.email}"
-                                       itemValue="#{u.id}"/>
-                    </h:selectOneMenu>
+                           style="font-weight: 500; color: var(--text-secondary);">Recipient email</label>
+                    <h:inputText value="#{sharedFilesBean.recipientEmail}" required="true"
+                                 requiredMessage="Please enter the recipient email"
+                                 placeholder="name@example.com"
+                                 styleClass="form-control"/>
                 </div>
 
                 <div style="flex: 1; min-width: 120px;">

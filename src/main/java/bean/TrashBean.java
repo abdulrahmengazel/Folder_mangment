@@ -202,7 +202,11 @@ public class TrashBean implements Serializable {
             return;
         }
 
-        Path folderPath = Path.of(ROOT_UPLOAD_DIR, "user_" + folder.getOwner().getId(), "folder_" + folder.getId());
+        Path folderPath = FolderStorageHelper.resolveFolderPath(ROOT_UPLOAD_DIR, folder);
+        if (folderPath == null) {
+            addMessage(FacesMessage.SEVERITY_WARN, "Warning", "Folder could not be deleted from storage: invalid folder path.");
+            return;
+        }
         try {
             if (java.nio.file.Files.exists(folderPath)) {
                 try (java.util.stream.Stream<Path> paths = java.nio.file.Files.walk(folderPath)) {

@@ -42,6 +42,26 @@ public class UserFacade extends AbstractFacade implements UserFacadeLocal {
     }
 
     @Override
+    public Users findByEmail(String email) {
+        if (email == null) {
+            return null;
+        }
+
+        String normalizedEmail = email.trim().toLowerCase();
+        if (normalizedEmail.isEmpty()) {
+            return null;
+        }
+
+        CriteriaBuilder cb = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Users> cq = cb.createQuery(Users.class);
+        Root<Users> root = cq.from(Users.class);
+        cq.select(root).where(cb.equal(cb.lower(root.get("email")), normalizedEmail));
+
+        List<Users> matches = entityManager.createQuery(cq).getResultList();
+        return matches.isEmpty() ? null : matches.get(0);
+    }
+
+    @Override
     public Users login(String email, String password) {
         try {
             CriteriaBuilder cb = entityManager.getCriteriaBuilder();
@@ -60,4 +80,3 @@ public class UserFacade extends AbstractFacade implements UserFacadeLocal {
         }
     }
 }
-

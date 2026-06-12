@@ -39,6 +39,13 @@ public class FolderContentBean implements Serializable {
         if (currentUser == null) {
             return;
         }
+        
+        // Check flash scope for refresh flag
+        if (context.getExternalContext().getFlash().containsKey("folderCreated")) {
+            // Force reload by clearing lists
+            filesInFolder = null;
+            subFolders = null;
+        }
 
         if (folderId != null) {
             currentFolder = folderFacade.find(folderId);

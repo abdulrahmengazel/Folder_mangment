@@ -12,17 +12,17 @@ public class Files implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "Name", nullable = false, length = 200)
+    @Column(name = "Name", nullable = false)
     private String name;
 
     @Column(name = "Size", nullable = false)
     private Long size;
 
-    @Column(name = "Type", nullable = false, length = 50)
+    @Column(name = "Type", nullable = false)
     private String type;
 
     // File path added here to be saved in the database
-    @Column(name = "Path", nullable = false, length = 500)
+    @Column(name = "Path", nullable = false)
     private String path;
 
     @Column(name = "Deleted", nullable = false)

@@ -24,6 +24,7 @@ public class UserBean implements Serializable {
     
 
     public String createUser() {
+        FacesContext context = FacesContext.getCurrentInstance();
         try {
             // Hash the password before saving to the database
             String plainPassword = user.getPassword();
@@ -53,7 +54,17 @@ public class UserBean implements Serializable {
             return "login.xhtml?faces-redirect=true";
 
         } catch (Exception e) {
+            String errorMessage = e.getMessage();
+            if (errorMessage != null && (errorMessage.contains("violates unique constraint") || errorMessage.contains("duplicate key"))) {
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Registration Failed", "This email address is already registered. Please use a different one."));
+            } else {
+                // To display unknown error
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Registration Failed", "An unexpected error occurred. Please try again."));
+            }
+            
+            // Still log to server
             System.out.println("Error during user registration: " + e.getMessage());
+
             return null;
         }
     }

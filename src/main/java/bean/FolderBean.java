@@ -55,10 +55,11 @@ public class FolderBean implements Serializable {
 
             // 2. Create the physical path on the system for each user and folder
             try {
-                String userDirectory = "user_" + currentUser.getId();
-                String folderDirectory = "folder_" + getFolder().getId();
-
-                java.nio.file.Path physicalPath = java.nio.file.Paths.get(ROOT_UPLOAD_DIR, userDirectory, folderDirectory);
+                java.nio.file.Path physicalPath = FolderStorageHelper.resolveFolderPath(ROOT_UPLOAD_DIR, folder);
+                if (physicalPath == null) {
+                    context.addMessage(null, new jakarta.faces.application.FacesMessage(jakarta.faces.application.FacesMessage.SEVERITY_ERROR, "Error", "Folder path could not be created."));
+                    return null;
+                }
 
                 if (!java.nio.file.Files.exists(physicalPath)) {
                     java.nio.file.Files.createDirectories(physicalPath);
@@ -70,6 +71,7 @@ public class FolderBean implements Serializable {
 
             System.out.println("Folder successfully created in DB and filesystem");
             
+            context.getExternalContext().getFlash().put("folderCreated", true);
             String redirectUrl = parentFolderId != null ? "folder-content.xhtml?faces-redirect=true&folderId=" + parentFolderId : "dashboard.xhtml?faces-redirect=true";
             clearForm();
 

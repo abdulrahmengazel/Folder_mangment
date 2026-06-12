@@ -25,14 +25,10 @@ public class SharedFilesBean implements Serializable {
     private SharedFiles sharedFile;
     private List<SharedFiles> sharedFilesList;
     private List<SharedFiles> sharedWithMeList;
-
-    // To store available files and users for sharing
     private List<Files> availableFiles;
-    private List<Users> availableUsers;
 
-    // For searching and filtering
     private Long selectedFileId;
-    private Long selectedUserId;
+    private String recipientEmail;
     private PermissionEnum selectedPermission = PermissionEnum.READ;
 
     @EJB
@@ -44,151 +40,114 @@ public class SharedFilesBean implements Serializable {
     @EJB
     private UserFacadeLocal userFacade;
 
-    // ============ METHODS ============
-
-    /**
-     * Share a file with another user
-     */
     public void shareFile() {
         FacesContext context = FacesContext.getCurrentInstance();
         Users currentUser = (Users) context.getExternalContext().getSessionMap().get("user");
 
-        // Validate input data
         if (selectedFileId == null || selectedFileId <= 0) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Error", "Please select a file."));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Please select a file."));
             return;
         }
 
-        if (selectedUserId == null || selectedUserId <= 0) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Error", "Please select a user."));
+        if (recipientEmail == null || recipientEmail.trim().isEmpty()) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Please enter the recipient email."));
             return;
         }
 
         if (currentUser == null) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Error", "Current user is not found."));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Current user is not found."));
             return;
         }
 
-        // Verify that the current user is the owner of the file
         Files file = fileFacade.find(selectedFileId);
         if (file == null) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Error", "File not found."));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "File not found."));
             return;
         }
 
         if (file.isDeleted()) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Error", "File is deleted."));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "File is deleted."));
             return;
         }
 
         if (!file.getOwner().getId().equals(currentUser.getId())) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Error", "You are not the owner of this file."));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "You are not the owner of this file."));
             return;
         }
 
-        // Verify that the recipient exists
-        Users recipient = userFacade.find(selectedUserId);
+        String normalizedEmail = recipientEmail.trim();
+        if (currentUser.getEmail() != null && currentUser.getEmail().equalsIgnoreCase(normalizedEmail)) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "You cannot share a file with yourself."));
+            return;
+        }
+
+        Users recipient = userFacade.findByEmail(normalizedEmail);
         if (recipient == null) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Error", "User not found."));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "No user found with that email."));
             return;
         }
 
-        // Prevent sharing the file again with the same user
-        List<SharedFiles> existing = sharedFilesFacade.findAll().stream()
-                .filter(sf -> sf.getFile().getId().equals(selectedFileId) &&
-                        sf.getRecipient().getId().equals(selectedUserId))
-                .collect(Collectors.toList());
-
-        if (!existing.isEmpty()) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN,
-                    "Warning", "File already shared with this user."));
+        boolean alreadyShared = sharedFilesFacade.findAll().stream()
+                .anyMatch(sf -> sf.getFile() != null
+                        && sf.getRecipient() != null
+                        && sf.getFile().getId().equals(selectedFileId)
+                        && sf.getRecipient().getId().equals(recipient.getId()));
+        if (alreadyShared) {
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_WARN, "Warning", "File already shared with this user."));
             return;
         }
 
         try {
-            // Create a new share record
             sharedFile = new SharedFiles();
             sharedFile.setFile(file);
             sharedFile.setRecipient(recipient);
             sharedFile.setPermission(selectedPermission);
 
             sharedFilesFacade.create(sharedFile);
-
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    "Success", "File shared successfully."));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "File shared successfully."));
 
             clearForm();
             refreshLists();
-
         } catch (Exception e) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "System Error", e.getMessage()));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "System Error", e.getMessage()));
         }
     }
 
-    /**
-     * Remove a shared file
-     */
     public void removeSharedFile(SharedFiles sf) {
         FacesContext context = FacesContext.getCurrentInstance();
 
         try {
             if (sf == null || sf.getId() == null) {
-                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "Error", "Shared file cannot be deleted."));
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Shared file cannot be deleted."));
                 return;
             }
 
             sharedFilesFacade.remove(sf);
-
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    "Success", "Sharing removed successfully."));
-
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Sharing removed successfully."));
             refreshLists();
-
         } catch (Exception e) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Error", e.getMessage()));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
         }
     }
 
-    /**
-     * Change permissions for a shared file
-     */
     public void changePermission(SharedFiles sf, PermissionEnum newPermission) {
         FacesContext context = FacesContext.getCurrentInstance();
 
         try {
             if (sf == null || sf.getId() == null) {
-                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                        "Error", "Shared file cannot be updated."));
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", "Shared file cannot be updated."));
                 return;
             }
 
             sf.setPermission(newPermission);
             sharedFilesFacade.edit(sf);
-
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO,
-                    "Success", "Permission updated successfully."));
-
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Success", "Permission updated successfully."));
             refreshLists();
-
         } catch (Exception e) {
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,
-                    "Error", e.getMessage()));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error", e.getMessage()));
         }
     }
 
-    /**
-     * Get all files shared with me (as a recipient)
-     */
     public List<SharedFiles> getSharedWithMe() {
         FacesContext context = FacesContext.getCurrentInstance();
         Users currentUser = (Users) context.getExternalContext().getSessionMap().get("user");
@@ -205,9 +164,6 @@ public class SharedFilesBean implements Serializable {
         return sharedWithMeList;
     }
 
-    /**
-     * Get all files I shared (as an owner)
-     */
     public List<SharedFiles> getMySharedFiles() {
         FacesContext context = FacesContext.getCurrentInstance();
         Users currentUser = (Users) context.getExternalContext().getSessionMap().get("user");
@@ -224,9 +180,6 @@ public class SharedFilesBean implements Serializable {
         return sharedFilesList;
     }
 
-    /**
-     * Get files available to share (my files only)
-     */
     public List<Files> getAvailableFiles() {
         FacesContext context = FacesContext.getCurrentInstance();
         Users currentUser = (Users) context.getExternalContext().getSessionMap().get("user");
@@ -244,61 +197,26 @@ public class SharedFilesBean implements Serializable {
         return availableFiles;
     }
 
-    /**
-     * Get all users (except the current user)
-     */
-    public List<Users> getAvailableUsers() {
-        FacesContext context = FacesContext.getCurrentInstance();
-        Users currentUser = (Users) context.getExternalContext().getSessionMap().get("user");
-
-        if (currentUser == null) {
-            availableUsers = new ArrayList<>();
-            return availableUsers;
-        }
-
-        availableUsers = userFacade.findAll().stream()
-                .filter(u -> !u.getId().equals(currentUser.getId()))
-                .collect(Collectors.toList());
-
-        return availableUsers;
-    }
-
-    /**
-     * Check for write permission on a shared file
-     */
     public boolean hasWritePermission(SharedFiles sf) {
         return sf != null && sf.getPermission() == PermissionEnum.WRITE;
     }
 
-    /**
-     * Check for read permission
-     */
     public boolean hasReadPermission(SharedFiles sf) {
-        return sf != null && (sf.getPermission() == PermissionEnum.READ ||
-                sf.getPermission() == PermissionEnum.WRITE);
+        return sf != null && (sf.getPermission() == PermissionEnum.READ || sf.getPermission() == PermissionEnum.WRITE);
     }
 
-    /**
-     * Clear the input form
-     */
     public void clearForm() {
         sharedFile = null;
         selectedFileId = null;
-        selectedUserId = null;
+        recipientEmail = null;
         selectedPermission = PermissionEnum.READ;
     }
 
-    /**
-     * Refresh lists
-     */
     public void refreshLists() {
         getMySharedFiles();
         getSharedWithMe();
         getAvailableFiles();
-        getAvailableUsers();
     }
-
-
 
     public List<SharedFiles> getSharedFilesList() {
         if (sharedFilesList == null) {
@@ -307,14 +225,12 @@ public class SharedFilesBean implements Serializable {
         return sharedFilesList;
     }
 
-
     public List<SharedFiles> getSharedWithMeList() {
         if (sharedWithMeList == null) {
             getSharedWithMe();
         }
         return sharedWithMeList;
     }
-
 
     public Long getSelectedFileId() {
         return selectedFileId;
@@ -324,12 +240,12 @@ public class SharedFilesBean implements Serializable {
         this.selectedFileId = selectedFileId;
     }
 
-    public Long getSelectedUserId() {
-        return selectedUserId;
+    public String getRecipientEmail() {
+        return recipientEmail;
     }
 
-    public void setSelectedUserId(Long selectedUserId) {
-        this.selectedUserId = selectedUserId;
+    public void setRecipientEmail(String recipientEmail) {
+        this.recipientEmail = recipientEmail;
     }
 
     public PermissionEnum getSelectedPermission() {

@@ -6,6 +6,11 @@
       xmlns:ui="jakarta.faces.facelets"
 >
 
+<f:metadata>
+    <f:viewParam name="targetFolderId" value="#{fileBean.targetFolderId}"/>
+    <f:viewAction action="#{fileBean.init}"/>
+</f:metadata>
+
 <ui:composition template="./template.xhtml">
 
     <ui:define name="title">
@@ -26,15 +31,26 @@
         <div class="form-card" style="margin-top: 24px;">
 
             <h:form id="uploadForm" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label class="form-label">Select target folder</label>
-                    <h:selectOneMenu value="#{fileBean.targetFolderId}" required="true"
-                                     requiredMessage="Please select a folder" styleClass="form-control">
-                        <f:selectItem itemLabel="Select a folder..." itemValue="#{null}" noSelectionOption="true"/>
-                        <f:selectItems value="#{folderBean.foldersList}" var="folder" itemLabel="#{folder.name}"
-                                       itemValue="#{folder.id}"/>
-                    </h:selectOneMenu>
-                </div>
+                <h:panelGroup rendered="#{not empty fileBean.targetFolder}">
+                    <div class="form-group">
+                        <label class="form-label">Target folder</label>
+                        <div class="form-control" style="background-color: #f8fafc; display: flex; align-items: center; min-height: 48px;">
+                            <h:outputText value="#{fileBean.targetFolder.name}"/>
+                        </div>
+                    </div>
+                </h:panelGroup>
+
+                <h:panelGroup rendered="#{empty fileBean.targetFolder}">
+                    <div class="form-group">
+                        <label class="form-label">Select target folder</label>
+                        <h:selectOneMenu value="#{fileBean.targetFolderId}" required="true"
+                                         requiredMessage="Please select a folder" styleClass="form-control">
+                            <f:selectItem itemLabel="Select a folder..." itemValue="#{null}" noSelectionOption="true"/>
+                            <f:selectItems value="#{folderBean.foldersList}" var="folder" itemLabel="#{folder.name}"
+                                           itemValue="#{folder.id}"/>
+                        </h:selectOneMenu>
+                    </div>
+                </h:panelGroup>
 
                 <div class="form-group" style="margin-top: 32px;">
                     <div style="border: 2px dashed #cbd5e1; border-radius: 12px; padding: 48px 24px; text-align: center; background-color: #f8fafc; transition: all 0.2s;">

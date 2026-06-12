@@ -1,18 +1,20 @@
 <component name="ArtifactManager">
-  <artifact type="war" name="unnamed">
-    <output-path>$PROJECT_DIR$/out/artifacts/unnamed</output-path>
-    <root id="archive" name="unnamed.war">
+  <artifact type="war" name="app">
+    <output-path>$PROJECT_DIR$/out/artifacts/app</output-path>
+    <root id="archive" name="app.war">
       <element id="directory" name="WEB-INF">
         <element id="directory" name="classes">
           <element id="module-output" name="Folder_mangment" />
         </element>
         <element id="directory" name="lib">
           <element id="library" level="project" name="Maven: jakarta.persistence:jakarta.persistence-api:3.1.0" />
+          <element id="library" level="project" name="Maven: org.checkerframework:checker-qual:3.52.0" />
           <element id="library" level="project" name="Maven: org.eclipse.persistence:org.eclipse.persistence.asm:9.5.0" />
           <element id="library" level="project" name="Maven: org.eclipse.persistence:org.eclipse.persistence.core:4.0.2" />
           <element id="library" level="project" name="Maven: org.eclipse.persistence:org.eclipse.persistence.jpa.jpql:4.0.2" />
           <element id="library" level="project" name="Maven: org.eclipse.persistence:org.eclipse.persistence.jpa:4.0.2" />
           <element id="library" level="project" name="Maven: org.mindrot:jbcrypt:0.4" />
+          <element id="library" level="project" name="Maven: org.postgresql:postgresql:42.7.10" />
         </element>
       </element>
       <element id="javaee-facet-resources" facet="Folder_mangment/web/Web" />
