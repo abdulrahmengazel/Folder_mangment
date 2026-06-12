@@ -1,17 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core"
-      xmlns:ui="jakarta.faces.facelets"
->
+<ui:composition template="./template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets">
 
-<f:metadata>
-    <f:viewParam name="targetFolderId" value="#{fileBean.targetFolderId}"/>
-    <f:viewAction action="#{fileBean.init}"/>
-</f:metadata>
-
-<ui:composition template="./template.xhtml">
+    <f:metadata>
+        <f:viewParam name="targetFolderId" value="#{fileBean.targetFolderId}"/>
+        <f:viewAction action="#{fileBean.init}"/>
+    </f:metadata>
 
     <ui:define name="title">
         Upload File - Cloud System
@@ -73,4 +69,3 @@
     </ui:define>
 
 </ui:composition>
-</html>

@@ -1,11 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html"
-      xmlns:ui="jakarta.faces.facelets">
-<h:outputStylesheet name="css/style.css"/>
-<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/style.css?v=2.0"/>
-<ui:composition template="./template.xhtml">
+<ui:composition template="./template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:ui="jakarta.faces.facelets">
 
     <ui:define name="title">
         My Files - Cloud System
@@ -22,25 +18,9 @@
         <h:panelGroup rendered="#{folderBean.foldersList.size() > 0}">
             <h3 class="form-label"
                 style="margin-bottom: 20px; font-size: 15px; color: var(--text-secondary);">Folders</h3>
-            <div class="grid-folders">
-                <ui:repeat value="#{folderBean.foldersList}" var="folder">
-                    <!-- Note: onclick inside the card wrapper for better click area, maintaining the inner commandLink for delete -->
-                    <div class="card-folder"
-                         onclick="window.location.href='folder-content.xhtml?folderId=#{folder.id}'">
-                        <div class="card-folder-info">
-                            <i class="fas fa-folder card-folder-icon"></i>
-                            <span class="card-folder-name" title="#{folder.name}">#{folder.name}</span>
-                        </div>
-                        <h:form style="margin: 0; padding: 0;" onclick="event.stopPropagation();">
-                            <h:commandLink action="#{folderBean.deleteFolder(folder)}" styleClass="card-action-btn"
-                                           title="Delete folder"
-                                           onclick="return confirm('Are you sure you want to delete this folder? All contents inside will be deleted.');">
-                                <i class="fas fa-trash-alt"></i>
-                            </h:commandLink>
-                        </h:form>
-                    </div>
-                </ui:repeat>
-            </div>
+            <ui:include src="/includes/folder-grid.xhtml">
+                <ui:param name="folders" value="#{folderBean.foldersList}"/>
+            </ui:include>
         </h:panelGroup>
 
         <h:panelGroup rendered="#{folderBean.foldersList.size() == 0}">
@@ -54,4 +34,3 @@
     </ui:define>
 
 </ui:composition>
-</html>

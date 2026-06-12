@@ -1,18 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
-      xmlns:h="jakarta.faces.html"
-      xmlns:f="jakarta.faces.core"
-      xmlns:ui="jakarta.faces.facelets"
-      xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
+<ui:composition template="./template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="jakarta.faces.html"
+                xmlns:f="jakarta.faces.core"
+                xmlns:ui="jakarta.faces.facelets"
+                xmlns:a="http://xmlns.jcp.org/jsf/passthrough">
 
 <f:metadata>
     <f:viewParam name="parentFolderId" value="#{folderBean.parentFolderId}"/>
 </f:metadata>
-
-<h:outputStylesheet name="css/style.css"/>
-<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/style.css?v=2.0"/>
-<ui:composition template="./template.xhtml">
 
     <ui:define name="title">
         New Folder - Cloud System
@@ -59,6 +54,3 @@
         </div>
 
     </ui:define>
-
-</ui:composition>
-</html>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      lang="en"
+      xmlns:h="jakarta.faces.html"
+      xmlns:ui="jakarta.faces.facelets">
+<h:head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title><ui:insert name="title">Cloud System</ui:insert></title>
+    <ui:include src="/includes/common-resources.xhtml"/>
+    <h:outputStylesheet name="css/auth.css"/>
+</h:head>
+<h:body>
+    <div class="auth-container">
+        <ui:insert name="content"/>
+    </div>
+</h:body>
+</html>
