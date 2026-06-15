@@ -1,5 +1,4 @@
 <ui:composition template="./template.xhtml"
-                xmlns="http://www.w3.org/1999/xhtml"
                 xmlns:h="jakarta.faces.html"
                 xmlns:f="jakarta.faces.core"
                 xmlns:ui="jakarta.faces.facelets">
@@ -14,7 +13,8 @@
     </ui:define>
 
     <ui:define name="content">
-        <h:messages globalOnly="true" styleClass="messages"/>
+        <!-- Global messages for success/general errors -->
+        <h:messages globalOnly="true" styleClass="messages" errorStyle="color: #dc2626;" infoStyle="color: #16a34a;"/>
 
         <div class="page-header" style="justify-content: flex-start; gap: 16px; border: none;">
             <h:link outcome="dashboard.xhtml"
@@ -39,12 +39,14 @@
                 <h:panelGroup rendered="#{empty fileBean.targetFolder}">
                     <div class="form-group">
                         <label class="form-label">Select target folder</label>
-                        <h:selectOneMenu value="#{fileBean.targetFolderId}" required="true"
+                        <h:selectOneMenu id="folderSelect" value="#{fileBean.targetFolderId}" required="true"
                                          requiredMessage="Please select a folder" styleClass="form-control">
                             <f:selectItem itemLabel="Select a folder..." itemValue="#{null}" noSelectionOption="true"/>
                             <f:selectItems value="#{folderBean.foldersList}" var="folder" itemLabel="#{folder.name}"
                                            itemValue="#{folder.id}"/>
                         </h:selectOneMenu>
+                        <!-- Form validation: Check for empty data and display appropriate message (Criteria 5) -->
+                        <h:message for="folderSelect" style="color: #dc2626; font-size: 14px; margin-top: 4px; display: block;"/>
                     </div>
                 </h:panelGroup>
 
@@ -53,9 +55,11 @@
                         <i class="fas fa-cloud-upload-alt"
                            style="font-size: 48px; color: var(--primary-color); margin-bottom: 16px;"></i>
                         <div style="margin-bottom: 16px; color: var(--text-primary); font-weight: 500;">Select file to upload</div>
-                        <h:inputFile value="#{fileBean.uploadedFile}" required="true"
+                        <h:inputFile id="fileInput" value="#{fileBean.uploadedFile}" required="true"
                                      requiredMessage="Please select a file to upload"
                                      style="width: 100%; max-width: 300px; margin: 0 auto; color: var(--text-secondary); cursor: pointer;"/>
+                        <!-- Form validation: Check for empty data and display appropriate message (Criteria 5) -->
+                        <h:message for="fileInput" style="color: #dc2626; font-size: 14px; margin-top: 8px; display: block;"/>
                     </div>
                 </div>
 
